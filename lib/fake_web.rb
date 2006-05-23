@@ -83,11 +83,6 @@ module FakeWeb
   # Checks for presence of +uri+ in the +FakeWeb+ registry.
   def FakeWeb.registered_uri?(uri); FakeWeb::Registry.instance.registered_uri?(uri); end
 
-  def FakeWeb.registered_host?(*args) #:nodoc:
-    FakeWeb::Registry.instance.registered_host?(*args)
-  end
-
-
   class Registry #:nodoc:
     include Singleton
 
@@ -107,13 +102,6 @@ module FakeWeb
 
     def registered_uri?(uri)
       uri_map.has_key?(normalize_uri(uri))
-    end
-
-    def registered_host?(host)
-      uri_map.each_key do |uri|
-        return true if uri.host == host
-      end
-      false
     end
 
     def registered_uri(uri)
@@ -194,7 +182,7 @@ module FakeWeb
       resp = case options[:response]
       when Net::HTTPResponse: options[:response]
       when String
-        socket = Net::LocalMessageIO.new(options[:response])
+        socket = Net::BufferedIO.new(options[:response])
         r = Net::HTTPResponse.read_new(socket)
         r.instance_eval { @header['transfer-encoding'] = nil }
         r.reading_body(socket, true) {}
@@ -226,18 +214,6 @@ module FakeWeb
 
   class SocketDelegator #:nodoc:
 
-    def self.delegate_to
-      Net::InternetMessageIO
-    end
-
-    def self.open(*args)
-      if FakeWeb.registered_host?(args[0])
-        new().open(*args)
-      else
-        delegate_to.open(*args)
-      end
-    end
-
     def initialize(delegate=nil)
       @delegate = nil
     end
@@ -247,24 +223,8 @@ module FakeWeb
       return self.send("my_#{method}", *args, &block)
     end
 
-    def my_open(*args)
-      @open_args = args
-      @closed = false
-      return self
-    end
-
     def my_closed?
       @closed ||= true
-    end
-
-    def my_reopen(*args)
-      @reopen_args = args
-      @close = false
-    end
-
-    def my_write(*args)
-      @delegate = self.class.delegate_to.open(*@open_args)
-      return @delegate.write(*args)
     end
 
     def my_readuntil(*args)

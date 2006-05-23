@@ -17,19 +17,21 @@
 
 require 'net/http'
 require 'net/https'
+require 'rubygems'
+require 'breakpoint'
 require 'stringio'
 
 module Net #:nodoc:
 
-  class LocalMessageIO < Net::InternetMessageIO #:nodoc:
+  class BufferedIO #:nodoc:
     def initialize( io, debug_output = nil )
       @debug_output = debug_output
-      @socket = case io
+      @io = case io
       when Socket, IO: io
       when String
         File.exists?(io) ?  File.open(io, "r") : StringIO.new(io)
       end
-      raise "Unable to create local socket" unless @socket
+      raise "Unable to create local socket" unless @io
       connect
     end
 
@@ -38,7 +40,7 @@ module Net #:nodoc:
     end
 
     def rbuf_fill
-      @rbuf << @socket.sysread(1024)
+      @rbuf << @io.sysread(1024)
     end
   end
   
@@ -49,7 +51,7 @@ module Net #:nodoc:
     end
 
     alias :original_net_http_request :request
-    alias :original_net_http_do_start :do_start
+    alias :original_net_http_connect :connect
     
     def request(req, body = nil, &block)
       prot = use_ssl ? "https" : "http"
@@ -58,8 +60,12 @@ module Net #:nodoc:
         @socket = Net::HTTP.socket_type.new
         return FakeWeb.response_for(uri, &block)
       else
+        original_net_http_connect
         return original_net_http_request(req, body, &block)
       end
+    end
+
+    def connect
     end
   end
 end

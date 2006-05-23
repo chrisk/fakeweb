@@ -1,3 +1,11 @@
+fakeweb (1.0.1)
+
+  [ Blaine Cook ]
+  * update code to correspond to ruby 1.8.4
+  * breaks compatibility with ruby 1.8.2
+
+-- Blaine Cook <romeda@gmail.com>  Tue,  23 May 2006 16:13:26 -0800
+
 fakeweb (1.0.0)
 
   [ Blaine Cook ]

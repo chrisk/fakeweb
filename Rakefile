@@ -24,7 +24,7 @@ require 'rcov/rcovtask'
 
 spec = Gem::Specification.new do |s| 
   s.name = "FakeWeb" 
-  s.version = "1.0.0" 
+  s.version = "1.1.0" 
   s.author = "Blaine Cook" 
   s.email = "romeda@gmail.com" 
   s.homepage = "http://fakeweb.rubyforge.org/" 

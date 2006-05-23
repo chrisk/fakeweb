@@ -1,0 +1,55 @@
+= Name
+
+FakeWeb - Helper for Faking Web Requests
+
+= Synopsis
+
+  :include:test/unit/test_examples.rb
+
+= Description
+
+FakeWeb is a helper for faking web requests. This makes testing easier,
+because you can decouple your test environment from live services without
+modifying code. It allows for a range of request behaviour, from simple
+stubbing of HTTP responses to re-playing complete recorded responses.
+
+In addition to the conceptual advantage of having idempotent request behaviour, 
+FakeWeb makes tests run faster than if they were made to remote (or even local)
+web servers. It also makes it possible to run tests without a network
+connection or in situations where the server is behind a firewall or has
+host based access controls.
+
+FakeWeb is tested with
+Net::HTTP[http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index.html] and
+OpenURI[http://www.ruby-doc.org/stdlib/libdoc/open-uri/rdoc/]. It should work
+with any web client library that uses Net::HTTP for its underlying requests
+(e.g., Flickr.rb[http://redgreenblu.com/flickr/],
+Ruby/Amazon[http://www.caliban.org/ruby/ruby-amazon.shtml],
+soap4r[http://dev.ctor.org/soap4r/], etc.)
+
+= Known Issues
+
+* The port-specific nature of requests is ignored; requests to <tt>test.com</tt> and
+  <tt>test.com:8080</tt> are treated identically.
+* Request bodies are ignored, including GET, PUT, and POST parameters. If you
+  need different responses for different request bodies, you need to request
+  different URLs, and register different responses for each.
+
+= Copyright
+
+FakeWeb - Ruby Helper for Faking Web Requests
+Copyright 2006 Blaine Cook <romeda@gmail.com>.
+
+FakeWeb is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+FakeWeb is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with FakeWeb; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA

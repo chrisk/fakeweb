@@ -15,9 +15,14 @@ class FakeWebExampleTest < Test::Unit::TestCase
     FakeWeb.register_uri('http://www.google.com/', :response => `curl -is http://www.google.com/`)
     Net::HTTP.start('www.google.com') do |req|
       response = req.get('/')
-      assert_equal "200", response.code
-      assert_equal "OK", response.message
-      assert response.body.include?('<title>Google')
+      if response.code == 200
+        assert_equal "OK", response.message
+        assert response.body.include?('<title>Google')
+      elsif response.code == 302
+        # Google redirects foreign sites to ccTLDs.
+        assert_equal "Found", response.message
+        assert response.body.include?('The document has moved')
+      end
     end
   end
 

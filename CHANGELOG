@@ -1,4 +1,12 @@
-fakeweb (1.0.1)
+fakeweb (1.1.1)
+
+  [ Blaine Cook ]
+  * fix for non-existance of :string method on File as presented by open-uri
+  * fix for curl example test - google redirects to ccTLDs for those outside US
+
+-- Blaine Cook <romeda@gmail.com>  Thu,  03 Aug 2006 03:41:48 -0800
+
+fakeweb (1.1.0)
 
   [ Blaine Cook ]
   * update code to correspond to ruby 1.8.4

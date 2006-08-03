@@ -33,7 +33,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   end
   
   def test_mock_open
-    assert_equal 'test example content', open('http://mock/test_example.txt').string
+    assert_equal 'test example content', open('http://mock/test_example.txt').read
   end
   
   def test_mock_open_with_string_as_registered_uri
@@ -44,8 +44,9 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   def test_real_open
     resp = open('http://images.apple.com/main/rss/hotnews/hotnews.rss')
     assert_equal "200", resp.status.first
-    assert resp.string.include?('Apple')
-    assert resp.string.include?('News')
+    body = resp.read
+    assert body.include?('Apple')
+    assert body.include?('News')
   end
   
   def test_mock_open_that_raises_exception

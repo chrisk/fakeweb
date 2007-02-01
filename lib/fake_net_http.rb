@@ -17,8 +17,6 @@
 
 require 'net/http'
 require 'net/https'
-require 'rubygems'
-require 'breakpoint'
 require 'stringio'
 
 module Net #:nodoc:

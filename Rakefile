@@ -23,8 +23,10 @@ require 'rake/rdoctask'
 require 'rcov/rcovtask'
 
 spec = Gem::Specification.new do |s| 
+  s.add_dependency('rake')
+  s.add_dependency('rcov')
   s.name = "FakeWeb" 
-  s.version = "1.1.1" 
+  s.version = "1.1.2" 
   s.author = "Blaine Cook" 
   s.email = "romeda@gmail.com" 
   s.homepage = "http://fakeweb.rubyforge.org/" 
@@ -32,7 +34,6 @@ spec = Gem::Specification.new do |s|
   s.summary = "A test helper that makes it simple to test HTTP interaction" 
   s.files = FileList["{test,lib}/**/*", '[A-Z]*'].exclude("rdoc", ".svn").to_a 
   s.require_path = "lib" 
-  s.autorequire = "fake_web" 
   s.test_files = Dir.glob("test/test_*.rb")
   s.has_rdoc = true 
   s.extra_rdoc_files = ["README", "COPYING"] 

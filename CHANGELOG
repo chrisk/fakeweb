@@ -1,3 +1,11 @@
+fakeweb (1.1.2)
+
+  [ Blaine Cook ]
+  * add required dependencies to GemSpec to ensure that tests pass in
+    firebrigade (http://firebrigade.seattlerb.org/)
+
+-- Blaine Cook <romeda@gmail.com>  Wed,  31 Aug 2007 17:26:04 -0800
+
 fakeweb (1.1.1)
 
   [ Blaine Cook ]

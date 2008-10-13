@@ -1,3 +1,11 @@
+fakeweb (development)
+
+  [ Chris Kampmeier ]
+  * fix for non-faked SSL requests failing with "Unable to create local socket"
+  * update Rakefile to fix warning about deprecated code
+
+-- Chris Kampmeier <chris@kampers.net>  Mon,  13 Oct 2008 02:46:12 -0700
+
 fakeweb (1.1.2)
 
   [ Blaine Cook ]

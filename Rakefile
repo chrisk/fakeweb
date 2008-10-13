@@ -16,7 +16,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require 'rubygems'
-Gem::manage_gems
 require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'rake/rdoctask'

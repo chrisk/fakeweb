@@ -25,7 +25,7 @@ module Net #:nodoc:
     def initialize( io, debug_output = nil )
       @debug_output = debug_output
       @io = case io
-      when Socket, IO: io
+      when Socket, OpenSSL::SSL::SSLSocket, IO: io
       when String
         File.exists?(io) ?  File.open(io, "r") : StringIO.new(io)
       end

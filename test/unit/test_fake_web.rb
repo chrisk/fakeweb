@@ -123,13 +123,22 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
   
-  def test_real_request
+  def test_real_http_request
     resp = nil
     Net::HTTP.start('images.apple.com') do |query|
       resp = query.get('/main/rss/hotnews/hotnews.rss')
     end
     assert resp.body.include?('Apple')
     assert resp.body.include?('News')
+  end
+
+  def test_real_https_request
+    http = Net::HTTP.new('images.apple.com', 443)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # silence certificate warning
+    response = http.get('/main/rss/hotnews/hotnews.rss')
+    assert response.body.include?('Apple')
+    assert response.body.include?('News')
   end
 
   def test_real_request_on_same_domain_as_mock

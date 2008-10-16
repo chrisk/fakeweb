@@ -36,7 +36,37 @@ class TestFakeWeb < Test::Unit::TestCase
       FakeWeb.register_uri('test_example2.txt', File.dirname(__FILE__) + '/../fixtures/test_example.txt')
     end
   end
+
+  def test_register_uri_with_port_and_check_with_port
+    FakeWeb.register_uri('http://example.com:3000/', :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.com:3000/')
+  end
   
+  def test_register_uri_with_port_and_check_without_port
+    FakeWeb.register_uri('http://example.com:3000/', :string => 'foo')
+    assert !FakeWeb.registered_uri?('http://example.com/')
+  end
+
+  def test_register_uri_with_default_port_for_http_and_check_without_port
+    FakeWeb.register_uri('http://example.com:80/', :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.com/')
+  end
+
+  def test_register_uri_with_default_port_for_https_and_check_without_port
+    FakeWeb.register_uri('https://example.com:443/', :string => 'foo')
+    assert FakeWeb.registered_uri?('https://example.com/')
+  end
+
+  def test_register_uri_with_no_port_for_http_and_check_with_default_port
+    FakeWeb.register_uri('http://example.com/', :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.com:80/')
+  end
+
+  def test_register_uri_with_no_port_for_https_and_check_with_default_port
+    FakeWeb.register_uri('https://example.com/', :string => 'foo')
+    assert FakeWeb.registered_uri?('https://example.com:443/')
+  end
+
   def test_content_for_registered_uri
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
   end

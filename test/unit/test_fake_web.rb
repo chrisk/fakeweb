@@ -74,7 +74,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_mock_request_with_block
     Net::HTTP.start('mock') do |http|
       response = http.get('/test_example.txt')
-      assert 'test example content', response.body
+      assert_equal 'test example content', response.body
     end
   end
  

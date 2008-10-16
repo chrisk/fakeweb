@@ -31,7 +31,7 @@ class TestFakeWeb < Test::Unit::TestCase
     assert FakeWeb.registered_uri?('http://mock/test_example.txt')
   end
   
-  def test_register_url_without_domain_name
+  def test_register_uri_without_domain_name
     assert_raises URI::InvalidURIError do
       FakeWeb.register_uri('test_example2.txt', File.dirname(__FILE__) + '/../fixtures/test_example.txt')
     end

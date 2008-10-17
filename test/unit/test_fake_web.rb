@@ -71,6 +71,65 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
   end
 
+  def test_content_for_registered_uri_with_port_and_request_with_port
+    FakeWeb.register_uri('http://example.com:3000/', :string => 'test example content')
+    Net::HTTP.start('example.com', 3000) do |http|
+      response = http.get('/')
+      assert_equal 'test example content', response.body
+    end
+  end
+
+  def test_content_for_registered_uri_with_default_port_for_http_and_request_without_port
+    FakeWeb.register_uri('http://example.com:80/', :string => 'test example content')
+    Net::HTTP.start('example.com') do |http|
+      response = http.get('/')
+      assert_equal 'test example content', response.body
+    end
+  end
+
+  def test_content_for_registered_uri_with_no_port_for_http_and_request_with_default_port
+    FakeWeb.register_uri('http://example.com/', :string => 'test example content')
+    Net::HTTP.start('example.com', 80) do |http|
+      response = http.get('/')
+      assert_equal 'test example content', response.body
+    end
+  end
+
+  def test_content_for_registered_uri_with_default_port_for_https_and_request_with_default_port
+    FakeWeb.register_uri('https://example.com:443/', :string => 'test example content')
+    http = Net::HTTP.new('example.com', 443)
+    http.use_ssl = true
+    response = http.get('/')
+    assert_equal 'test example content', response.body
+  end
+
+  def test_content_for_registered_uri_with_no_port_for_https_and_request_with_default_port
+    FakeWeb.register_uri('https://example.com/', :string => 'test example content')
+    http = Net::HTTP.new('example.com', 443)
+    http.use_ssl = true
+    response = http.get('/')
+    assert_equal 'test example content', response.body
+  end
+
+  def test_content_for_registered_uris_with_ports_on_same_domain_and_request_without_port
+    FakeWeb.register_uri('http://example.com:3000/', :string => 'port 3000')
+    FakeWeb.register_uri('http://example.com/', :string => 'port 80')
+    Net::HTTP.start('example.com') do |http|
+      response = http.get('/')
+      assert_equal 'port 80', response.body
+    end
+  end
+
+  def test_content_for_registered_uris_with_ports_on_same_domain_and_request_with_port
+    FakeWeb.register_uri('http://example.com:3000/', :string => 'port 3000')
+    FakeWeb.register_uri('http://example.com/', :string => 'port 80')
+    Net::HTTP.start('example.com', 3000) do |http|
+      response = http.get('/')
+      assert_equal 'port 3000', response.body
+    end
+  end
+
+
   def test_mock_request_with_block
     Net::HTTP.start('mock') do |http|
       response = http.get('/test_example.txt')

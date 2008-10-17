@@ -53,7 +53,7 @@ module Net #:nodoc:
     
     def request(req, body = nil, &block)
       prot = use_ssl ? "https" : "http"
-      uri = "#{prot}://#{self.address}#{req.path}"
+      uri = "#{prot}://#{self.address}:#{self.port}#{req.path}"
       if FakeWeb.registered_uri?(uri)
         @socket = Net::HTTP.socket_type.new
         return FakeWeb.response_for(uri, &block)

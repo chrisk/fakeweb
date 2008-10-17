@@ -32,6 +32,12 @@ soap4r[http://dev.ctor.org/soap4r/], etc.)
 * Request bodies are ignored, including GET, PUT, and POST parameters. If you
   need different responses for different request bodies, you need to request
   different URLs, and register different responses for each.
+* Query-string parameter order is significant, so GET http://example.com/?a=1&b=1
+  and GET http://example.com/?b=1&a=1 are considered different requests. This is
+  technically correct, but it's often a nuisance in practice since 1) many servers
+  return the same resource for any ordering of the key=value pairs, and
+  2) Net::HTTP's use of a hash to specify query parameters means that the order
+  is unpredictable.
 
 = Copyright
 

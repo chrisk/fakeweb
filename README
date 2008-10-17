@@ -29,8 +29,6 @@ soap4r[http://dev.ctor.org/soap4r/], etc.)
 
 = Known Issues
 
-* The port-specific nature of requests is ignored; requests to <tt>test.com</tt> and
-  <tt>test.com:8080</tt> are treated identically.
 * Request bodies are ignored, including GET, PUT, and POST parameters. If you
   need different responses for different request bodies, you need to request
   different URLs, and register different responses for each.

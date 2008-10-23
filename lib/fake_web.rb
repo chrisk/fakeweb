@@ -120,8 +120,15 @@ module FakeWeb
       when URI: uri
       else
         uri = 'http://' + uri unless uri.match('^https?://')
-        URI.parse(uri)
+        parsed_uri = URI.parse(uri)
+        parsed_uri.query = sort_query_params(parsed_uri.query)
+        parsed_uri
       end
+    end
+
+    def sort_query_params(query)
+      return nil if query.nil?
+      query.split('&').sort.join('&')
     end
   end
 

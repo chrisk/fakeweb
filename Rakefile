@@ -25,7 +25,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('rake')
   s.add_dependency('rcov')
   s.name = "FakeWeb" 
-  s.version = "1.1.2.1"
+  s.version = "1.1.2.2"
   s.author = "Blaine Cook" 
   s.email = "romeda@gmail.com" 
   s.homepage = "http://fakeweb.rubyforge.org/" 

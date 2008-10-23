@@ -4,7 +4,7 @@ FakeWeb - Helper for Faking Web Requests
 
 = Synopsis
 
-  :include:test/unit/test_examples.rb
+  :include:test/test_examples.rb
 
 = Description
 

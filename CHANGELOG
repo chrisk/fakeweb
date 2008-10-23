@@ -1,6 +1,12 @@
 fakeweb (development)
 
   [ Chris Kampmeier ]
+  * sort query params before storing internally, so that
+    http://example.com/?a=1&b=2 and http://example.com/?b=2&a=1 are considered
+    the same URL (although this is technically incorrect, it's much more
+    convenient--most web apps work that way, and Net::HTTP's use of a hash to
+    pass query params means that the order in which FakeWeb stores them can be
+    unpredictable)
   * add support for ports in URLs, so that http://example.com/ and
     http://example.com:3000/ are not the same
   * fix for non-faked SSL requests failing with "Unable to create local socket"

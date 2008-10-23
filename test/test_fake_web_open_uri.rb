@@ -15,7 +15,7 @@
 # along with FakeWeb; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-$:.unshift "#{File.dirname(__FILE__)}/../../lib"
+$:.unshift "#{File.dirname(__FILE__)}/../lib"
 
 require 'test/unit'
 require 'open-uri'
@@ -25,7 +25,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
 
   def setup
     FakeWeb.clean_registry
-    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/../fixtures/test_example.txt')
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
   end
 
   def test_content_for_registered_uri

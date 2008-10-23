@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.files    = ["CHANGELOG", "COPYING", "fakeweb.gemspec", "Rakefile", "README",
                 "setup.rb", "lib/fake_net_http.rb", "lib/fake_web.rb"]
   s.test_files = ["test/fixtures/test_example.txt", "test/fixtures/test_request",
-                  "test/unit/test_examples.rb", "test/unit/test_fake_web.rb",
-                  "test/unit/test_fake_web_open_uri.rb"]
+                  "test/test_examples.rb", "test/test_fake_web.rb",
+                  "test/test_fake_web_open_uri.rb"]
   s.rdoc_options = ["--main", "README"]
   s.extra_rdoc_files = ["CHANGELOG", "COPYING", "README"]
 end

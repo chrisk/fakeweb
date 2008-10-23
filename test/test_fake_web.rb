@@ -15,7 +15,7 @@
 # along with FakeWeb; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-$:.unshift "#{File.dirname(__FILE__)}/../../lib"
+$:.unshift "#{File.dirname(__FILE__)}/../lib"
 
 require 'test/unit'
 require 'fake_web'
@@ -24,7 +24,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def setup
     FakeWeb.clean_registry
-    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/../fixtures/test_example.txt')
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
   end
 
   def test_register_uri
@@ -33,7 +33,7 @@ class TestFakeWeb < Test::Unit::TestCase
   
   def test_register_uri_without_domain_name
     assert_raises URI::InvalidURIError do
-      FakeWeb.register_uri('test_example2.txt', File.dirname(__FILE__) + '/../fixtures/test_example.txt')
+      FakeWeb.register_uri('test_example2.txt', File.dirname(__FILE__) + '/fixtures/test_example.txt')
     end
   end
 
@@ -176,7 +176,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_get_with_request_from_file_as_registered_uri
-    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/../fixtures/test_request')
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request')
     response = nil
     Net::HTTP.start('www.google.com') do |query|
       response = query.get('/')
@@ -186,7 +186,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_post_with_request_from_file_as_registered_uri
-    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/../fixtures/test_request')
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request')
     response = nil
     Net::HTTP.start('www.google.com') do |query|
       response = query.post('/', '')

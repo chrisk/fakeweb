@@ -326,4 +326,37 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_registry_sort_query_params_sorts_by_value_if_keys_collide
     assert_equal "a=1&a=2&b=2", FakeWeb::Registry.instance.send(:sort_query_params, "a=2&b=2&a=1")
   end
+
+  def test_mock_rotate_responses
+    FakeWeb.register_uri('http://mock/multiple_test_example.txt', [{ :file => File.dirname(__FILE__) + '/fixtures/test_example.txt',
+                                                                     :times => 2 },
+                                                                   { :string => "thrice",
+                                                                     :times => 3 },
+                                                                   { :string => "ever_more" } 
+                                                                  ])
+    response = nil
+    uri = URI.parse('http://mock/multiple_test_example.txt')
+    http = Net::HTTP.new(uri.host, uri.port)
+
+    2.times {
+      response = http.start do
+        http.get(uri.path)
+      end
+      assert_equal 'test example content', response.body
+    }
+
+    3.times {
+      response = http.start do
+        http.get(uri.path)
+      end
+      assert_equal 'thrice', response.body
+    }
+
+    4.times {
+      response = http.start do
+        http.get(uri.path)
+      end
+      assert_equal 'ever_more', response.body
+    }
+  end
 end

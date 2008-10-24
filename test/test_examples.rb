@@ -42,4 +42,14 @@ class FakeWebExampleTest < Test::Unit::TestCase
     content = open('http://example.com/').string
     assert_equal "Hello, World!", content
   end
+
+  def test_rotated_response
+    FakeWeb.register_uri('http://example.com/', [{:string => "Hello, World!"}, {:string => "Goodbye, Cruel World!"}])
+
+    content = open('http://example.com/').string
+    assert_equal "Hello, World!", content
+
+    content = open('http://example.com/').string
+    assert_equal "Goodbye, Cruel World!", content
+  end
 end

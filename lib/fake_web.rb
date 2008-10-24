@@ -29,8 +29,9 @@ module FakeWeb
   def FakeWeb.clean_registry; FakeWeb::Registry.instance.clean_registry; end
 
   # Register +uri+ to be handled according to +options+. +uri+ can be a
-  # +String+ or an +URI+ object. +options+ must be a +Hash+ that must contain
-  # any one of the following keys:
+  # +String+ or an +URI+ object. +options+ must be either a +Hash+ or 
+  # an +Array+ of +Hashes+ (see below) that must contain any one of the 
+  # following keys:
   #
   # <tt>:string</tt>::
   #   Takes a +String+ argument that is returned as the body of the response.
@@ -60,6 +61,14 @@ module FakeWeb
   #   See the <tt>Net::HTTPResponse</tt>
   #   documentation[http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/classes/Net/HTTPResponse.html]
   #   for more information on creating custom response objects.
+  # 
+  # +options+ may also be an +Array+ containing a list of the above-described +Hash+.
+  # In this case, FakeWeb will rotate through each provided response, you may optionally
+  # provide:
+  #
+  # <tt>:times</tt>::
+  #   The number of times this response will be used. Decremented by one each time it's called.
+  #   FakeWeb will use the final provided request indefinitely, regardless of its :times parameter.
   # 
   # Two optional arguments are also accepted:
   #
@@ -97,7 +106,9 @@ module FakeWeb
     end
 
     def register_uri(uri, options)
-      uri_map[normalize_uri(uri)] = FakeWeb::Responder.new(uri, options)
+      uri_map[normalize_uri(uri)] = [*[options]].flatten.collect { |option|
+        FakeWeb::Responder.new(uri, option, option[:times])
+      }
     end
 
     def registered_uri?(uri)
@@ -110,7 +121,18 @@ module FakeWeb
     end
 
     def response_for(uri, &block)
-      return registered_uri(uri).response(&block)
+      responses = registered_uri(uri)
+
+      next_response = responses.last
+      responses.each { |response|
+        if response.times and response.times > 0
+          response.times -= 1
+          next_response = response
+          break
+        end
+      }
+
+      return next_response.response(&block)
     end
 
     private
@@ -141,11 +163,12 @@ module FakeWeb
 
   class Responder #:nodoc:
 
-    attr_accessor :uri, :options
+    attr_accessor :uri, :options, :times
 
-    def initialize(uri, options)
+    def initialize(uri, options, times)
       self.uri = uri
       self.options = options
+      self.times = times ? times : 1
     end
 
     def response(&block)

@@ -231,6 +231,15 @@ class TestFakeWeb < Test::Unit::TestCase
     assert resp.body.include?('News')
   end
 
+  def test_real_http_request_with_undocumented_full_uri_argument_style
+    resp = nil
+    Net::HTTP.start('images.apple.com') do |query|
+      resp = query.get('http://images.apple.com/main/rss/hotnews/hotnews.rss')
+    end
+    assert resp.body.include?('Apple')
+    assert resp.body.include?('News')
+  end
+
   def test_real_https_request
     http = Net::HTTP.new('images.apple.com', 443)
     http.use_ssl = true

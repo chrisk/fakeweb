@@ -1,6 +1,8 @@
 fakeweb (development)
 
   [ Chris Kampmeier ]
+  * add support for Net::HTTP's undocumented full-URI request style (fixes
+    URI::InvalidURIErrors that you might see in older libraries)
   * sort query params before storing internally, so that
     http://example.com/?a=1&b=2 and http://example.com/?b=2&a=1 are considered
     the same URL (although this is technically incorrect, it's much more

@@ -146,7 +146,22 @@ class TestFakeWeb < Test::Unit::TestCase
       assert_equal 'test example content', response.body
     end
   end
- 
+
+  def test_mock_request_with_undocumented_full_uri_argument_style
+    Net::HTTP.start('mock') do |query|
+      response = query.get('http://mock/test_example.txt')
+      assert_equal 'test example content', response.body
+    end
+  end
+
+  def test_mock_request_with_undocumented_full_uri_argument_style_and_query
+    FakeWeb.register_uri('http://mock/test_example.txt?a=b', :string => 'test query content')
+    Net::HTTP.start('mock') do |query|
+      response = query.get('http://mock/test_example.txt?a=b')
+      assert_equal 'test query content', response.body
+    end
+  end
+
   def test_mock_post
     response = nil
     Net::HTTP.start('mock') do |query|

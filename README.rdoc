@@ -1,52 +1,46 @@
 = FakeWeb
 
-A Helper for Faking Web Requests
+FakeWeb is a helper for faking web requests. It works at a global level, without
+modifying code or writing extensive stubs.
 
 = Examples
 
-  require 'test/unit'
-  require 'fake_web'
-  require 'open-uri'
+== Using a string response
 
-  class FakeWebExampleTest < Test::Unit::TestCase
-    def test_request
-      FakeWeb.register_uri('http://example.com/test_me', :string => "Hello World!")
-      content = Net::HTTP.get(URI.parse('http://example.com/test_me'))
-      assert_equal "Hello World!", content
-    end
+  FakeWeb.register_uri("http://example.com/test1", :string => "Hello World!")
 
-    def test_request_with_response
-      FakeWeb.register_uri('http://www.google.com/', :response => `curl -is http://www.google.com/`)
-      Net::HTTP.start('www.google.com') do |req|
-        response = req.get('/')
-        if response.code == 200
-          assert_equal "OK", response.message
-          assert response.body.include?('<title>Google')
-        elsif response.code == 302
-          # Google redirects foreign sites to ccTLDs.
-          assert_equal "Found", response.message
-          assert response.body.include?('The document has moved')
-        end
-      end
-    end
+  Net::HTTP.get(URI.parse('http://example.com/test1'))
+  => "Hello World!"
 
-    def test_request_with_custom_status
-      FakeWeb.register_uri('http://example.com/', :string => "Nothing to be found 'round here",
-                                                  :status => ['404', 'Not Found'])
-      Net::HTTP.start('example.com') do |req|
-        response = req.get('/')
-        assert_equal "404", response.code
-        assert_equal "Not Found", response.message
-        assert_equal "Nothing to be found 'round here", response.body
-      end
-    end
+  Net::HTTP.get(URI.parse('http://example.com/test2'))
+  => FakeWeb is bypassed and the response from a real request is returned
 
-    def test_open_uri
-      FakeWeb.register_uri('http://example.com/', :string => "Hello, World!")
-      content = open('http://example.com/').string
-      assert_equal "Hello, World!", content
-    end
+== Replaying a recorded response
+
+  page = `curl -is http://www.google.com/`
+  FakeWeb.register_uri('http://www.google.com/', :response => page)
+
+  Net::HTTP.get(URI.parse('http://www.google.com/'))
+  # => Full response, including headers
+
+== Adding a custom status to the response
+
+  FakeWeb.register_uri('http://example.com/', :string => "Nothing to be found 'round here",
+                                              :status => ["404", "Not Found"])
+
+  Net::HTTP.start('example.com') do |req|
+    response = req.get('/')
+    response.code     # => "404"
+    response.message  # => "Not Found"
+    response.body     # => "Nothing to be found 'round here"
   end
+
+== Requesting with OpenURI
+
+  FakeWeb.register_uri('http://example.com/', :string => "Hello, World!")
+
+  open('http://example.com/').string
+  => "Hello, World!"
 
 
 = Description

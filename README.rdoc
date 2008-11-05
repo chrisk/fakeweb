@@ -42,6 +42,14 @@ modifying code or writing extensive stubs.
   open('http://example.com/').string
   => "Hello, World!"
 
+== Clearing registered URIs
+
+The FakeWeb registry is a singleton that lasts for the duration of your
+program, maintaining every fake responses you register. If needed, you
+can clean out the registry and remove all registered URIs:
+
+  FakeWeb.clean_registry
+
 
 = Description
 

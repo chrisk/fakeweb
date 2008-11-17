@@ -1,16 +1,16 @@
 # FakeWeb - Ruby Helper for Faking Web Requests
 # Copyright 2006 Blaine Cook <romeda@gmail.com>.
-# 
+#
 # FakeWeb is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # FakeWeb is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with FakeWeb; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -30,7 +30,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_register_uri
     assert FakeWeb.registered_uri?('http://mock/test_example.txt')
   end
-  
+
   def test_register_uri_without_domain_name
     assert_raises URI::InvalidURIError do
       FakeWeb.register_uri('test_example2.txt', File.dirname(__FILE__) + '/fixtures/test_example.txt')
@@ -41,7 +41,7 @@ class TestFakeWeb < Test::Unit::TestCase
     FakeWeb.register_uri('http://example.com:3000/', :string => 'foo')
     assert FakeWeb.registered_uri?('http://example.com:3000/')
   end
-  
+
   def test_register_uri_with_port_and_check_without_port
     FakeWeb.register_uri('http://example.com:3000/', :string => 'foo')
     assert !FakeWeb.registered_uri?('http://example.com/')
@@ -169,7 +169,7 @@ class TestFakeWeb < Test::Unit::TestCase
     end
     assert_equal 'test example content', response.body
   end
-  
+
   def test_mock_post_with_string_as_registered_uri
     response = nil
     FakeWeb.register_uri('http://mock/test_string.txt', :string => 'foo')
@@ -236,7 +236,7 @@ class TestFakeWeb < Test::Unit::TestCase
       Net::HTTP.start('mock') { |q| q.get('/unimplemented') }
     end
   end
-  
+
   def test_real_http_request
     resp = nil
     Net::HTTP.start('images.apple.com') do |query|
@@ -280,7 +280,7 @@ class TestFakeWeb < Test::Unit::TestCase
     Net::HTTP.start('images.apple.com') do |query|
       resp = query.get('/test_string.txt')
     end
-    assert_equal 'foo', resp.body 
+    assert_equal 'foo', resp.body
   end
 
   def test_mock_post_that_raises_exception
@@ -300,7 +300,7 @@ class TestFakeWeb < Test::Unit::TestCase
       end
     end
   end
-  
+
   def test_mock_instance_syntax
     response = nil
     uri = URI.parse('http://mock/test_example.txt')
@@ -308,32 +308,32 @@ class TestFakeWeb < Test::Unit::TestCase
     response = http.start do
       http.get(uri.path)
     end
-    
+
     assert_equal 'test example content', response.body
   end
-  
+
   def test_mock_via_nil_proxy
     response = nil
     proxy_address = nil
     proxy_port = nil
-    
+
     uri = URI.parse('http://mock/test_example.txt')
     http = Net::HTTP::Proxy(proxy_address, proxy_port).new(
               uri.host, (uri.port or 80))
     response = http.start do
       http.get(uri.path)
     end
+
     assert_equal 'test example content', response.body
-         
   end
-  
+
   def test_reponse_type
     Net::HTTP.start('mock') do |http|
       response = http.get('/test_example.txt', '')
       assert_kind_of(Net::HTTPSuccess, response)
     end
-  end     
-    
+  end
+
   def test_mock_request_that_raises_an_http_error_with_a_specific_status
     FakeWeb.register_uri('http://mock/raising_exception.txt', :exception => Net::HTTPError, :status => ['404', 'Not Found'])
     exception = assert_raises(Net::HTTPError) do
@@ -356,9 +356,10 @@ class TestFakeWeb < Test::Unit::TestCase
                          [ {:file => File.dirname(__FILE__) + '/fixtures/test_example.txt', :times => 2},
                            {:string => "thrice", :times => 3},
                            {:string => "ever_more"} ])
+
     uri = URI.parse('http://mock/multiple_test_example.txt')
     2.times { assert_equal 'test example content', Net::HTTP.get(uri) }
-    3.times { assert_equal 'thrice', Net::HTTP.get(uri) }
-    4.times { assert_equal 'ever_more', Net::HTTP.get(uri) }
+    3.times { assert_equal 'thrice',               Net::HTTP.get(uri) }
+    4.times { assert_equal 'ever_more',            Net::HTTP.get(uri) }
   end
 end

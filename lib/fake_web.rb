@@ -26,7 +26,9 @@ module FakeWeb
 
   # Resets the FakeWeb Registry. This will force all subsequent web requests to
   # behave as real requests.
-  def FakeWeb.clean_registry; FakeWeb::Registry.instance.clean_registry; end
+  def self.clean_registry
+    Registry.instance.clean_registry
+  end
 
   # Register +uri+ to be handled according to +options+. +uri+ can be a
   # +String+ or an +URI+ object. +options+ must be a +Hash+ that must contain
@@ -73,15 +75,19 @@ module FakeWeb
   #   specified URL is requested. Any +Exception+ class is valid. Example:
   #     FakeWeb.register_uri('http://www.example.com/', :exception => Net::HTTPError)
   #
-  def FakeWeb.register_uri(uri, options); FakeWeb::Registry.instance.register_uri(uri, options); end
+  def self.register_uri(uri, options);
+    Registry.instance.register_uri(uri, options)
+  end
 
   # Returns the faked Net::HTTPResponse object associated with +uri+.
-  def FakeWeb.response_for(uri, &block) #:nodoc: :yields: response
-    FakeWeb::Registry.instance.response_for(uri, &block)
+  def self.response_for(uri, &block) #:nodoc: :yields: response
+    Registry.instance.response_for(uri, &block)
   end
 
   # Checks for presence of +uri+ in the +FakeWeb+ registry.
-  def FakeWeb.registered_uri?(uri); FakeWeb::Registry.instance.registered_uri?(uri); end
+  def self.registered_uri?(uri);
+    Registry.instance.registered_uri?(uri)
+  end
 
   class Registry #:nodoc:
     include Singleton

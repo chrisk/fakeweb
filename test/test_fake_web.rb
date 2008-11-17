@@ -352,35 +352,13 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_rotate_responses
-    FakeWeb.register_uri('http://mock/multiple_test_example.txt', [{ :file => File.dirname(__FILE__) + '/fixtures/test_example.txt',
-                                                                     :times => 2 },
-                                                                   { :string => "thrice",
-                                                                     :times => 3 },
-                                                                   { :string => "ever_more" } 
-                                                                  ])
-    response = nil
+    FakeWeb.register_uri('http://mock/multiple_test_example.txt',
+                         [ {:file => File.dirname(__FILE__) + '/fixtures/test_example.txt', :times => 2},
+                           {:string => "thrice", :times => 3},
+                           {:string => "ever_more"} ])
     uri = URI.parse('http://mock/multiple_test_example.txt')
-    http = Net::HTTP.new(uri.host, uri.port)
-
-    2.times {
-      response = http.start do
-        http.get(uri.path)
-      end
-      assert_equal 'test example content', response.body
-    }
-
-    3.times {
-      response = http.start do
-        http.get(uri.path)
-      end
-      assert_equal 'thrice', response.body
-    }
-
-    4.times {
-      response = http.start do
-        http.get(uri.path)
-      end
-      assert_equal 'ever_more', response.body
-    }
+    2.times { assert_equal 'test example content', Net::HTTP.get(uri) }
+    3.times { assert_equal 'thrice', Net::HTTP.get(uri) }
+    4.times { assert_equal 'ever_more', Net::HTTP.get(uri) }
   end
 end

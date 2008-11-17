@@ -46,10 +46,10 @@ Rake::GemPackageTask.new(spec) do |pkg|
 end
 
 desc "Default Task"
-task :default => [:tests]
+task :default => [:test]
 
 desc "Run All Tests"
-Rake::TestTask.new :tests do |test|
+Rake::TestTask.new :test do |test|
   test.test_files = ["test/**/*.rb"]
   test.verbose = true
 end

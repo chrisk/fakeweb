@@ -84,7 +84,7 @@ module FakeWeb
   #   specified URL is requested. Any +Exception+ class is valid. Example:
   #     FakeWeb.register_uri('http://www.example.com/', :exception => Net::HTTPError)
   #
-  def self.register_uri(uri, options);
+  def self.register_uri(uri, options)
     Registry.instance.register_uri(uri, options)
   end
 
@@ -94,7 +94,7 @@ module FakeWeb
   end
 
   # Checks for presence of +uri+ in the +FakeWeb+ registry.
-  def self.registered_uri?(uri);
+  def self.registered_uri?(uri)
     Registry.instance.registered_uri?(uri)
   end
 

@@ -23,6 +23,8 @@ module Net #:nodoc:
 
   class BufferedIO #:nodoc:
     def initialize( io, debug_output = nil )
+      @read_timeout = 60
+      @rbuf = ''
       @debug_output = debug_output
       @io = case io
       when Socket, OpenSSL::SSL::SSLSocket, IO: io
@@ -30,16 +32,8 @@ module Net #:nodoc:
         File.exists?(io) ?  File.open(io, "r") : StringIO.new(io)
       end
       raise "Unable to create local socket" unless @io
-      connect
     end
 
-    def connect(*args)
-      @rbuf = ''
-    end
-
-    def rbuf_fill
-      @rbuf << @io.sysread(1024)
-    end
   end
   
   class HTTP #:nodoc:

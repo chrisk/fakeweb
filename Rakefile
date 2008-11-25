@@ -35,7 +35,7 @@ spec = Gem::Specification.new do |s|
   s.require_path = "lib" 
   s.test_files = Dir.glob("test/test_*.rb")
   s.has_rdoc = true 
-  s.extra_rdoc_files = ["README.rdoc", "COPYING"]
+  s.extra_rdoc_files = ["README.rdoc", "COPYING", "CHANGELOG"]
   s.rubyforge_project = "fakeweb"
 end 
 
@@ -58,7 +58,7 @@ desc "Generate Documentation"
 Rake::RDocTask.new do |rdoc|
   rdoc.main = "README.rdoc"
   rdoc.rdoc_dir = "doc"
-  rdoc.rdoc_files.include("README.rdoc", "COPYING", "lib/*.rb")
+  rdoc.rdoc_files.include("README.rdoc", "COPYING", "CHANGELOG", "lib/*.rb")
   rdoc.title = "FakeWeb"
 end
 

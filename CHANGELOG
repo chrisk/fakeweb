@@ -1,5 +1,17 @@
 fakeweb (development)
 
+* use `rake test` instead of `rake tests` [Josh Nichols]
+
+* fix an incompatibility with Ruby 1.8.6 p36 where you'd get "Errno::EINTR:
+  Interrupted system call" exceptions in Socket#sysread for any non-faked
+  request [Chris Kampmeier]
+
+* response rotation: you can now optionally call FakeWeb.register_uri with an
+  array of options hashes; these are used, in order, to respond to
+  repeated requests (to repeat a response more than once before rotating, use
+  the :times option). Once you run out of responses, further requests always
+  receive the last response. [Michael Shapiro]
+
 * add support for Net::HTTP's undocumented full-URI request style (fixes
   URI::InvalidURIErrors that you might see in older libraries) [Chris Kampmeier]
 

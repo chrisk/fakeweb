@@ -35,6 +35,24 @@ modifying code or writing extensive stubs.
     response.body     # => "Nothing to be found 'round here"
   end
 
+== Rotating responses
+
+You can optionally call FakeWeb.register_uri with an array of options hashes;
+these are used, in order, to respond to repeated requests. Once you run out of
+responses, further requests always receive the last response. (You can also send
+a response more than once before rotating, by specifying a <tt>:times</tt>
+option for that response.)
+
+  FakeWeb.register_uri('http://example.com/posts/1',
+                       [{:string => "Post 1 deleted.", :status => ["200", "OK"]},
+                        {:string => "Post not found",  :status => ["404", "Not Found"]}])
+
+  Net::HTTP.start('example.com') do |req|
+    req.delete('/posts/1').body  # => "Post 1 deleted"
+    req.delete('/posts/1').body  # => "Post not found"
+    req.delete('/posts/1').body  # => "Post not found"
+  end
+
 == Requesting with OpenURI
 
   FakeWeb.register_uri('http://example.com/', :string => "Hello, World!")

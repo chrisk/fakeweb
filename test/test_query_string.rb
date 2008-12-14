@@ -18,6 +18,11 @@ class TestFakeWeb < Test::Unit::TestCase
     FakeWeb.register_uri('http://example.com/?a=1&b=1', :string => 'foo')
     assert FakeWeb.registered_uri?('http://example.com/?b=1&a=1')
   end
+  
+  def test_registered_uri_gets_recognized_with_empty_query_params
+    FakeWeb.register_uri('http://example.com/', :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.com/?')
+  end
 
   def test_registry_sort_query_params
     assert_equal "a=1&b=2", FakeWeb::Registry.instance.send(:sort_query_params, "b=2&a=1")

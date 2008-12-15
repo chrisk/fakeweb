@@ -29,6 +29,18 @@ module FakeWeb
   def self.clean_registry
     Registry.instance.clean_registry
   end
+  
+  def self.allow_net_connect=(value)
+    @allow_net_connect = value
+  end
+  
+  # when a request is made to an URI that isn't registered,
+  # raise an error rather than making a real HTTP connection
+  self.allow_net_connect = false
+  
+  def self.allow_net_connect?
+    @allow_net_connect
+  end
 
   # Register +uri+ to be handled according to +options+. +uri+ can be a
   # +String+ or an +URI+ object. +options+ must be either a +Hash+ or 

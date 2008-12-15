@@ -57,8 +57,13 @@ module Net #:nodoc:
         @socket = Net::HTTP.socket_type.new
         return FakeWeb.response_for(uri, &block)
       else
-        original_net_http_connect
-        return original_net_http_request(req, body, &block)
+        if FakeWeb.allow_net_connect?
+          original_net_http_connect
+          return original_net_http_request(req, body, &block)
+        else
+          expected = FakeWeb::Registry.instance.uri_map.keys
+          raise "unexpected HTTP #{req.method} to #{uri}\n-- expected one of #{expected.inspect}"
+        end
       end
     end
 

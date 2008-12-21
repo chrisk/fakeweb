@@ -1,9 +1,6 @@
-$:.unshift "#{File.dirname(__FILE__)}/../lib"
+require File.join(File.dirname(__FILE__), "test_helper")
 
-require 'test/unit'
-require 'fake_web'
-
-class TestFakeWeb < Test::Unit::TestCase
+class TestFakeWebQueryString < Test::Unit::TestCase
 
   def setup
     FakeWeb.clean_registry
@@ -26,5 +23,5 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_registry_sort_query_params_sorts_by_value_if_keys_collide
     assert_equal "a=1&a=2&b=2", FakeWeb::Registry.instance.send(:sort_query_params, "a=2&b=2&a=1")
   end
-  
+
 end

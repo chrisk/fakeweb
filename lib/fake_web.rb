@@ -155,7 +155,7 @@ module FakeWeb
     end
 
     def sort_query_params(query)
-      return nil if query.nil?
+      return nil if query.nil? or query.empty?
       query.split('&').sort.join('&')
     end
   end

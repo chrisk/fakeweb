@@ -15,13 +15,11 @@
 # along with FakeWeb; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-$:.unshift "#{File.dirname(__FILE__)}/../lib"
+require File.join(File.dirname(__FILE__), "test_helper")
 
-require 'test/unit'
-require 'open-uri'
-require 'fake_web'
 
 class TestFakeWebOpenURI < Test::Unit::TestCase
+  include FakeWebTestHelper
 
   def setup
     FakeWeb.clean_registry
@@ -42,6 +40,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   end
   
   def test_real_open
+    setup_expectations_for_real_apple_hot_news_request
     resp = open('http://images.apple.com/main/rss/hotnews/hotnews.rss')
     assert_equal "200", resp.status.first
     body = resp.read

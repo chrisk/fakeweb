@@ -1,10 +1,9 @@
-$:.unshift "#{File.dirname(__FILE__)}/../lib"
 
-require 'test/unit'
-require 'fake_web'
-require 'open-uri'
+require File.join(File.dirname(__FILE__), "test_helper")
 
 class FakeWebExampleTest < Test::Unit::TestCase
+  include FakeWebTestHelper
+
   def test_request
     FakeWeb.register_uri('http://example.com/test_me', :string => "Hello World!")
     content = Net::HTTP.get(URI.parse('http://example.com/test_me'))

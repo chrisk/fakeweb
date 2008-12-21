@@ -24,6 +24,7 @@ require 'rcov/rcovtask'
 spec = Gem::Specification.new do |s| 
   s.add_dependency('rake')
   s.add_dependency('rcov')
+  s.add_development_dependency('mocha')
   s.name = "FakeWeb" 
   s.version = "1.1.2.5"
   s.author = "Blaine Cook" 

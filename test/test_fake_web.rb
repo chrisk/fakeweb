@@ -15,12 +15,11 @@
 # along with FakeWeb; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-$:.unshift "#{File.dirname(__FILE__)}/../lib"
+require File.join(File.dirname(__FILE__), "test_helper")
 
-require 'test/unit'
-require 'fake_web'
 
 class TestFakeWeb < Test::Unit::TestCase
+  include FakeWebTestHelper
 
   def setup
     FakeWeb.clean_registry
@@ -238,6 +237,8 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_http_request
+    setup_expectations_for_real_apple_hot_news_request
+
     resp = nil
     Net::HTTP.start('images.apple.com') do |query|
       resp = query.get('/main/rss/hotnews/hotnews.rss')
@@ -247,6 +248,8 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_http_request_with_undocumented_full_uri_argument_style
+    setup_expectations_for_real_apple_hot_news_request(:path => 'http://images.apple.com/main/rss/hotnews/hotnews.rss')
+
     resp = nil
     Net::HTTP.start('images.apple.com') do |query|
       resp = query.get('http://images.apple.com/main/rss/hotnews/hotnews.rss')
@@ -256,6 +259,8 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_https_request
+    setup_expectations_for_real_apple_hot_news_request(:port => 443)
+
     http = Net::HTTP.new('images.apple.com', 443)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # silence certificate warning
@@ -265,7 +270,10 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_request_on_same_domain_as_mock
+    setup_expectations_for_real_apple_hot_news_request
+
     FakeWeb.register_uri('http://images.apple.com/test_string.txt', :string => 'foo')
+
     resp = nil
     Net::HTTP.start('images.apple.com') do |query|
       resp = query.get('/main/rss/hotnews/hotnews.rss')

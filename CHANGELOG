@@ -1,5 +1,7 @@
 fakeweb (development)
 
+* improve the test suite to not rely on an internet connection [Chris Kampmeier]
+
 * use `rake test` instead of `rake tests` [Josh Nichols]
 
 * fix an incompatibility with Ruby 1.8.6 p36 where you'd get "Errno::EINTR:

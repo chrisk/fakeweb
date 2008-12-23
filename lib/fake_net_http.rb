@@ -61,8 +61,7 @@ module Net #:nodoc:
           original_net_http_connect
           return original_net_http_request(req, body, &block)
         else
-          expected = FakeWeb::Registry.instance.uri_map.keys
-          raise "unexpected HTTP #{req.method} to #{uri}\n-- expected one of #{expected.inspect}"
+          raise FakeWeb::NetConnectNotAllowedError, "Real HTTP connections are disabled. Unregistered URI: #{uri}"
         end
       end
     end

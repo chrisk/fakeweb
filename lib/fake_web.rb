@@ -55,6 +55,9 @@ module FakeWeb
     @allow_net_connect
   end
 
+  class NetConnectNotAllowedError < StandardError; end;
+
+
   # Register +uri+ to be handled according to +options+. +uri+ can be a
   # +String+ or an +URI+ object. +options+ must be either a +Hash+ or 
   # an +Array+ of +Hashes+ (see below) that must contain any one of the 

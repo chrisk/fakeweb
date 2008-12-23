@@ -19,7 +19,7 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
 
   def test_raises_for_unregistered_requests_when_allow_net_connect_is_false
     FakeWeb.allow_net_connect = false
-    assert_raise RuntimeError do
+    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
       Net::HTTP.get(URI.parse('http://example.com/'))
     end
   end

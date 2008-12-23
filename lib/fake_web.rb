@@ -29,15 +29,28 @@ module FakeWeb
   def self.clean_registry
     Registry.instance.clean_registry
   end
-  
-  def self.allow_net_connect=(value)
-    @allow_net_connect = value
+
+  # Enables or disables real HTTP connections for requests that don't match
+  # registered URIs.
+  #
+  # If you set <tt>FakeWeb.allow_net_connect = false</tt> and subsequently try
+  # to make a request to a URI you haven't registered with #register_uri, an
+  # exception will be raised. This is handy when you want to make sure your
+  # tests are self-contained, or want to catch the scenario when a URI is
+  # changed in implementation code without a corresponding test change.
+  #
+  # When <tt>FakeWeb.allow_net_connect = true</tt> (the default), requests to
+  # URIs not registered with FakeWeb are passed through to Net::HTTP.
+  def self.allow_net_connect=(allowed)
+    @allow_net_connect = allowed
   end
-  
-  # when a request is made to an URI that isn't registered,
-  # raise an error rather than making a real HTTP connection
-  self.allow_net_connect = false
-  
+
+  # Enable pass-through to Net::HTTP by default.
+  self.allow_net_connect = true
+
+  # Returns +true+ if requests to URIs not registered with FakeWeb are passed
+  # through to Net::HTTP for normal processing (the default). Returns +false+
+  # if an exception is raised for these requests.
   def self.allow_net_connect?
     @allow_net_connect
   end

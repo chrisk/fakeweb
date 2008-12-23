@@ -1,0 +1,16 @@
+CHANGELOG
+COPYING
+README.rdoc
+Rakefile
+lib
+lib/fake_net_http.rb
+lib/fake_web.rb
+test
+test/fixtures
+test/fixtures/test_example.txt
+test/fixtures/test_request
+test/test_allow_net_connect.rb
+test/test_fake_web.rb
+test/test_fake_web_open_uri.rb
+test/test_helper.rb
+test/test_query_string.rb

@@ -16,38 +16,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require 'rubygems'
-require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'rake/rdoctask'
 require 'rcov/rcovtask'
 
-spec = Gem::Specification.new do |s| 
-  s.add_dependency('rake')
-  s.add_dependency('rcov')
-  s.add_development_dependency('mocha')
-  s.name = "FakeWeb" 
-  s.version = "1.1.2.5"
-  s.author = "Blaine Cook" 
-  s.email = "romeda@gmail.com" 
-  s.homepage = "http://fakeweb.rubyforge.org/" 
-  s.platform = Gem::Platform::RUBY 
-  s.summary = "A test helper that makes it simple to test HTTP interaction" 
-  s.files = FileList["{test,lib}/**/*", '[A-Z]*'].exclude("rdoc", ".svn").to_a 
-  s.require_path = "lib" 
-  s.test_files = Dir.glob("test/test_*.rb")
-  s.has_rdoc = true 
-  s.extra_rdoc_files = ["README.rdoc", "COPYING", "CHANGELOG"]
-  s.rubyforge_project = "fakeweb"
-end 
-
-Rake::GemPackageTask.new(spec) do |pkg| 
-  pkg.gem_spec = spec
-  pkg.need_tar = true 
-  pkg.need_zip = true
-end
-
-desc "Default Task"
-task :default => [:test]
+task :default => :test
 
 desc "Run All Tests"
 Rake::TestTask.new :test do |test|
@@ -68,4 +41,32 @@ Rcov::RcovTask.new do |t|
   t.rcov_opts << "--sort coverage"
   t.rcov_opts << "--exclude gems"
   t.rcov_opts << "--no-validator-links"
+end
+
+desc %{Update ".manifest" with the latest list of project filenames. Respect\
+.gitignore by excluding everything that git ignores. Update `files` and\
+`test_files` arrays in "*.gemspec" file if it's present.}
+task :manifest do
+  list = Dir['**/*'].sort
+  spec_file = Dir['*.gemspec'].first
+  list -= [spec_file] if spec_file
+
+  File.read('.gitignore').each_line do |glob|
+    glob = glob.chomp.sub(/^\//, '')
+    list -= Dir[glob]
+    list -= Dir["#{glob}/**/*"] if File.directory?(glob) and !File.symlink?(glob)
+    puts "excluding #{glob}"
+  end
+
+  if spec_file
+    spec = File.read spec_file
+    spec.gsub! /^(\s* s.(test_)?files \s* = \s* )( \[ [^\]]* \] | %w\( [^)]* \) )/mx do
+      assignment = $1
+      bunch = $2 ? list.grep(/^test\//) : list
+      '%s%%w(%s)' % [assignment, bunch.join(' ')]
+    end
+
+    File.open(spec_file,   'w') {|f| f << spec }
+  end
+  File.open('.manifest', 'w') {|f| f << list.join("\n") }
 end

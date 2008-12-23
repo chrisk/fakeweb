@@ -1,4 +1,3 @@
-
 $:.unshift "#{File.dirname(__FILE__)}/../lib"
 
 require 'test/unit'
@@ -49,3 +48,5 @@ module FakeWebTestHelper
   end
 
 end
+
+Test::Unit::TestCase.send(:include, FakeWebTestHelper)

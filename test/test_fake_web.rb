@@ -17,9 +17,7 @@
 
 require File.join(File.dirname(__FILE__), "test_helper")
 
-
 class TestFakeWeb < Test::Unit::TestCase
-  include FakeWebTestHelper
 
   def setup
     FakeWeb.clean_registry

@@ -1,7 +1,6 @@
 require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeWebAllowNetConnect < Test::Unit::TestCase
-  include FakeWebTestHelper
 
   def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_true
     original_value = FakeWeb.allow_net_connect?

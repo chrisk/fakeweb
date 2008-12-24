@@ -19,9 +19,9 @@ require 'net/http'
 require 'net/https'
 require 'stringio'
 
-module Net  #:nodoc:
+module Net  #:nodoc: all
 
-  class BufferedIO  #:nodoc:
+  class BufferedIO
     def initialize(io, debug_output = nil)
       @read_timeout = 60
       @rbuf = ''
@@ -38,7 +38,7 @@ module Net  #:nodoc:
   end
 
 
-  class HTTP  #:nodoc:
+  class HTTP
     def self.socket_type
       FakeWeb::SocketDelegator
     end

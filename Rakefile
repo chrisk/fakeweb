@@ -33,7 +33,9 @@ Rake::RDocTask.new do |rdoc|
   rdoc.main = "README.rdoc"
   rdoc.rdoc_dir = "doc"
   rdoc.rdoc_files.include("README.rdoc", "COPYING", "CHANGELOG", "lib/*.rb")
-  rdoc.title = "FakeWeb"
+  rdoc.title = "FakeWeb API Documentation"
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.options << '--charset' << 'utf-8'
 end
 
 Rcov::RcovTask.new do |t|

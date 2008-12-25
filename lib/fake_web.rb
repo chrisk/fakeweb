@@ -177,7 +177,7 @@ module FakeWeb
 
     def normalize_uri(uri)
       case uri
-      when URI: uri
+      when URI then uri
       else
         uri = 'http://' + uri unless uri.match('^https?://')
         parsed_uri = URI.parse(uri)
@@ -248,7 +248,7 @@ module FakeWeb
 
     def baked_response
       resp = case options[:response]
-      when Net::HTTPResponse: options[:response]
+      when Net::HTTPResponse then options[:response]
       when String
         socket = Net::BufferedIO.new(options[:response])
         r = Net::HTTPResponse.read_new(socket)
@@ -267,7 +267,8 @@ module FakeWeb
       return unless options.has_key?(:exception)
       ex_alloc = options[:exception].allocate
       ex_instance = case ex_alloc
-      when Net::HTTPError, OpenURI::HTTPError: options[:exception].new('Exception from FakeWeb', response)
+      when Net::HTTPError, OpenURI::HTTPError
+        options[:exception].new('Exception from FakeWeb', response)
       else options[:exception].new
       end
       raise ex_instance

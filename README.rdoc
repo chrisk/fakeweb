@@ -5,6 +5,11 @@ modifying code or writing extensive stubs.
 
 = Examples
 
+Start by requiring FakeWeb:
+
+  require 'rubygems'
+  require 'fake_web'
+
 == Using a string response
 
   FakeWeb.register_uri("http://example.com/test1", :string => "Hello World!")
@@ -63,11 +68,28 @@ option for that response.)
 == Clearing registered URIs
 
 The FakeWeb registry is a singleton that lasts for the duration of your
-program, maintaining every fake responses you register. If needed, you
+program, maintaining every fake response you register. If needed, you
 can clean out the registry and remove all registered URIs:
 
   FakeWeb.clean_registry
 
+== Blocking all real requests
+
+When you're using FakeWeb to replace _all_ of your requests, it's useful to
+catch when requests are made for unregistered URIs (unlike the default
+behavior, which is to pass those requests through to Net::HTTP as usual).
+
+  FakeWeb.allow_net_connect = false
+  Net::HTTP.get(URI.parse('http://example.com/'))
+  => raises FakeWeb::NetConnectNotAllowedError
+
+  FakeWeb.allow_net_connect = true
+  Net::HTTP.get(URI.parse('http://example.com/'))
+  => FakeWeb is bypassed and the response from a real request is returned
+
+This is handy when you want to make sure your tests are self-contained, or you
+want to catch the scenario when a URI is changed in implementation code
+without a corresponding test change.
 
 = Description
 

@@ -1,7 +1,15 @@
 = FakeWeb
 
-FakeWeb is a helper for faking web requests. It works at a global level, without
-modifying code or writing extensive stubs.
+FakeWeb is a helper for faking web requests in Ruby. It works at a global
+level, without modifying code or writing extensive stubs.
+
+= Installation
+
+This fork of Blaine Cook's original code has lots of fixes, stability
+improvements, and a few new features. To get it, install the latest gem
+directly from GitHub (currently 1.1.2.5):
+
+  sudo gem install chrisk-fakeweb --source http://gems.github.com
 
 = Examples
 
@@ -10,7 +18,7 @@ Start by requiring FakeWeb:
   require 'rubygems'
   require 'fake_web'
 
-== Using a string response
+== Registering basic string responses
 
   FakeWeb.register_uri("http://example.com/test1", :string => "Hello World!")
 
@@ -58,13 +66,6 @@ option for that response.)
     req.delete('/posts/1').body  # => "Post not found"
   end
 
-== Requesting with OpenURI
-
-  FakeWeb.register_uri('http://example.com/', :string => "Hello, World!")
-
-  open('http://example.com/').string
-  => "Hello, World!"
-
 == Clearing registered URIs
 
 The FakeWeb registry is a singleton that lasts for the duration of your
@@ -91,37 +92,36 @@ This is handy when you want to make sure your tests are self-contained, or you
 want to catch the scenario when a URI is changed in implementation code
 without a corresponding test change.
 
-= Description
+= More info
 
-FakeWeb is a helper for faking web requests. This makes testing easier,
-because you can decouple your test environment from live services without
-modifying code. It allows for a range of request behaviour, from simple
-stubbing of HTTP responses to re-playing complete recorded responses.
+FakeWeb lets you decouple your test environment from live services without
+modifying code or writing extensive stubs.
 
-In addition to the conceptual advantage of having idempotent request behaviour, 
-FakeWeb makes tests run faster than if they were made to remote (or even local)
-web servers. It also makes it possible to run tests without a network
-connection or in situations where the server is behind a firewall or has
-host based access controls.
+In addition to the conceptual advantage of having idempotent request
+behaviour, FakeWeb makes tests run faster than if they were made to remote (or
+even local) web servers. It also makes it possible to run tests without a
+network connection or in situations where the server is behind a firewall or
+has host-based access controls.
 
-FakeWeb is tested with
-Net::HTTP[http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index.html] and
-OpenURI[http://www.ruby-doc.org/stdlib/libdoc/open-uri/rdoc/]. It should work
-with any web client library that uses Net::HTTP for its underlying requests
-(e.g., Flickr.rb[http://redgreenblu.com/flickr/],
-Ruby/Amazon[http://www.caliban.org/ruby/ruby-amazon.shtml],
-soap4r[http://dev.ctor.org/soap4r/], etc.)
+FakeWeb works with anything based on Net::HTTP--both higher-level wrappers,
+like OpenURI, as well as a ton of libraries for popular web services.
+
 
 = Known Issues
 
-* Request bodies are ignored, including PUT and POST parameters. If you
-  need different responses for different request bodies, you need to request
-  different URLs, and register different responses for each.
+* Requests are only stubbed at the URI level, with no respect to HTTP method.
+
+* Similarly, request bodies are ignored, including PUT and POST parameters. If
+  you need different responses for different request bodies, you need to
+  request different URLs, and register different responses for each. (Query
+  strings are fully supported, though.)
+
 
 = Copyright
 
-FakeWeb - Ruby Helper for Faking Web Requests
-Copyright 2006 Blaine Cook <romeda@gmail.com>.
+Copyright 2006-2007 Blaine Cook
+
+Copyright 2008 various contributors
 
 FakeWeb is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

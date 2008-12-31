@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name     = "fakeweb"
-  s.version  = "1.1.2.5"
-  s.date     = "2008-11-25"
-  s.summary  = "A test helper that makes it simple to test HTTP interaction"
+  s.version  = "1.1.2.6"
+  s.date     = "2008-12-31"
+  s.summary  = "A tool for faking responses to HTTP requests"
   s.homepage = "http://github.com/chrisk/fakeweb"
   s.has_rdoc = true
   s.authors  = ["Blaine Cook"]

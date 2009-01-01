@@ -3,7 +3,7 @@
 FakeWeb is a helper for faking web requests in Ruby. It works at a global
 level, without modifying code or writing extensive stubs.
 
-= Installation
+== Installation
 
 This fork of Blaine Cook's original code has lots of fixes, stability
 improvements, and a few new features. To get it, install the latest gem
@@ -11,14 +11,14 @@ directly from GitHub (currently 1.1.2.6):
 
   sudo gem install chrisk-fakeweb --source http://gems.github.com
 
-= Examples
+== Examples
 
 Start by requiring FakeWeb:
 
   require 'rubygems'
   require 'fake_web'
 
-== Registering basic string responses
+=== Registering basic string responses
 
   FakeWeb.register_uri("http://example.com/test1", :string => "Hello World!")
 
@@ -28,7 +28,7 @@ Start by requiring FakeWeb:
   Net::HTTP.get(URI.parse('http://example.com/test2'))
   => FakeWeb is bypassed and the response from a real request is returned
 
-== Replaying a recorded response
+=== Replaying a recorded response
 
   page = `curl -is http://www.google.com/`
   FakeWeb.register_uri('http://www.google.com/', :response => page)
@@ -36,7 +36,7 @@ Start by requiring FakeWeb:
   Net::HTTP.get(URI.parse('http://www.google.com/'))
   # => Full response, including headers
 
-== Adding a custom status to the response
+=== Adding a custom status to the response
 
   FakeWeb.register_uri('http://example.com/', :string => "Nothing to be found 'round here",
                                               :status => ["404", "Not Found"])
@@ -48,7 +48,7 @@ Start by requiring FakeWeb:
     response.body     # => "Nothing to be found 'round here"
   end
 
-== Rotating responses
+=== Rotating responses
 
 You can optionally call FakeWeb.register_uri with an array of options hashes;
 these are used, in order, to respond to repeated requests. Once you run out of
@@ -66,7 +66,7 @@ option for that response.)
     req.delete('/posts/1').body  # => "Post not found"
   end
 
-== Clearing registered URIs
+=== Clearing registered URIs
 
 The FakeWeb registry is a singleton that lasts for the duration of your
 program, maintaining every fake response you register. If needed, you
@@ -74,7 +74,7 @@ can clean out the registry and remove all registered URIs:
 
   FakeWeb.clean_registry
 
-== Blocking all real requests
+=== Blocking all real requests
 
 When you're using FakeWeb to replace _all_ of your requests, it's useful to
 catch when requests are made for unregistered URIs (unlike the default
@@ -92,7 +92,7 @@ This is handy when you want to make sure your tests are self-contained, or you
 want to catch the scenario when a URI is changed in implementation code
 without a corresponding test change.
 
-= More info
+== More info
 
 FakeWeb lets you decouple your test environment from live services without
 modifying code or writing extensive stubs.
@@ -107,7 +107,7 @@ FakeWeb works with anything based on Net::HTTP--both higher-level wrappers,
 like OpenURI, as well as a ton of libraries for popular web services.
 
 
-= Known Issues
+== Known Issues
 
 * Requests are only stubbed at the URI level, with no respect to HTTP method.
 
@@ -117,7 +117,7 @@ like OpenURI, as well as a ton of libraries for popular web services.
   strings are fully supported, though.)
 
 
-= Copyright
+== Copyright
 
 Copyright 2006-2007 Blaine Cook
 

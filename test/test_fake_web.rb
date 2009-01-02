@@ -47,6 +47,26 @@ class TestFakeWeb < Test::Unit::TestCase
     assert FakeWeb.registered_uri?('https://example.com:443/')
   end
 
+  # intentionally failing: spec for full REST support
+  def test_register_uri_for_any_method
+    FakeWeb.register_uri(:any, "http://example.com/rpc_endpoint", :string => "OK")
+    assert FakeWeb.registered_uri?(:get, "http://example.com/rpc_endpoint")
+    assert FakeWeb.registered_uri?(:post, "http://example.com/rpc_endpoint")
+    assert FakeWeb.registered_uri?(:put, "http://example.com/rpc_endpoint")
+    assert FakeWeb.registered_uri?(:delete, "http://example.com/rpc_endpoint")
+    assert FakeWeb.registered_uri?(:any, "http://example.com/rpc_endpoint")
+  end
+
+  # intentionally failing: spec for full REST support
+  def test_register_uri_for_get_method_only
+    FakeWeb.register_uri(:get, "http://example.com/users", :string => "User list")
+    assert FakeWeb.registered_uri?(:get, "http://example.com/users")
+    assert !FakeWeb.registered_uri?(:post, "http://example.com/users")
+    assert !FakeWeb.registered_uri?(:put, "http://example.com/users")
+    assert !FakeWeb.registered_uri?(:delete, "http://example.com/users")
+    assert !FakeWeb.registered_uri?(:any, "http://example.com/users")
+  end
+
   def test_content_for_registered_uri
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
   end

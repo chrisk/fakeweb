@@ -3,12 +3,40 @@ require File.join(File.dirname(__FILE__), "test_helper")
 class TestFakeWeb < Test::Unit::TestCase
 
   def setup
+    FakeWeb.allow_net_connect = true
     FakeWeb.clean_registry
   end
 
   def test_register_uri
     FakeWeb.register_uri('http://mock/test_example.txt', :string => "example")
     assert FakeWeb.registered_uri?('http://mock/test_example.txt')
+  end
+
+  def test_register_uri_with_wrong_number_of_arguments
+    assert_raises ArgumentError do
+      FakeWeb.register_uri("http://example.com")
+    end
+    assert_raises ArgumentError do
+      FakeWeb.register_uri(:get, "http://example.com", "/example", :string => "example")
+    end
+  end
+
+  def test_registered_uri_with_wrong_number_of_arguments
+    assert_raises ArgumentError do
+      FakeWeb.registered_uri?
+    end
+    assert_raises ArgumentError do
+      FakeWeb.registered_uri?(:get, "http://example.com", "/example")
+    end
+  end
+
+  def test_response_for_with_wrong_number_of_arguments
+    assert_raises ArgumentError do
+      FakeWeb.response_for
+    end
+    assert_raises ArgumentError do
+      FakeWeb.response_for(:get, "http://example.com", "/example")
+    end
   end
 
   def test_register_uri_without_domain_name
@@ -47,17 +75,16 @@ class TestFakeWeb < Test::Unit::TestCase
     assert FakeWeb.registered_uri?('https://example.com:443/')
   end
 
-  # intentionally failing: spec for full REST support
-  def test_register_uri_for_any_method
+  def test_register_uri_for_any_method_explicitly
     FakeWeb.register_uri(:any, "http://example.com/rpc_endpoint", :string => "OK")
     assert FakeWeb.registered_uri?(:get, "http://example.com/rpc_endpoint")
     assert FakeWeb.registered_uri?(:post, "http://example.com/rpc_endpoint")
     assert FakeWeb.registered_uri?(:put, "http://example.com/rpc_endpoint")
     assert FakeWeb.registered_uri?(:delete, "http://example.com/rpc_endpoint")
     assert FakeWeb.registered_uri?(:any, "http://example.com/rpc_endpoint")
+    assert FakeWeb.registered_uri?("http://example.com/rpc_endpoint")
   end
 
-  # intentionally failing: spec for full REST support
   def test_register_uri_for_get_method_only
     FakeWeb.register_uri(:get, "http://example.com/users", :string => "User list")
     assert FakeWeb.registered_uri?(:get, "http://example.com/users")
@@ -65,11 +92,23 @@ class TestFakeWeb < Test::Unit::TestCase
     assert !FakeWeb.registered_uri?(:put, "http://example.com/users")
     assert !FakeWeb.registered_uri?(:delete, "http://example.com/users")
     assert !FakeWeb.registered_uri?(:any, "http://example.com/users")
+    assert !FakeWeb.registered_uri?("http://example.com/users")
   end
 
-  def test_content_for_registered_uri
+  def test_response_for_with_registered_uri
     FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
+  end
+
+  def test_response_for_with_put_method
+    FakeWeb.register_uri(:put, "http://example.com", :string => "response")
+    assert_equal 'response', FakeWeb.response_for(:put, "http://example.com").body
+  end
+
+  def test_response_for_with_any_method_explicitly
+    FakeWeb.register_uri(:any, "http://example.com", :string => "response")
+    assert_equal 'response', FakeWeb.response_for(:get, "http://example.com").body
+    assert_equal 'response', FakeWeb.response_for(:any, "http://example.com").body
   end
 
   def test_content_for_registered_uri_with_port_and_request_with_port
@@ -130,6 +169,38 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
+  def test_content_for_registered_uri_with_get_method_only
+    FakeWeb.allow_net_connect = false
+    FakeWeb.register_uri(:get, "http://example.com/", :string => "test example content")
+    Net::HTTP.start('example.com') do |http|
+      assert_equal 'test example content', http.get('/').body
+      assert_raises(FakeWeb::NetConnectNotAllowedError) { http.post('/', nil) }
+      assert_raises(FakeWeb::NetConnectNotAllowedError) { http.put('/', nil) }
+      assert_raises(FakeWeb::NetConnectNotAllowedError) { http.delete('/', nil) }
+    end
+  end
+
+  def test_content_for_registered_uri_with_any_method_explicitly
+    FakeWeb.allow_net_connect = false
+    FakeWeb.register_uri(:any, "http://example.com/", :string => "test example content")
+    Net::HTTP.start('example.com') do |http|
+      assert_equal 'test example content', http.get('/').body
+      assert_equal 'test example content', http.post('/', nil).body
+      assert_equal 'test example content', http.put('/', nil).body
+      assert_equal 'test example content', http.delete('/').body
+    end
+  end
+
+  def test_content_for_registered_uri_with_any_method_implicitly
+    FakeWeb.allow_net_connect = false
+    FakeWeb.register_uri("http://example.com/", :string => "test example content")
+    Net::HTTP.start('example.com') do |http|
+      assert_equal 'test example content', http.get('/').body
+      assert_equal 'test example content', http.post('/', nil).body
+      assert_equal 'test example content', http.put('/', nil).body
+      assert_equal 'test example content', http.delete('/').body
+    end
+  end
 
   def test_mock_request_with_block
     FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')

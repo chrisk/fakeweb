@@ -44,19 +44,24 @@ module FakeWeb
   # stubbed.
   class NetConnectNotAllowedError < StandardError; end;
 
-
-  # Register +uri+ to be handled according to +options+. +uri+ can be a
-  # +String+ or an +URI+ object. +options+ must be either a +Hash+ or 
-  # an +Array+ of +Hashes+ (see below) that must contain any one of the 
-  # following keys:
+  # call-seq:
+  #   FakeWeb.register_uri(method, uri, options)
+  #   FakeWeb.register_uri(uri, options)
+  #
+  # Register requests using the HTTP method specified by the symbol +method+ for
+  # +uri+ to be handled according to +options+. If no +method+ is specified, or
+  # you explicitly specify <tt>:any</tt>, the response will be reigstered for
+  # any request for +uri+. +uri+ can be a +String+ or a +URI+ object. +options+
+  # must be either a +Hash+ or an +Array+ of +Hashes+ (see below) that must
+  # contain any one of the following keys:
   #
   # <tt>:string</tt>::
   #   Takes a +String+ argument that is returned as the body of the response.
-  #     FakeWeb.register_uri('http://example.com/', :string => "Hello World!") 
+  #     FakeWeb.register_uri(:get, 'http://example.com/', :string => "Hello World!")
   # <tt>:file</tt>::
   #   Takes a valid filesystem path to a file that is slurped and returned as
   #   the body of the response.
-  #     FakeWeb.register_uri('http://example.com/', :file => "/tmp/my_response_body.txt")
+  #     FakeWeb.register_uri(:post, 'http://example.com/', :file => "/tmp/my_response_body.txt")
   # <tt>:response</tt>:: 
   #   Either an <tt>Net::HTTPResponse</tt>, an +IO+ or a +String+.
   # 
@@ -73,7 +78,7 @@ module FakeWeb
   #
   #   which can then be used in your test environment like so:
   #
-  #     FakeWeb.register_uri('http://www.example.com/', :response => 'response_for_www.example.com')
+  #     FakeWeb.register_uri(:get, 'http://www.example.com/', :response => 'response_for_www.example.com')
   #
   #   See the <tt>Net::HTTPResponse</tt>
   #   documentation[http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/classes/Net/HTTPResponse.html]
@@ -99,18 +104,46 @@ module FakeWeb
   #   specified URL is requested. Any +Exception+ class is valid. Example:
   #     FakeWeb.register_uri('http://www.example.com/', :exception => Net::HTTPError)
   #
-  def self.register_uri(uri, options)
-    Registry.instance.register_uri(uri, options)
+  def self.register_uri(*args)
+    method = :any
+    case args.length
+    when 3 then method, uri, options = *args
+    when 2 then         uri, options = *args
+    else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri, options)")
+    end
+    Registry.instance.register_uri(method, uri, options)
   end
 
+  # call-seq:
+  #   FakeWeb.response_for(method, uri)
+  #   FakeWeb.response_for(uri)
+  #
   # Returns the faked Net::HTTPResponse object associated with +uri+.
-  def self.response_for(uri, &block) #:nodoc: :yields: response
-    Registry.instance.response_for(uri, &block)
+  def self.response_for(*args, &block) #:nodoc: :yields: response
+    method = :any
+    case args.length
+    when 2 then method, uri = *args
+    when 1 then         uri = *args
+    else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
+    end
+    Registry.instance.response_for(method, uri, &block)
   end
 
-  # Checks for presence of +uri+ in the +FakeWeb+ registry.
-  def self.registered_uri?(uri)
-    Registry.instance.registered_uri?(uri)
+  # call-seq:
+  #   FakeWeb.registered_uri?(method, uri)
+  #   FakeWeb.registered_uri?(uri)
+  #
+  # Returns true if +uri+ is registered with FakeWeb. You can optionally
+  # specify +method+ to limit the search to a certain HTTP method (or use
+  # <tt>:any</tt> to explicitly check against any method).
+  def self.registered_uri?(*args)
+    method = :any
+    case args.length
+    when 2 then method, uri = *args
+    when 1 then         uri = *args
+    else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
+    end
+    Registry.instance.registered_uri?(method, uri)
   end
 
   class Registry #:nodoc:
@@ -123,26 +156,34 @@ module FakeWeb
     end
 
     def clean_registry
-      self.uri_map = {}
+      self.uri_map = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
     end
 
-    def register_uri(uri, options)
-      uri_map[normalize_uri(uri)] = [*[options]].flatten.collect { |option|
-        FakeWeb::Responder.new(uri, option, option[:times])
+    def register_uri(method, uri, options)
+      uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect { |option|
+        FakeWeb::Responder.new(method, uri, option, option[:times])
       }
     end
 
-    def registered_uri?(uri)
-      uri_map.has_key?(normalize_uri(uri))
+    def registered_uri?(method, uri)
+      normalized_uri = normalize_uri(uri)
+      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any)
     end
 
-    def registered_uri(uri)
+    def registered_uri(method, uri)
       uri = normalize_uri(uri)
-      return uri_map[uri] if registered_uri?(uri)
+      registered = registered_uri?(method, uri)
+      if registered && uri_map[uri].has_key?(method)
+        uri_map[uri][method]
+      elsif registered
+        uri_map[uri][:any]
+      else
+        nil
+      end
     end
 
-    def response_for(uri, &block)
-      responses = registered_uri(uri)
+    def response_for(method, uri, &block)
+      responses = registered_uri(method, uri)
 
       next_response = responses.last
       responses.each { |response|
@@ -184,9 +225,10 @@ module FakeWeb
 
   class Responder #:nodoc:
 
-    attr_accessor :uri, :options, :times
+    attr_accessor :method, :uri, :options, :times
 
-    def initialize(uri, options, times)
+    def initialize(method, uri, options, times)
+      self.method = method
       self.uri = uri
       self.options = options
       self.times = times ? times : 1

@@ -36,16 +36,17 @@ module Net  #:nodoc: all
       path = URI.parse(request.path).request_uri if request.path =~ /^http/
 
       uri = "#{protocol}://#{self.address}:#{self.port}#{path}"
+      method = request.method.downcase.to_sym
 
-      if FakeWeb.registered_uri?(uri)
+      if FakeWeb.registered_uri?(method, uri)
         @socket = Net::HTTP.socket_type.new
-        FakeWeb.response_for(uri, &block)
+        FakeWeb.response_for(method, uri, &block)
       elsif FakeWeb.allow_net_connect?
         original_net_http_connect
         original_net_http_request(request, body, &block)
       else
         raise FakeWeb::NetConnectNotAllowedError,
-              "Real HTTP connections are disabled. Unregistered URI: #{uri}"
+              "Real HTTP connections are disabled. Unregistered request: #{request.method} #{uri}"
       end
     end
 

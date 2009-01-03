@@ -4,14 +4,15 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
 
   def setup
     FakeWeb.clean_registry
-    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
   end
 
   def test_content_for_registered_uri
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
   end
   
   def test_mock_open
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', open('http://mock/test_example.txt').read
   end
   
@@ -53,6 +54,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   end
 
   def test_mock_open_with_block
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     open('http://mock/test_example.txt') do |f|
       assert 'test example content', f.readlines
     end

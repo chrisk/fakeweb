@@ -4,10 +4,10 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def setup
     FakeWeb.clean_registry
-    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
   end
 
   def test_register_uri
+    FakeWeb.register_uri('http://mock/test_example.txt', :string => "example")
     assert FakeWeb.registered_uri?('http://mock/test_example.txt')
   end
 
@@ -68,6 +68,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uri
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
   end
 
@@ -131,6 +132,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
 
   def test_mock_request_with_block
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     Net::HTTP.start('mock') do |http|
       response = http.get('/test_example.txt')
       assert_equal 'test example content', response.body
@@ -138,6 +140,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_with_undocumented_full_uri_argument_style
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     Net::HTTP.start('mock') do |query|
       response = query.get('http://mock/test_example.txt')
       assert_equal 'test example content', response.body
@@ -153,6 +156,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_post
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     response = nil
     Net::HTTP.start('mock') do |query|
       response = query.post('/test_example.txt', '')
@@ -301,6 +305,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_instance_syntax
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     response = nil
     uri = URI.parse('http://mock/test_example.txt')
     http = Net::HTTP.new(uri.host, uri.port)
@@ -315,7 +320,7 @@ class TestFakeWeb < Test::Unit::TestCase
     response = nil
     proxy_address = nil
     proxy_port = nil
-
+    FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     uri = URI.parse('http://mock/test_example.txt')
     http = Net::HTTP::Proxy(proxy_address, proxy_port).new(
               uri.host, (uri.port or 80))
@@ -326,7 +331,8 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal 'test example content', response.body
   end
 
-  def test_reponse_type
+  def test_response_type
+    FakeWeb.register_uri('http://mock/test_example.txt', :string => "test")
     Net::HTTP.start('mock') do |http|
       response = http.get('/test_example.txt', '')
       assert_kind_of(Net::HTTPSuccess, response)

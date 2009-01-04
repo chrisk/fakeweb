@@ -2,6 +2,7 @@ require 'singleton'
 
 require 'fake_net_http'
 require 'fake_web/registry'
+require 'fake_web/response'
 
 module OpenURI #:nodoc: all
   class HTTPError < StandardError; end;
@@ -146,14 +147,6 @@ module FakeWeb
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
     end
     Registry.instance.registered_uri?(method, uri)
-  end
-
-
-  module Response #:nodoc:
-    def read_body(*args, &block)
-      yield @body if block_given?
-      @body
-    end
   end
 
   class Responder #:nodoc:

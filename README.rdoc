@@ -20,33 +20,44 @@ Start by requiring FakeWeb:
 
 === Registering basic string responses
 
-  FakeWeb.register_uri("http://example.com/test1", :string => "Hello World!")
+  FakeWeb.register_uri(:get, "http://example.com/test1", :string => "Hello World!")
 
-  Net::HTTP.get(URI.parse('http://example.com/test1'))
+  Net::HTTP.get(URI.parse("http://example.com/test1"))
   => "Hello World!"
 
-  Net::HTTP.get(URI.parse('http://example.com/test2'))
+  Net::HTTP.get(URI.parse("http://example.com/test2"))
   => FakeWeb is bypassed and the response from a real request is returned
 
 === Replaying a recorded response
 
   page = `curl -is http://www.google.com/`
-  FakeWeb.register_uri('http://www.google.com/', :response => page)
+  FakeWeb.register_uri(:get, "http://www.google.com/", :response => page)
 
-  Net::HTTP.get(URI.parse('http://www.google.com/'))
+  Net::HTTP.get(URI.parse("http://www.google.com/"))
   # => Full response, including headers
 
 === Adding a custom status to the response
 
-  FakeWeb.register_uri('http://example.com/', :string => "Nothing to be found 'round here",
-                                              :status => ["404", "Not Found"])
+  FakeWeb.register_uri(:get, "http://example.com/", :string => "Nothing to be found 'round here",
+                                                    :status => ["404", "Not Found"])
 
-  Net::HTTP.start('example.com') do |req|
-    response = req.get('/')
+  Net::HTTP.start("example.com") do |req|
+    response = req.get("/")
     response.code     # => "404"
     response.message  # => "Not Found"
     response.body     # => "Nothing to be found 'round here"
   end
+
+=== Responding to any HTTP method
+
+  FakeWeb.register_uri(:any, "http://example.com", :string => "response for any HTTP method")
+
+If you use the <tt>:any</tt> symbol, the URI you specify will be completely
+stubbed out (regardless of the HTTP method of the request). This can be useful
+for RPC-like services, where the HTTP method isn't significant. (Older
+versions of FakeWeb always behaved like this, and didn't accept the first
++method+ argument above; this syntax is still supported, for
+backwards-compatibility, but it will probably be deprecated at some point.)
 
 === Rotating responses
 
@@ -56,14 +67,14 @@ responses, further requests always receive the last response. (You can also send
 a response more than once before rotating, by specifying a <tt>:times</tt>
 option for that response.)
 
-  FakeWeb.register_uri('http://example.com/posts/1',
+  FakeWeb.register_uri(:delete, "http://example.com/posts/1",
                        [{:string => "Post 1 deleted.", :status => ["200", "OK"]},
                         {:string => "Post not found",  :status => ["404", "Not Found"]}])
 
-  Net::HTTP.start('example.com') do |req|
-    req.delete('/posts/1').body  # => "Post 1 deleted"
-    req.delete('/posts/1').body  # => "Post not found"
-    req.delete('/posts/1').body  # => "Post not found"
+  Net::HTTP.start("example.com") do |req|
+    req.delete("/posts/1").body  # => "Post 1 deleted"
+    req.delete("/posts/1").body  # => "Post not found"
+    req.delete("/posts/1").body  # => "Post not found"
   end
 
 === Clearing registered URIs
@@ -81,11 +92,11 @@ catch when requests are made for unregistered URIs (unlike the default
 behavior, which is to pass those requests through to Net::HTTP as usual).
 
   FakeWeb.allow_net_connect = false
-  Net::HTTP.get(URI.parse('http://example.com/'))
+  Net::HTTP.get(URI.parse("http://example.com/"))
   => raises FakeWeb::NetConnectNotAllowedError
 
   FakeWeb.allow_net_connect = true
-  Net::HTTP.get(URI.parse('http://example.com/'))
+  Net::HTTP.get(URI.parse("http://example.com/"))
   => FakeWeb is bypassed and the response from a real request is returned
 
 This is handy when you want to make sure your tests are self-contained, or you
@@ -109,12 +120,10 @@ like OpenURI, as well as a ton of libraries for popular web services.
 
 == Known Issues
 
-* Requests are only stubbed at the URI level, with no respect to HTTP method.
-
-* Similarly, request bodies are ignored, including PUT and POST parameters. If
-  you need different responses for different request bodies, you need to
-  request different URLs, and register different responses for each. (Query
-  strings are fully supported, though.)
+* Request bodies are ignored, including PUT and POST parameters. If you need
+  different responses for different request bodies, you need to request
+  different URLs, and register different responses for each. (Query strings
+  are fully supported, though.)
 
 
 == Copyright

@@ -4,6 +4,7 @@ require 'fake_net_http'
 require 'fake_web/registry'
 require 'fake_web/response'
 require 'fake_web/responder'
+require 'fake_web/socket_delegator'
 
 module OpenURI #:nodoc: all
   class HTTPError < StandardError; end;
@@ -150,22 +151,4 @@ module FakeWeb
     Registry.instance.registered_uri?(method, uri)
   end
 
-  class SocketDelegator #:nodoc:
-
-    def initialize(delegate=nil)
-      @delegate = nil
-    end
-
-    def method_missing(method, *args, &block)
-      return @delegate.send(method, *args, &block) if @delegate
-      return self.send("my_#{method}", *args, &block)
-    end
-
-    def my_closed?
-      @closed ||= true
-    end
-
-    def my_readuntil(*args)
-    end
-  end
 end

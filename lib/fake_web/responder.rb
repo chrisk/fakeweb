@@ -19,6 +19,7 @@ module FakeWeb
         response = Net::HTTPResponse.send(:response_class, code.to_s).new(uri, code.to_s, msg)
         response.instance_variable_set(:@body, content)
       end
+
       response.instance_variable_set(:@read, true)
       response.extend FakeWeb::Response
 
@@ -77,9 +78,7 @@ module FakeWeb
     end
 
     def meta_information
-      if options.has_key?(:status); options[:status]
-      else; [ 200, 'OK' ]
-      end
+      options.has_key?(:status) ? options[:status] : [200, 'OK']
     end
   end
 end

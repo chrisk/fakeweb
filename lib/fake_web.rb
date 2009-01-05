@@ -116,6 +116,7 @@ module FakeWeb
     when 2 then         uri, options = *args
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri, options)")
     end
+
     Registry.instance.register_uri(method, uri, options)
   end
 
@@ -131,6 +132,7 @@ module FakeWeb
     when 1 then         uri = *args
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
     end
+
     Registry.instance.response_for(method, uri, &block)
   end
 
@@ -148,6 +150,7 @@ module FakeWeb
     when 1 then         uri = *args
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
     end
+
     Registry.instance.registered_uri?(method, uri)
   end
 

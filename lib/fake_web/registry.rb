@@ -9,13 +9,15 @@ module FakeWeb
     end
 
     def clean_registry
-      self.uri_map = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
+      self.uri_map = Hash.new do |hash, key|
+        hash[key] = Hash.new(&hash.default_proc)
+      end
     end
 
     def register_uri(method, uri, options)
-      uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect { |option|
+      uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
         FakeWeb::Responder.new(method, uri, option, option[:times])
-      }
+      end
     end
 
     def registered_uri?(method, uri)
@@ -39,15 +41,15 @@ module FakeWeb
       responses = registered_uri(method, uri)
 
       next_response = responses.last
-      responses.each { |response|
+      responses.each do |response|
         if response.times and response.times > 0
           response.times -= 1
           next_response = response
           break
         end
-      }
+      end
 
-      return next_response.response(&block)
+      next_response.response(&block)
     end
 
     private
@@ -64,8 +66,12 @@ module FakeWeb
     end
 
     def sort_query_params(query)
-      return nil if query.nil? or query.empty?
-      query.split('&').sort.join('&')
+      if query.nil? || query.empty?
+        nil
+      else
+        query.split('&').sort.join('&')
+      end
     end
+
   end
 end

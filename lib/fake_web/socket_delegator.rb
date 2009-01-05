@@ -7,8 +7,11 @@ module FakeWeb
     end
 
     def method_missing(method, *args, &block)
-      return @delegate.send(method, *args, &block) if @delegate
-      return self.send("my_#{method}", *args, &block)
+      if @delegate
+        @delegate.send(method, *args, &block)
+      else
+        self.send("my_#{method}", *args, &block)
+      end
     end
 
     def my_closed?

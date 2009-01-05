@@ -3,8 +3,14 @@ LICENSE.txt
 README.rdoc
 Rakefile
 lib
-lib/fake_net_http.rb
+lib/fake_web
 lib/fake_web.rb
+lib/fake_web/ext
+lib/fake_web/ext/net_http.rb
+lib/fake_web/registry.rb
+lib/fake_web/responder.rb
+lib/fake_web/response.rb
+lib/fake_web/socket_delegator.rb
 test
 test/fixtures
 test/fixtures/test_example.txt

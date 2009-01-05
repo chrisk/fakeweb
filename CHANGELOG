@@ -1,5 +1,12 @@
 fakeweb (development)
 
+* Fix a bug where FakeWeb.response_for would raise if the request wasn't
+  registered [Chris Kampmeier]
+
+* add HTTP method support, so FakeWeb takes both the URI and method into
+  account for registration, requests, and responses. Backwards-compatible with
+  the old method signatures, which didn't have a method param. [Chris Kampmeier]
+
 * start work on Ruby 1.9 compatibility [Chris Kampmeier]
 
 * add FakeWeb.allow_net_connect= to enable/disable the pass-through to

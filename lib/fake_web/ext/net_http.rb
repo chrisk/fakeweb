@@ -20,7 +20,6 @@ module Net  #:nodoc: all
     end
   end
 
-
   class HTTP
     def self.socket_type
       FakeWeb::SocketDelegator

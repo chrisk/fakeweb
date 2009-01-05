@@ -6,10 +6,6 @@ require 'fake_web/response'
 require 'fake_web/responder'
 require 'fake_web/socket_delegator'
 
-module OpenURI #:nodoc: all
-  class HTTPError < StandardError; end;
-end
-
 module FakeWeb
 
   # Resets the FakeWeb Registry. This will force all subsequent web requests to

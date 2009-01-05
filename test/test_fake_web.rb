@@ -100,6 +100,10 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
   end
 
+  def test_response_for_with_unknown_uri
+    assert_equal nil, FakeWeb.response_for(:get, 'http://example.com/')
+  end
+
   def test_response_for_with_put_method
     FakeWeb.register_uri(:put, "http://example.com", :string => "response")
     assert_equal 'response', FakeWeb.response_for(:put, "http://example.com").body

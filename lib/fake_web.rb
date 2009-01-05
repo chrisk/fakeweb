@@ -184,6 +184,7 @@ module FakeWeb
 
     def response_for(method, uri, &block)
       responses = registered_uri(method, uri)
+      return nil if responses.nil?
 
       next_response = responses.last
       responses.each { |response|

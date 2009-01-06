@@ -1,5 +1,9 @@
 fakeweb (development)
 
+* remove an unnecessary redefinition of OpenURI::HTTPError [Josh Nichols]
+
+* rearrange implementation code into separate files, one per class [Josh Nichols]
+
 * Fix a bug where FakeWeb.response_for would raise if the request wasn't
   registered [Chris Kampmeier]
 

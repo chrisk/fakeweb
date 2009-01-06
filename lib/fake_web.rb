@@ -1,9 +1,10 @@
-require 'fake_net_http'
 require 'singleton'
 
-module OpenURI #:nodoc: all
-  class HTTPError < StandardError; end;
-end
+require 'fake_web/ext/net_http'
+require 'fake_web/registry'
+require 'fake_web/response'
+require 'fake_web/responder'
+require 'fake_web/socket_delegator'
 
 module FakeWeb
 
@@ -111,6 +112,7 @@ module FakeWeb
     when 2 then         uri, options = *args
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri, options)")
     end
+
     Registry.instance.register_uri(method, uri, options)
   end
 
@@ -126,6 +128,7 @@ module FakeWeb
     when 1 then         uri = *args
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
     end
+
     Registry.instance.response_for(method, uri, &block)
   end
 
@@ -143,186 +146,8 @@ module FakeWeb
     when 1 then         uri = *args
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
     end
+
     Registry.instance.registered_uri?(method, uri)
   end
 
-  class Registry #:nodoc:
-    include Singleton
-
-    attr_accessor :uri_map
-
-    def initialize
-      clean_registry
-    end
-
-    def clean_registry
-      self.uri_map = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
-    end
-
-    def register_uri(method, uri, options)
-      uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect { |option|
-        FakeWeb::Responder.new(method, uri, option, option[:times])
-      }
-    end
-
-    def registered_uri?(method, uri)
-      normalized_uri = normalize_uri(uri)
-      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any)
-    end
-
-    def registered_uri(method, uri)
-      uri = normalize_uri(uri)
-      registered = registered_uri?(method, uri)
-      if registered && uri_map[uri].has_key?(method)
-        uri_map[uri][method]
-      elsif registered
-        uri_map[uri][:any]
-      else
-        nil
-      end
-    end
-
-    def response_for(method, uri, &block)
-      responses = registered_uri(method, uri)
-      return nil if responses.nil?
-
-      next_response = responses.last
-      responses.each { |response|
-        if response.times and response.times > 0
-          response.times -= 1
-          next_response = response
-          break
-        end
-      }
-
-      return next_response.response(&block)
-    end
-
-    private
-
-    def normalize_uri(uri)
-      case uri
-      when URI then uri
-      else
-        uri = 'http://' + uri unless uri.match('^https?://')
-        parsed_uri = URI.parse(uri)
-        parsed_uri.query = sort_query_params(parsed_uri.query)
-        parsed_uri
-      end
-    end
-
-    def sort_query_params(query)
-      return nil if query.nil? or query.empty?
-      query.split('&').sort.join('&')
-    end
-  end
-
-  module Response #:nodoc:
-    def read_body(*args, &block)
-      yield @body if block_given?
-      @body
-    end
-  end
-
-  class Responder #:nodoc:
-
-    attr_accessor :method, :uri, :options, :times
-
-    def initialize(method, uri, options, times)
-      self.method = method
-      self.uri = uri
-      self.options = options
-      self.times = times ? times : 1
-    end
-
-    def response(&block)
-      if has_baked_response?
-        response = baked_response
-      else
-        code, msg = meta_information
-        response = Net::HTTPResponse.send(:response_class, code.to_s).new(uri, code.to_s, msg)
-        response.instance_variable_set(:@body, content)
-      end
-      response.instance_variable_set(:@read, true)
-      response.extend FakeWeb::Response
-
-      optionally_raise(response)
-
-      yield response if block_given?
-
-      response
-    end
-
-    private
-
-    def content
-      [ :file, :string ].each do |map_option|
-        next unless options.has_key?(map_option)
-        return self.send("#{map_option}_response", options[map_option])
-      end
-
-      return ''
-    end
-
-    def file_response(path)
-      IO.readlines(path).join("\n")
-    end
-
-    def string_response(string)
-      string
-    end
-
-    def baked_response
-      resp = case options[:response]
-      when Net::HTTPResponse then options[:response]
-      when String
-        socket = Net::BufferedIO.new(options[:response])
-        r = Net::HTTPResponse.read_new(socket)
-        r.instance_eval { @header['transfer-encoding'] = nil }
-        r.reading_body(socket, true) {}
-        r
-      else raise StandardError, "Handler unimplemented for response #{options[:response]}"
-      end
-    end
-
-    def has_baked_response?
-      options.has_key?(:response)
-    end
-
-    def optionally_raise(response)
-      return unless options.has_key?(:exception)
-      ex_alloc = options[:exception].allocate
-      ex_instance = case ex_alloc
-      when Net::HTTPError, OpenURI::HTTPError
-        options[:exception].new('Exception from FakeWeb', response)
-      else options[:exception].new
-      end
-      raise ex_instance
-    end
-
-    def meta_information
-      if options.has_key?(:status); options[:status]
-      else; [ 200, 'OK' ]
-      end
-    end
-  end
-
-  class SocketDelegator #:nodoc:
-
-    def initialize(delegate=nil)
-      @delegate = nil
-    end
-
-    def method_missing(method, *args, &block)
-      return @delegate.send(method, *args, &block) if @delegate
-      return self.send("my_#{method}", *args, &block)
-    end
-
-    def my_closed?
-      @closed ||= true
-    end
-
-    def my_readuntil(*args)
-    end
-  end
 end

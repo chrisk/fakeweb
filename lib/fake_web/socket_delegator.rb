@@ -1,5 +1,4 @@
 module FakeWeb
-
   class SocketDelegator #:nodoc:
 
     def initialize(delegate=nil)
@@ -20,6 +19,6 @@ module FakeWeb
 
     def my_readuntil(*args)
     end
-  end
 
+  end
 end

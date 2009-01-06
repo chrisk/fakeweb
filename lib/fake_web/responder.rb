@@ -1,5 +1,4 @@
 module FakeWeb
-
   class Responder #:nodoc:
 
     attr_accessor :method, :uri, :options, :times
@@ -80,5 +79,6 @@ module FakeWeb
     def meta_information
       options.has_key?(:status) ? options[:status] : [200, 'OK']
     end
+
   end
 end

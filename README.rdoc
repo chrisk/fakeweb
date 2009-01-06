@@ -11,6 +11,10 @@ directly from GitHub (currently 1.1.2.6):
 
   sudo gem install chrisk-fakeweb --source http://gems.github.com
 
+<b>Warning:</b> this +README+ goes with the latest development version, which
+has significant API changes. If you're using 1.1.2.6, please see the +README+
+for that release here: http://github.com/chrisk/fakeweb/tree/ff14175b8f
+
 == Examples
 
 Start by requiring FakeWeb:

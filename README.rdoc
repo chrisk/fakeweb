@@ -15,6 +15,13 @@ directly from GitHub (currently 1.1.2.6):
 has significant API changes. If you're using 1.1.2.6, please see the +README+
 for that release here: http://github.com/chrisk/fakeweb/tree/ff14175b8f
 
+== Development Notes
+
+We're currently considering how the API should change to add support for
+request bodies (see Known Issues below). Your input might be really helpful:
+see http://fakeweb.lighthouseapp.com/projects/22985/tickets/1 for a discussion
+of some different options. Thanks!
+
 == Examples
 
 Start by requiring FakeWeb:

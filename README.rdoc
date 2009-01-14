@@ -22,6 +22,7 @@ request bodies (see Known Issues below). Your input might be really helpful:
 see http://fakeweb.lighthouseapp.com/projects/22985/tickets/1 for a discussion
 of some different options. Thanks!
 
+
 == Examples
 
 Start by requiring FakeWeb:

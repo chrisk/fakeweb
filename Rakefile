@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'rake/testtask'
 require 'rake/rdoctask'
-require 'rcov/rcovtask'
 
 task :default => :test
 
@@ -19,13 +18,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "FakeWeb API Documentation"
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.options << '--charset' << 'utf-8'
-end
-
-Rcov::RcovTask.new do |t|
-  t.test_files = FileList['test/**/test*.rb'] 
-  t.rcov_opts << "--sort coverage"
-  t.rcov_opts << "--exclude gems"
-  t.rcov_opts << "--no-validator-links"
 end
 
 desc %{Update ".manifest" with the latest list of project filenames. Respect\
@@ -54,4 +46,16 @@ task :manifest do
     File.open(spec_file,   'w') {|f| f << spec }
   end
   File.open('.manifest', 'w') {|f| f << list.join("\n") }
+end
+
+if RUBY_PLATFORM =~ /java/
+  puts "rcov support disabled (running under JRuby)."
+else
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |t|
+    t.test_files = FileList['test/**/test*.rb'] 
+    t.rcov_opts << "--sort coverage"
+    t.rcov_opts << "--exclude gems"
+    t.rcov_opts << "--no-validator-links"
+  end
 end

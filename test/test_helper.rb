@@ -33,7 +33,7 @@ module FakeWebTestHelper
     socket.expects(:write).with(all_of(includes(request_parts[0]), includes(request_parts[1]))).returns(100)
 
     # TODO: handle long response bodies that use more than one #sysread call
-    socket.expects(:sysread).with(1024).at_least_once.returns("HTTP/1.1 #{options[:response_code]} #{options[:response_message]}\nContent-Length: #{options[:response_body].length}\n\n#{options[:response_body]}").then.raises(EOFError)
+    socket.expects(:sysread).at_least_once.returns("HTTP/1.1 #{options[:response_code]} #{options[:response_message]}\nContent-Length: #{options[:response_body].length}\n\n#{options[:response_body]}").then.raises(EOFError)
   end
 
 

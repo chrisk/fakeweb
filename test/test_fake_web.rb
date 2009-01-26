@@ -434,4 +434,13 @@ class TestFakeWeb < Test::Unit::TestCase
     3.times { assert_equal 'thrice',               Net::HTTP.get(uri) }
     4.times { assert_equal 'ever_more',            Net::HTTP.get(uri) }
   end
+  
+  def test_mock_request_using_response_has_valid_transfer_encoding_header
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request')
+    response = nil
+    Net::HTTP.start('www.google.com') do |query|
+      response = query.get('/')
+    end
+    assert_not_nil response['transfer-encoding']
+  end
 end

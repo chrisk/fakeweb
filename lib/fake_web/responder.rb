@@ -54,8 +54,10 @@ module FakeWeb
       when String
         socket = Net::BufferedIO.new(options[:response])
         r = Net::HTTPResponse.read_new(socket)
+        saved_transfer_encoding = r.instance_eval { @header['transfer-encoding'] }
         r.instance_eval { @header['transfer-encoding'] = nil }
         r.reading_body(socket, true) {}
+        r.instance_eval { @header['transfer-encoding'] = saved_transfer_encoding }
         r
       else raise StandardError, "Handler unimplemented for response #{options[:response]}"
       end

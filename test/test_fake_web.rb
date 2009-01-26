@@ -442,5 +442,15 @@ class TestFakeWeb < Test::Unit::TestCase
       response = query.get('/')
     end
     assert_not_nil response['transfer-encoding']
+    assert response['transfer-encoding'] == 'chunked'
+  end
+
+  def test_mock_request_using_response_without_transfer_encoding_header_does_not_have_a_transfer_encoding_header
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request_without_transfer_encoding')
+    response = nil
+    Net::HTTP.start('www.google.com') do |query|
+      response = query.get('/')
+    end
+    assert !response.key?('transfer-encoding')
   end
 end

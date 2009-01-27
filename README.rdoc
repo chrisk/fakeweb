@@ -3,6 +3,7 @@
 FakeWeb is a helper for faking web requests in Ruby. It works at a global
 level, without modifying code or writing extensive stubs.
 
+
 == Installation
 
 This fork of Blaine Cook's original code has lots of fixes, stability
@@ -15,12 +16,18 @@ the latest gem directly from GitHub (currently 1.1.2.6):
 has significant API changes. If you're using 1.1.2.6, please see the +README+
 for that release here: http://github.com/chrisk/fakeweb/tree/ff14175b8f
 
+
+== Help and discussion
+
+There's a brand new mailing list at http://groups.google.com/group/fakeweb-users.
+
+
 == Development Notes
 
 We're currently considering how the API should change to add support for
-request bodies (see Known Issues below). Your input might be really helpful:
-see http://fakeweb.lighthouseapp.com/projects/22985/tickets/1 for a discussion
-of some different options. Thanks!
+request bodies (see Known Issues below). Your input would be really helpful:
+see http://groups.google.com/group/fakeweb-users/browse_thread/thread/44d190a6b12e4273
+for a discussion of some different options. Thanks!
 
 
 == Examples

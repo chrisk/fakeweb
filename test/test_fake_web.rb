@@ -453,4 +453,13 @@ class TestFakeWeb < Test::Unit::TestCase
     end
     assert !response.key?('transfer-encoding')
   end
+  
+  def test_txt_file_should_have_three_lines
+    FakeWeb.register_uri('http://www.google.com/', :file => File.dirname(__FILE__) + '/fixtures/test_txt_file')
+    response = nil
+    Net::HTTP.start('www.google.com') do |query|
+      response = query.get('/')
+    end
+    assert response.body.split(/\n/).size == 3, "response has #{response.body.split(/\n/).size} lines should have 3"
+  end
 end

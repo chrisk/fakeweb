@@ -54,14 +54,16 @@ module FakeWeb
       when String
         socket = Net::BufferedIO.new(options[:response])
         r = Net::HTTPResponse.read_new(socket)
-        
+
         # Store the oiriginal transfer-encoding
-        saved_transfer_encoding = r.instance_eval { @header['transfer-encoding'] if @header.key?('transfer-encoding')}
-        
+        saved_transfer_encoding = r.instance_eval {
+          @header['transfer-encoding'] if @header.key?('transfer-encoding')
+        }
+
         # read the body of response.
         r.instance_eval { @header['transfer-encoding'] = nil }
         r.reading_body(socket, true) {}
-        
+
         # Delete the transfer-encoding key from r.@header if there wasn't one,
         # else restore the saved_transfer_encoding.
         if saved_transfer_encoding.nil?

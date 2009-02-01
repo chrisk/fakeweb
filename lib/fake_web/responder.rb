@@ -41,7 +41,7 @@ module FakeWeb
     end
 
     def file_response(path)
-      IO.readlines(path).collect { |line| line.sub(/\r\n/,'').sub(/\n$/, '') }.join("\n")
+      IO.read(path)
     end
 
     def string_response(string)

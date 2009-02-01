@@ -260,7 +260,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_get_with_request_from_file_as_registered_uri
-    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request')
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_without_transfer_encoding')
     response = nil
     Net::HTTP.start('www.google.com') do |query|
       response = query.get('/')
@@ -270,7 +270,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_post_with_request_from_file_as_registered_uri
-    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request')
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_without_transfer_encoding')
     response = nil
     Net::HTTP.start('www.google.com') do |query|
       response = query.post('/', '')
@@ -436,7 +436,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
   
   def test_mock_request_using_response_has_valid_transfer_encoding_header
-    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request')
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_with_transfer_encoding')
     response = nil
     Net::HTTP.start('www.google.com') do |query|
       response = query.get('/')
@@ -446,14 +446,24 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_using_response_without_transfer_encoding_header_does_not_have_a_transfer_encoding_header
-    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/test_request_without_transfer_encoding')
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_without_transfer_encoding')
     response = nil
     Net::HTTP.start('www.google.com') do |query|
       response = query.get('/')
     end
     assert !response.key?('transfer-encoding')
   end
-  
+
+  def test_mock_request_using_response_from_curl_has_original_transfer_encoding_header
+    FakeWeb.register_uri('http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_from_curl')
+    response = nil
+    Net::HTTP.start('www.google.com') do |query|
+      response = query.get('/')
+    end
+    assert_not_nil response['transfer-encoding']
+    assert response['transfer-encoding'] == 'chunked'
+  end
+
   def test_txt_file_should_have_three_lines
     FakeWeb.register_uri('http://www.google.com/', :file => File.dirname(__FILE__) + '/fixtures/test_txt_file')
     response = nil

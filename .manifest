@@ -2,7 +2,6 @@ CHANGELOG
 LICENSE.txt
 README.rdoc
 Rakefile
-fakeweb-1.1.2.6.gem
 lib
 lib/fake_web
 lib/fake_web.rb

@@ -409,7 +409,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_response_type
     FakeWeb.register_uri('http://mock/test_example.txt', :string => "test")
     Net::HTTP.start('mock') do |http|
-      response = http.get('/test_example.txt', '')
+      response = http.get('/test_example.txt')
       assert_kind_of(Net::HTTPSuccess, response)
     end
   end

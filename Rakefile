@@ -50,6 +50,8 @@ end
 
 if RUBY_PLATFORM =~ /java/
   puts "rcov support disabled (running under JRuby)."
+elsif RUBY_VERSION =~ /^1\.9/
+  puts "rcov support disabled (running under Ruby 1.9)"
 else
   require 'rcov/rcovtask'
   Rcov::RcovTask.new do |t|

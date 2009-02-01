@@ -29,7 +29,7 @@ module Net  #:nodoc: all
     alias :original_net_http_connect :connect
 
     def request(request, body = nil, &block)
-      protocol = use_ssl ? "https" : "http"
+      protocol = use_ssl? ? "https" : "http"
 
       path = request.path
       path = URI.parse(request.path).request_uri if request.path =~ /^http/

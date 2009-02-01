@@ -124,8 +124,8 @@ module FakeWeb
   def self.response_for(*args, &block) #:nodoc: :yields: response
     method = :any
     case args.length
-    when 2 then method, uri = *args
-    when 1 then         uri = *args
+    when 2 then method, uri = args
+    when 1 then         uri = args.first
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
     end
 
@@ -142,8 +142,8 @@ module FakeWeb
   def self.registered_uri?(*args)
     method = :any
     case args.length
-    when 2 then method, uri = *args
-    when 1 then         uri = *args
+    when 2 then method, uri = args
+    when 1 then         uri = args.first
     else   raise ArgumentError.new("wrong number of arguments (#{args.length} for method = :any, uri)")
     end
 

@@ -1,5 +1,13 @@
 fakeweb (development)
 
+* Fix that newlines in file-based responses could be doubled in the response
+  object's body [Mark Menard, Chris Kampmeier]
+
+* Fix unnecessary munging of the transfer-encoding header, which improves
+  compatibility with mechanize [Mark Menard]
+
+* Fix a test and the RCov dependency to be compatible with JRuby [Mark Menard]
+
 * remove an unnecessary redefinition of OpenURI::HTTPError [Josh Nichols]
 
 * rearrange implementation code into separate files, one per class [Josh Nichols]

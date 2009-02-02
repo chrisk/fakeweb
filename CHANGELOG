@@ -1,18 +1,20 @@
 fakeweb (development)
 
-* Fix that newlines in file-based responses could be doubled in the response
+* fix compatibility with Ruby 1.9.1 [Chris Kampmeier]
+
+* fix that newlines in file-based responses could be doubled in the response
   object's body [Mark Menard, Chris Kampmeier]
 
-* Fix unnecessary munging of the transfer-encoding header, which improves
+* fix unnecessary munging of the transfer-encoding header, which improves
   compatibility with mechanize [Mark Menard]
 
-* Fix a test and the RCov dependency to be compatible with JRuby [Mark Menard]
+* fix a test and the RCov dependency to be compatible with JRuby [Mark Menard]
 
 * remove an unnecessary redefinition of OpenURI::HTTPError [Josh Nichols]
 
 * rearrange implementation code into separate files, one per class [Josh Nichols]
 
-* Fix a bug where FakeWeb.response_for would raise if the request wasn't
+* fix a bug where FakeWeb.response_for would raise if the request wasn't
   registered [Chris Kampmeier]
 
 * add HTTP method support, so FakeWeb takes both the URI and method into

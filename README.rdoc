@@ -7,8 +7,9 @@ level, without modifying code or writing extensive stubs.
 == Installation
 
 This fork of Blaine Cook's original code has lots of fixes, stability
-improvements, JRuby support, and a few new features. To get it, install
-the latest gem directly from GitHub (currently 1.1.2.6):
+improvements, and a few new features. It also has new support for Ruby 1.9.1
+and JRuby. To get it, install the latest gem directly from GitHub (currently
+1.1.2.6):
 
   sudo gem install chrisk-fakeweb --source http://gems.github.com
 

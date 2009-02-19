@@ -22,7 +22,7 @@ module Net  #:nodoc: all
 
   class HTTP
     def self.socket_type
-      FakeWeb::SocketDelegator
+      FakeWeb::StubSocket
     end
 
     alias :original_net_http_request :request

@@ -4,7 +4,7 @@ require 'fake_web/ext/net_http'
 require 'fake_web/registry'
 require 'fake_web/response'
 require 'fake_web/responder'
-require 'fake_web/socket_delegator'
+require 'fake_web/stub_socket'
 
 module FakeWeb
 

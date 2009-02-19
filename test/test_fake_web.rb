@@ -75,6 +75,16 @@ class TestFakeWeb < Test::Unit::TestCase
     assert FakeWeb.registered_uri?('https://example.com:443/')
   end
 
+  def test_register_uri_with_no_port_for_https_and_check_with_443_on_http
+    FakeWeb.register_uri('https://example.com/', :string => 'foo')
+    assert !FakeWeb.registered_uri?('http://example.com:443/')
+  end
+
+  def test_register_uri_with_no_port_for_http_and_check_with_80_on_https
+    FakeWeb.register_uri('http://example.com/', :string => 'foo')
+    assert !FakeWeb.registered_uri?('https://example.com:80/')
+  end
+
   def test_register_uri_for_any_method_explicitly
     FakeWeb.register_uri(:any, "http://example.com/rpc_endpoint", :string => "OK")
     assert FakeWeb.registered_uri?(:get, "http://example.com/rpc_endpoint")

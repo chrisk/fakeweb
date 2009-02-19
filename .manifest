@@ -13,9 +13,10 @@ lib/fake_web/response.rb
 lib/fake_web/socket_delegator.rb
 test
 test/fixtures
+test/fixtures/google_response_from_curl
+test/fixtures/google_response_with_transfer_encoding
+test/fixtures/google_response_without_transfer_encoding
 test/fixtures/test_example.txt
-test/fixtures/test_request
-test/fixtures/test_request_without_transfer_encoding
 test/fixtures/test_txt_file
 test/test_allow_net_connect.rb
 test/test_fake_web.rb

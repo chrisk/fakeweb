@@ -9,14 +9,9 @@ level, without modifying code or writing extensive stubs.
 This fork of Blaine Cook's original code has lots of fixes, stability
 improvements, and a few new features. It also has new support for Ruby 1.9.1
 and JRuby. To get it, install the latest gem directly from GitHub (currently
-1.1.2.6):
+1.1.2.7):
 
   sudo gem install chrisk-fakeweb --source http://gems.github.com
-
-<b>Warning:</b> this +README+ goes with the latest development version, which
-has significant API changes. If you're using 1.1.2.6, please see the +README+
-for that release here:
-http://github.com/chrisk/fakeweb/blob/ff14175b8f5478fbf0b3ca74da47db582be472cd/README.rdoc
 
 
 == Help and discussion

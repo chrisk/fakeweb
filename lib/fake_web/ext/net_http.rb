@@ -1,6 +1,7 @@
 require 'net/http'
 require 'net/https'
 require 'stringio'
+require 'base64'
 
 module Net  #:nodoc: all
 
@@ -34,7 +35,9 @@ module Net  #:nodoc: all
       path = request.path
       path = URI.parse(request.path).request_uri if request.path =~ /^http/
 
-      uri = "#{protocol}://#{self.address}:#{self.port}#{path}"
+        userinfo = Base64.decode64(request['authorization'].split.last) rescue nil
+
+      uri = "#{protocol}://#{"#{userinfo}@" if userinfo}#{self.address}:#{self.port}#{path}"
       method = request.method.downcase.to_sym
 
       if FakeWeb.registered_uri?(method, uri)

@@ -1,5 +1,7 @@
 fakeweb (development)
 
+* add lib/fakeweb.rb so you can require "fakeweb" as well [Chris Kampmeier]
+
 * fix compatibility with Ruby 1.9.1 [Chris Kampmeier]
 
 * fix that newlines in file-based responses could be doubled in the response

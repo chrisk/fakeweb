@@ -482,4 +482,8 @@ class TestFakeWeb < Test::Unit::TestCase
     end
     assert response.body.split(/\n/).size == 3, "response has #{response.body.split(/\n/).size} lines should have 3"
   end
+
+  def test_requiring_fakeweb_instead_of_fake_web
+    require "fakeweb"
+  end
 end

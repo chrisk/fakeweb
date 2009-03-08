@@ -10,7 +10,8 @@ lib/fake_web/ext/net_http.rb
 lib/fake_web/registry.rb
 lib/fake_web/responder.rb
 lib/fake_web/response.rb
-lib/fake_web/socket_delegator.rb
+lib/fake_web/stub_socket.rb
+lib/fakeweb.rb
 test
 test/fixtures
 test/fixtures/google_response_from_curl

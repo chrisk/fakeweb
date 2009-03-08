@@ -6,25 +6,18 @@ level, without modifying code or writing extensive stubs.
 
 == Installation
 
-This fork of Blaine Cook's original code has lots of fixes, stability
-improvements, and a few new features. It also has new support for Ruby 1.9.1
-and JRuby. To get it, install the latest gem directly from GitHub (currently
-1.1.2.7):
+The latest release of FakeWeb is once again available from your friendly
+RubyForge mirror. Just install the gem:
 
-  sudo gem install chrisk-fakeweb --source http://gems.github.com
+  sudo gem install fakeweb
 
 
 == Help and discussion
 
-There's a brand new mailing list at http://groups.google.com/group/fakeweb-users.
+RDocs for the current release are available at http://fakeweb.rubyforge.org.
 
-
-== Development Notes
-
-We're currently considering how the API should change to add support for
-request bodies (see Known Issues below). Your input would be really helpful:
-see http://groups.google.com/group/fakeweb-users/browse_thread/thread/44d190a6b12e4273
-for a discussion of some different options. Thanks!
+There's a mailing list for questions and discussion at
+http://groups.google.com/group/fakeweb-users.
 
 
 == Examples
@@ -32,7 +25,7 @@ for a discussion of some different options. Thanks!
 Start by requiring FakeWeb:
 
   require 'rubygems'
-  require 'fake_web'
+  require 'fakeweb'
 
 === Registering basic string responses
 
@@ -119,6 +112,7 @@ This is handy when you want to make sure your tests are self-contained, or you
 want to catch the scenario when a URI is changed in implementation code
 without a corresponding test change.
 
+
 == More info
 
 FakeWeb lets you decouple your test environment from live services without
@@ -138,8 +132,11 @@ like OpenURI, as well as a ton of libraries for popular web services.
 
 * Request bodies are ignored, including PUT and POST parameters. If you need
   different responses for different request bodies, you need to request
-  different URLs, and register different responses for each. (Query strings
-  are fully supported, though.)
+  different URLs, and register different responses for each. (Query strings are
+  fully supported, though.) We're currently considering how the API should
+  change to add support for request bodies in 1.3.0. Your input would be really
+  helpful: see http://groups.google.com/group/fakeweb-users/browse_thread/thread/44d190a6b12e4273
+  for a discussion of some different options. Thanks!
 
 
 == Copyright

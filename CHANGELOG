@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.0)
 
 * add lib/fakeweb.rb so you can require "fakeweb" as well [Chris Kampmeier]
 

@@ -11,6 +11,10 @@ RubyForge mirror. Just install the gem:
 
   sudo gem install fakeweb
 
+Note: the gem was previously available as +FakeWeb+ (capital letters), but now
+all versions are simply registered as +fakeweb+. If you have any old +FakeWeb+
+gems lying around, remove them: <tt>sudo gem uninstall FakeWeb</tt>
+
 
 == Help and discussion
 

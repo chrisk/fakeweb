@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
@@ -60,4 +61,10 @@ else
     t.rcov_opts << "--exclude gems"
     t.rcov_opts << "--no-validator-links"
   end
+end
+
+spec = eval(File.read(File.join(File.dirname(__FILE__), "fakeweb.gemspec")))
+Rake::GemPackageTask.new(spec) do |pkg|
+  pkg.need_tar_gz = true
+  pkg.need_zip    = true
 end

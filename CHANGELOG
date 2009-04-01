@@ -1,3 +1,8 @@
+fakeweb (development)
+
+* add support for HTTP basic authentication via userinfo strings in URIs
+  [Michael Bleigh]
+
 fakeweb (1.2.0)
 
 * add lib/fakeweb.rb so you can require "fakeweb" as well [Chris Kampmeier]

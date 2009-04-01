@@ -1,7 +1,6 @@
 require 'net/http'
 require 'net/https'
 require 'stringio'
-require 'base64'
 
 module Net  #:nodoc: all
 
@@ -38,7 +37,7 @@ module Net  #:nodoc: all
       if request['authorization'].nil?
         userinfo = ""
       else
-        userinfo = Base64.decode64(request['authorization'].sub(/^Basic /, "")) + "@"
+        userinfo = request['authorization'].sub(/^Basic /, "").unpack("m").first + "@"
       end
 
       uri = "#{protocol}://#{userinfo}#{self.address}:#{self.port}#{path}"

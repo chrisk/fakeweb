@@ -90,19 +90,20 @@ option for that response.)
     req.delete("/posts/1").body  # => "Post not found"
   end
 
-=== Using HTTP Basic Authentication
+=== Using HTTP basic authentication
 
-You can use HTTP Basic authentication in your FakeWeb URIs by providing an authentication string in the FakeWeb.register_uri call like so:
+You can stub requests that use basic authentication with +userinfo+ strings in
+the URIs:
 
-    FakeWeb.register_uri('http://example.com/auth', :string => 'Unauthorized', :status => ['401', 'Unauthorized'])
-    FakeWeb.register_uri('http://test:auth@example.com/auth', :string => 'Authorized')
+  FakeWeb.register_uri("http://example.com/secret", :string => "Unauthorized", :status => ["401", "Unauthorized"])
+  FakeWeb.register_uri("http://user:pass@example.com/secret", :string => "Authorized")
 
-    Net::HTTP.start('example.com') do |http|
-      req = Net::HTTP::Get.new('/auth')
-      http.request(req) # => Unauthorized
-      req.basic_auth 'test', 'auth'
-      http.request(req) # => Authorized
-    end
+  Net::HTTP.start("example.com") do |http|
+    req = Net::HTTP::Get.new("/secret")
+    http.request(req)  # => "Unauthorized"
+    req.basic_auth("user", "pass")
+    http.request(req)  # => "Authorized"
+  end
 
 === Clearing registered URIs
 

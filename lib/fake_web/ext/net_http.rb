@@ -35,9 +35,13 @@ module Net  #:nodoc: all
       path = request.path
       path = URI.parse(request.path).request_uri if request.path =~ /^http/
 
-        userinfo = Base64.decode64(request['authorization'].split.last) rescue nil
+      if request['authorization'].nil?
+        userinfo = ""
+      else
+        userinfo = Base64.decode64(request['authorization'].sub(/^Basic /, "")) + "@"
+      end
 
-      uri = "#{protocol}://#{"#{userinfo}@" if userinfo}#{self.address}:#{self.port}#{path}"
+      uri = "#{protocol}://#{userinfo}#{self.address}:#{self.port}#{path}"
       method = request.method.downcase.to_sym
 
       if FakeWeb.registered_uri?(method, uri)

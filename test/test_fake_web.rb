@@ -12,6 +12,26 @@ class TestFakeWeb < Test::Unit::TestCase
     assert FakeWeb.registered_uri?('http://mock/test_example.txt')
   end
 
+  def test_pattern_map_can_find_matches
+    FakeWeb::Registry.any_instance.stubs(:pattern_map).returns([fake_pattern_match])
+    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.yahoo.com")
+  end
+
+  def test_pattern_map_matches
+    FakeWeb::Registry.any_instance.stubs(:pattern_map).returns([fake_pattern_match])
+    assert [fake_pattern_match], FakeWeb::Registry.instance.send(:pattern_map_matches, :get, "http://www.yahoo.com")
+  end
+
+  def test_pattern_map_match
+    FakeWeb::Registry.any_instance.stubs(:pattern_map).returns([fake_pattern_match])
+    assert_equal fake_pattern_match, FakeWeb::Registry.instance.send(:pattern_map_match, :get, "http://www.yahoo.com")
+  end
+
+  def test_register_uri_pattern
+    FakeWeb.register_uri(%r|http://mock/test_example/\d+|, :string => "example")
+    assert FakeWeb.registered_uri?('http://mock/test_example/25')
+  end
+
   def test_register_uri_with_wrong_number_of_arguments
     assert_raises ArgumentError do
       FakeWeb.register_uri("http://example.com")
@@ -108,6 +128,16 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_response_for_with_registered_uri
     FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for('http://mock/test_example.txt').body
+  end
+
+  def test_response_for_with_matching_registered_uri
+    FakeWeb.register_uri(%r|http://www.google.com|, :string => "Welcome to Google!")
+    assert "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com")
+  end
+
+  def test_response_for_with_matching_registered_uri_and_method
+    FakeWeb.register_uri(%r|http://www.google.com|, :string => "Welcome to Google!")
+    assert "Welcome to Google!", FakeWeb.response_for(:any, "http://www.google.com")
   end
 
   def test_response_for_with_unknown_uri
@@ -485,5 +515,9 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_requiring_fakeweb_instead_of_fake_web
     require "fakeweb"
+  end
+
+  def fake_pattern_match
+    @fake_pattern_match ||= {:pattern => %r|http://www.yahoo.com|, :responders => [FakeWeb::Responder.new(:get, "http://www.yahoo.com", {:response => 'Welcome to Yahoo!'}, 1)], :method => :get }
   end
 end

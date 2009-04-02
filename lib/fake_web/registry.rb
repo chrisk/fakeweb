@@ -2,7 +2,7 @@ module FakeWeb
   class Registry #:nodoc:
     include Singleton
 
-    attr_accessor :uri_map
+    attr_accessor :uri_map, :pattern_map
 
     def initialize
       clean_registry
@@ -12,17 +12,29 @@ module FakeWeb
       self.uri_map = Hash.new do |hash, key|
         hash[key] = Hash.new(&hash.default_proc)
       end
+      self.pattern_map = []
     end
 
     def register_uri(method, uri, options)
-      uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
-        FakeWeb::Responder.new(method, uri, option, option[:times])
+      case uri
+      when String
+        uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
+          FakeWeb::Responder.new(method, uri, option, option[:times])
+        end
+      when Regexp
+        responders = [*[options]].flatten.collect do |option|
+          FakeWeb::Responder.new(method, uri, option, option[:times])
+        end
+        pattern_map << {:pattern => uri,
+                        :responders => responders,
+                        :method => method }
+
       end
     end
 
     def registered_uri?(method, uri)
       normalized_uri = normalize_uri(uri)
-      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any)
+      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any) | pattern_map_matches?(method, uri) || pattern_map_matches?(:any, uri)
     end
 
     def registered_uri(method, uri)
@@ -30,8 +42,12 @@ module FakeWeb
       registered = registered_uri?(method, uri)
       if registered && uri_map[uri].has_key?(method)
         uri_map[uri][method]
-      elsif registered
+      elsif registered && pattern_map_matches?(method, uri)
+        pattern_map_matches(method, uri).map{|m| m[:responders]}.flatten
+      elsif registered && uri_map[uri].has_key?(:any)
         uri_map[uri][:any]
+      elsif registered && pattern_map_matches(:any, uri)
+        pattern_map_matches(:any, uri).map{|m| m[:responders]}.flatten
       else
         nil
       end
@@ -53,13 +69,25 @@ module FakeWeb
       next_response.response(&block)
     end
 
+    def pattern_map_matches?(method, uri)
+      !pattern_map_matches(method, uri).empty?
+    end
+
+    def pattern_map_matches(method, uri)
+      pattern_map.select{|p| uri.to_s.match(p[:pattern]) && p[:method] == method}
+    end
+
+    def pattern_map_match(method, uri)
+      pattern_map_matches(method, uri).first
+    end
+
     private
 
     def normalize_uri(uri)
       normalized_uri =
         case uri
         when URI then uri
-        else
+        when String
           uri = 'http://' + uri unless uri.match('^https?://')
           parsed_uri = URI.parse(uri)
           parsed_uri.query = sort_query_params(parsed_uri.query)

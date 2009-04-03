@@ -108,8 +108,6 @@ the URIs:
 
 === Registering URI patterns with regular expressions
 
-  FakeWeb.register_uri(%r|http://example.com/test/\d+|, :string => "Response to a patterned URI!")
-
   FakeWeb.register_uri(%r|http://example.com(:\d+)?/test/\d+|, :string => "Response to a patterned URI!")
   Net::HTTP.get(URI.parse("http://example.com/test/1"))
   => "Response to a patterned URI!"

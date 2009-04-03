@@ -34,7 +34,7 @@ module FakeWeb
 
     def registered_uri?(method, uri)
       normalized_uri = normalize_uri(uri)
-      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any) | pattern_map_matches?(method, uri) || pattern_map_matches?(:any, uri)
+      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any) || pattern_map_matches?(method, uri) || pattern_map_matches?(:any, uri)
     end
 
     def registered_uri(method, uri)

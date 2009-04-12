@@ -19,7 +19,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_pattern_map_matches
     FakeWeb::Registry.any_instance.stubs(:pattern_map).returns([fake_pattern_match])
-    assert [fake_pattern_match], FakeWeb::Registry.instance.send(:pattern_map_matches, :get, "http://www.yahoo.com")
+    assert_equal [fake_pattern_match], FakeWeb::Registry.instance.send(:pattern_map_matches, :get, "http://www.yahoo.com")
   end
 
   def test_pattern_map_match
@@ -132,12 +132,12 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_response_for_with_matching_registered_uri
     FakeWeb.register_uri(%r|http://www.google.com|, :string => "Welcome to Google!")
-    assert "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com")
+    assert_equal "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com").body
   end
 
   def test_response_for_with_matching_registered_uri_and_method
-    FakeWeb.register_uri(%r|http://www.google.com|, :string => "Welcome to Google!")
-    assert "Welcome to Google!", FakeWeb.response_for(:any, "http://www.google.com")
+    FakeWeb.register_uri(:get, %r|http://www.google.com|, :string => "Welcome to Google!")
+    assert_equal "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com").body
   end
 
   def test_response_for_with_unknown_uri

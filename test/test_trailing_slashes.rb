@@ -12,25 +12,25 @@ class TestFakeWebTrailingSlashes < Test::Unit::TestCase
   end
 
   def test_registering_root_without_slash_and_ask_predicate_method_with_slash
-    FakeWeb.register_uri(:get, "http://www.google.com", :string => "Google")
-    assert FakeWeb.registered_uri?(:get, "http://www.google.com/")
+    FakeWeb.register_uri(:get, "http://www.example.com", :string => "root")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com/")
   end
 
   def test_registering_root_without_slash_and_request
-    FakeWeb.register_uri(:get, "http://www.google.com", :string => "Google")
-    response = Net::HTTP.start("www.google.com") { |query| query.get('/') }
-    assert_equal "Google", response.body
+    FakeWeb.register_uri(:get, "http://www.example.com", :string => "root")
+    response = Net::HTTP.start("www.example.com") { |query| query.get('/') }
+    assert_equal "root", response.body
   end
 
   def test_registering_root_with_slash_and_ask_predicate_method_without_slash
-    FakeWeb.register_uri(:get, "http://www.google.com/", :string => "Google")
-    assert FakeWeb.registered_uri?(:get, "http://www.google.com")
+    FakeWeb.register_uri(:get, "http://www.example.com/", :string => "root")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com")
   end
 
   def test_registering_root_with_slash_and_request
-    FakeWeb.register_uri(:get, "http://www.google.com/", :string => "Google")
-    response = Net::HTTP.start("www.google.com") { |query| query.get('/') }
-    assert_equal "Google", response.body
+    FakeWeb.register_uri(:get, "http://www.example.com/", :string => "root")
+    response = Net::HTTP.start("www.example.com") { |query| query.get('/') }
+    assert_equal "root", response.body
   end
 
   def test_registering_path_without_slash_and_ask_predicate_method_with_slash

@@ -517,6 +517,13 @@ class TestFakeWeb < Test::Unit::TestCase
     require "fakeweb"
   end
 
+  def test_registering_with_overlapping_regexes_uses_first_registered
+    FakeWeb.register_uri(:get, %r|http://example\.com/|, :string => "first")
+    FakeWeb.register_uri(:get, %r|http://example\.com/a|, :string => "second")
+    response = Net::HTTP.start("example.com") { |query| query.get('/a') }
+    assert_equal "first", response.body
+  end
+
   def fake_pattern_match
     @fake_pattern_match ||= {:pattern => %r|http://www.yahoo.com|, :responders => [FakeWeb::Responder.new(:get, "http://www.yahoo.com", {:response => 'Welcome to Yahoo!'}, 1)], :method => :get }
   end

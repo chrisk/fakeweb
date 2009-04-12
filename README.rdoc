@@ -23,6 +23,7 @@ RDocs for the current release are available at http://fakeweb.rubyforge.org.
 There's a mailing list for questions and discussion at
 http://groups.google.com/group/fakeweb-users.
 
+The main source repository is http://github.com/chrisk/fakeweb.
 
 == Examples
 

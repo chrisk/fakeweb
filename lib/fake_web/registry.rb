@@ -74,7 +74,8 @@ module FakeWeb
     end
 
     def pattern_map_matches(method, uri)
-      pattern_map.select{|p| uri.to_s.match(p[:pattern]) && p[:method] == method}
+      uri = uri.to_s.sub(/:(80|443)/, "")
+      pattern_map.select { |p| uri.match(p[:pattern]) && p[:method] == method }
     end
 
     def pattern_map_match(method, uri)

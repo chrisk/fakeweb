@@ -1,5 +1,8 @@
 fakeweb (development)
 
+* fix that trailing slashes were considered significant for requests to the root
+  of a domain [Chris Kampmeier]
+
 * add support for HTTP basic authentication via userinfo strings in URIs
   [Michael Bleigh]
 

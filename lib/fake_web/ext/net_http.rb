@@ -14,7 +14,11 @@ module Net  #:nodoc: all
       when Socket, OpenSSL::SSL::SSLSocket, IO
         io
       when String
-        File.exists?(io) ? File.open(io, "r") : StringIO.new(io)
+        if !io.include?("\0") && File.exists?(io)
+          File.open(io, "r")
+        else
+          StringIO.new(io)
+        end
       end
       raise "Unable to create local socket" unless @io
     end

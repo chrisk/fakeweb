@@ -58,15 +58,12 @@ module FakeWeb
     def normalize_uri(uri)
       normalized_uri =
         case uri
-        when URI then
-	  uri.query = sort_query_params(uri.query)
-	  uri
-	else
+        when URI then uri
+        else
           uri = 'http://' + uri unless uri.match('^https?://')
-          parsed_uri = URI.parse(uri)
-          parsed_uri.query = sort_query_params(parsed_uri.query)
-          parsed_uri
+          URI.parse(uri)
         end
+      normalized_uri.query = sort_query_params(normalized_uri.query)
       normalized_uri.normalize
     end
 

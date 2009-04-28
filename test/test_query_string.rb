@@ -6,29 +6,36 @@ class TestFakeWebQueryString < Test::Unit::TestCase
     FakeWeb.clean_registry
   end
 
-  def test_register_uri_with_query_params
+  def test_register_uri_string_with_query_params
     FakeWeb.register_uri('http://example.com/?a=1&b=1', :string => 'foo')
     assert FakeWeb.registered_uri?('http://example.com/?a=1&b=1')
+
+    FakeWeb.register_uri(URI.parse("http://example.org/?a=1&b=1"), :string => "foo")
+    assert FakeWeb.registered_uri?("http://example.org/?a=1&b=1")
   end
 
   def test_register_uri_with_query_params_and_check_in_different_order
     FakeWeb.register_uri('http://example.com/?a=1&b=1', :string => 'foo')
     assert FakeWeb.registered_uri?('http://example.com/?b=1&a=1')
-  end
 
-  def test_register_uri_with_query_params_unsorted_from_uri_object
-    FakeWeb.register_uri(URI.join('http://example.com/?b=1&a=1'), :string => 'foo')
-    assert FakeWeb.registered_uri?('http://example.com/?b=1&a=1')
+    FakeWeb.register_uri(URI.parse('http://example.org/?a=1&b=1'), :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.org/?b=1&a=1')
   end
 
   def test_registered_uri_gets_recognized_with_empty_query_params
     FakeWeb.register_uri('http://example.com/', :string => 'foo')
     assert FakeWeb.registered_uri?('http://example.com/?')
+
+    FakeWeb.register_uri(URI.parse('http://example.org/'), :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.org/?')
   end
 
   def test_register_uri_with_empty_query_params_and_check_with_none
     FakeWeb.register_uri('http://example.com/?', :string => 'foo')
     assert FakeWeb.registered_uri?('http://example.com/')
+
+    FakeWeb.register_uri(URI.parse('http://example.org/?'), :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.org/')
   end
 
   def test_registry_sort_query_params

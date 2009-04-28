@@ -16,6 +16,11 @@ class TestFakeWebQueryString < Test::Unit::TestCase
     assert FakeWeb.registered_uri?('http://example.com/?b=1&a=1')
   end
 
+  def test_register_uri_with_query_params_unsorted_from_uri_object
+    FakeWeb.register_uri(URI.join('http://example.com/?b=1&a=1'), :string => 'foo')
+    assert FakeWeb.registered_uri?('http://example.com/?b=1&a=1')
+  end
+
   def test_registered_uri_gets_recognized_with_empty_query_params
     FakeWeb.register_uri('http://example.com/', :string => 'foo')
     assert FakeWeb.registered_uri?('http://example.com/?')

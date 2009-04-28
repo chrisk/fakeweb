@@ -8,7 +8,7 @@ task :default => :test
 desc "Run All Tests"
 Rake::TestTask.new :test do |test|
   test.test_files = ["test/**/*.rb"]
-  test.verbose = true
+  test.verbose = false
 end
 
 desc "Generate Documentation"

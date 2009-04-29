@@ -1,5 +1,11 @@
 fakeweb (development)
 
+* fix that query parameters are handled correctly when registering with a URI
+  object [Anselmo Alves, Chris Kampmeier]
+
+* fix an exception when registering with the :response option and a string
+  containing "\0" [Jonathan Baudanza, Chris Kampmeier]
+
 * fix that trailing slashes were considered significant for requests to the root
   of a domain [Chris Kampmeier]
 

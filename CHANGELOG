@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.1)
 
 * fix that query parameters are handled correctly when registering with a URI
   object [Anselmo Alves, Chris Kampmeier]

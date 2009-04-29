@@ -25,3 +25,4 @@ test/test_fake_web.rb
 test/test_fake_web_open_uri.rb
 test/test_helper.rb
 test/test_query_string.rb
+test/test_trailing_slashes.rb

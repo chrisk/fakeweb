@@ -559,10 +559,22 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal "first", response.body
   end
 
+  def test_registering_using_response_with_string_containing_null_byte
+    # Regression test for File.exists? raising an ArgumentError ("string
+    # contains null byte") since :response first tries to find by filename.
+    # The string should be treated as a response body, instead, and an
+    # EOFError is raised when the byte is encountered.
+    FakeWeb.register_uri("http://example.com", :response => "test\0test")
+    assert_raise EOFError do
+      Net::HTTP.get(URI.parse("http://example.com"))
+    end
+  end
+
   def fake_pattern_match
     @fake_pattern_match ||= [
       {:pattern => %r|http://www.yahoo.com|, :responders => [FakeWeb::Responder.new(:get, "http://www.yahoo.com", {:response => 'Welcome to Yahoo!'}, 1)], :method => :get},
       {:pattern => %r|https://www.yahoo.com|, :responders => [FakeWeb::Responder.new(:get, "https://www.yahoo.com", {:response => 'Welcome to secure Yahoo!'}, 1)], :method => :get}
     ]
   end
+
 end

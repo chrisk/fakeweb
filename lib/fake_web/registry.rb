@@ -90,10 +90,9 @@ module FakeWeb
         when URI then uri
         when String
           uri = 'http://' + uri unless uri.match('^https?://')
-          parsed_uri = URI.parse(uri)
-          parsed_uri.query = sort_query_params(parsed_uri.query)
-          parsed_uri
+          URI.parse(uri)
         end
+      normalized_uri.query = sort_query_params(normalized_uri.query)
       normalized_uri.normalize
     end
 

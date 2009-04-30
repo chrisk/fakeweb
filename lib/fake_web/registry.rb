@@ -17,7 +17,7 @@ module FakeWeb
 
     def register_uri(method, uri, options)
       case uri
-      when String
+      when URI, String
         uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
           FakeWeb::Responder.new(method, uri, option, option[:times])
         end

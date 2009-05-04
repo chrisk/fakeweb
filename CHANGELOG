@@ -1,3 +1,9 @@
+fakeweb (development)
+
+* fix that HTTP Digest and OAuth requests could raise URI::InvalidURIErrors
+  [Bill Kocik, Chris Kampmeier]
+
+
 fakeweb (1.2.1)
 
 * fix that query parameters are handled correctly when registering with a URI
@@ -11,6 +17,7 @@ fakeweb (1.2.1)
 
 * add support for HTTP basic authentication via userinfo strings in URIs
   [Michael Bleigh]
+
 
 fakeweb (1.2.0)
 

@@ -38,10 +38,10 @@ module Net  #:nodoc: all
       path = request.path
       path = URI.parse(request.path).request_uri if request.path =~ /^http/
 
-      if request['authorization'].nil?
-        userinfo = ""
+      if request["authorization"] =~ /^Basic /
+        userinfo = request["authorization"].sub(/^Basic /, "").unpack("m").first + "@"
       else
-        userinfo = request['authorization'].sub(/^Basic /, "").unpack("m").first + "@"
+        userinfo = ""
       end
 
       uri = "#{protocol}://#{userinfo}#{self.address}:#{self.port}#{path}"

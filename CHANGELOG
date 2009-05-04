@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.2)
 
 * fix that HTTP Digest and OAuth requests could raise URI::InvalidURIErrors
   [Bill Kocik, Chris Kampmeier]

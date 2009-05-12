@@ -71,6 +71,17 @@ class TestRegexes < Test::Unit::TestCase
     assert !FakeWeb.registered_uri?(:get, "http://www.yahoo.com:443")
   end
 
+  def test_registry_only_finds_using_default_port_when_registered_without_if_protocol_matches
+    FakeWeb.register_uri(:get, %r|http://www.example.com/test|, :string => "example")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:80/test")
+    assert !FakeWeb.registered_uri?(:get, "http://www.example.com:443/test")
+    assert !FakeWeb.registered_uri?(:get, "https://www.example.com:443/test")
+    FakeWeb.register_uri(:get, %r|https://www.example.org/test|, :string => "example")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.org:443/test")
+    assert !FakeWeb.registered_uri?(:get, "https://www.example.org:80/test")
+    assert !FakeWeb.registered_uri?(:get, "http://www.example.org:80/test")
+  end
+
   def test_registry_matches_using_mismatched_port_when_registered_without
     FakeWeb.register_uri(:get, %r|http://www.yahoo.com|, :response => "Welcome to Yahoo!")
     assert FakeWeb.registered_uri?(:get, "http://www.yahoo.com:80")

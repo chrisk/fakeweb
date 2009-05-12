@@ -65,29 +65,29 @@ class TestRegexes < Test::Unit::TestCase
     assert_equal "first", response.body
   end
 
-  def test_pattern_map_does_not_find_matches_with_mismatched_protocols_or_ports_when_registered_with_both
+  def test_registry_does_not_find_using_mismatched_protocols_or_ports_when_registered_with_both
     FakeWeb.register_uri(:get, %r|http://www.yahoo.com:80|, :response => "Welcome to Yahoo!")
-    assert !FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "https://www.yahoo.com:80")
-    assert !FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.yahoo.com:443")
+    assert !FakeWeb.registered_uri?(:get, "https://www.yahoo.com:80")
+    assert !FakeWeb.registered_uri?(:get, "http://www.yahoo.com:443")
   end
 
-  def test_pattern_map_does_find_matches_with_mismatched_port_when_registered_without
+  def test_registry_matches_using_mismatched_port_when_registered_without
     FakeWeb.register_uri(:get, %r|http://www.yahoo.com|, :response => "Welcome to Yahoo!")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.yahoo.com:80")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.yahoo.com:443")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.yahoo.com:12345")
-    assert !FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "https://www.yahoo.com:443")
-    assert !FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "https://www.yahoo.com")
+    assert FakeWeb.registered_uri?(:get, "http://www.yahoo.com:80")
+    assert FakeWeb.registered_uri?(:get, "http://www.yahoo.com:443")
+    assert FakeWeb.registered_uri?(:get, "http://www.yahoo.com:12345")
+    assert !FakeWeb.registered_uri?(:get, "https://www.yahoo.com:443")
+    assert !FakeWeb.registered_uri?(:get, "https://www.yahoo.com")
   end
 
-  def test_pattern_map_finds_matches_for_any_protocol_and_port_when_registered_without_protocol_or_port
+  def test_registry_matches_using_any_protocol_and_port_when_registered_without_protocol_or_port
     FakeWeb.register_uri(:get, %r|www.example.com|, :response => "example")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.example.com")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.example.com:80")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "http://www.example.com:443")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "https://www.example.com")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "https://www.example.com:80")
-    assert FakeWeb::Registry.instance.send(:pattern_map_matches?, :get, "https://www.example.com:443")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:80")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:443")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:80")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:443")
   end
 
 end

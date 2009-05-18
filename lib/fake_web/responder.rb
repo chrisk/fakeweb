@@ -82,13 +82,13 @@ module FakeWeb
 
     def optionally_raise(response)
       return unless options.has_key?(:exception)
-      ex_alloc = options[:exception].allocate
-      ex_instance = case ex_alloc
-      when Net::HTTPError, OpenURI::HTTPError
-        options[:exception].new('Exception from FakeWeb', response)
-      else options[:exception].new('Exception from FakeWeb')
+
+      case options[:exception].to_s
+      when "Net::HTTPError", "OpenURI::HTTPError"
+        raise options[:exception].new('Exception from FakeWeb', response)
+      else
+        raise options[:exception].new('Exception from FakeWeb')
       end
-      raise ex_instance
     end
 
     def meta_information

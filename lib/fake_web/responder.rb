@@ -86,7 +86,7 @@ module FakeWeb
       ex_instance = case ex_alloc
       when Net::HTTPError, OpenURI::HTTPError
         options[:exception].new('Exception from FakeWeb', response)
-      else options[:exception].new
+      else options[:exception].new('Exception from FakeWeb')
       end
       raise ex_instance
     end

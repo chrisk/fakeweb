@@ -389,6 +389,13 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
+  def test_raising_an_exception_that_requires_an_argument_to_instantiate
+    FakeWeb.register_uri(:get, "http://example.com/timeout.txt", :exception => Timeout::Error)
+    assert_raises(Timeout::Error) do
+      Net::HTTP.get(URI.parse("http://example.com/timeout.txt"))
+    end
+  end
+
   def test_mock_instance_syntax
     FakeWeb.register_uri('http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     response = nil

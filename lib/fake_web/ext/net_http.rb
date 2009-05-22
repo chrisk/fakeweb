@@ -5,6 +5,7 @@ require 'stringio'
 module Net  #:nodoc: all
 
   class BufferedIO
+    alias :old_initialize :initialize
     def initialize(io, debug_output = nil)
       @read_timeout = 60
       @rbuf = ''
@@ -25,6 +26,9 @@ module Net  #:nodoc: all
   end
 
   class HTTP
+    class << self
+      alias :old_socket_type :socket_type
+    end
     def self.socket_type
       FakeWeb::StubSocket
     end

@@ -38,7 +38,7 @@ task :manifest do
 
   if spec_file
     spec = File.read spec_file
-    spec.gsub! /^(\s* s.(test_)?files \s* = \s* )( \[ [^\]]* \] | %w\( [^)]* \) )/mx do
+    spec.gsub!(/^(\s* s.(test_)?files \s* = \s* )( \[ [^\]]* \] | %w\( [^)]* \) )/mx) do
       assignment = $1
       bunch = $2 ? list.grep(/^test\//) : list
       '%s%%w(%s)' % [assignment, bunch.join(' ')]

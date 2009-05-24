@@ -5,7 +5,7 @@ require 'stringio'
 module Net  #:nodoc: all
 
   class BufferedIO
-    alias :old_initialize :initialize
+    alias initialize_without_fakeweb initialize
     def initialize(io, debug_output = nil)
       @read_timeout = 60
       @rbuf = ''
@@ -27,15 +27,13 @@ module Net  #:nodoc: all
 
   class HTTP
     class << self
-      alias :old_socket_type :socket_type
-    end
-    def self.socket_type
-      FakeWeb::StubSocket
+      alias socket_type_without_fakeweb socket_type
+      def socket_type
+        FakeWeb::StubSocket
+      end
     end
 
-    alias :original_net_http_request :request
-    alias :original_net_http_connect :connect
-
+    alias request_without_fakeweb request
     def request(request, body = nil, &block)
       protocol = use_ssl? ? "https" : "http"
 
@@ -55,14 +53,15 @@ module Net  #:nodoc: all
         @socket = Net::HTTP.socket_type.new
         FakeWeb.response_for(method, uri, &block)
       elsif FakeWeb.allow_net_connect?
-        original_net_http_connect
-        original_net_http_request(request, body, &block)
+        connect_without_fakeweb
+        request_without_fakeweb(request, body, &block)
       else
         raise FakeWeb::NetConnectNotAllowedError,
               "Real HTTP connections are disabled. Unregistered request: #{request.method} #{uri}"
       end
     end
 
+    alias connect_without_fakeweb connect
     def connect
     end
   end

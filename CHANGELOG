@@ -1,3 +1,15 @@
+fakeweb (development)
+
+* add method aliases in the Net::HTTP patch to eliminate warnings when running
+  with -w [Joshua Clingenpeel]
+
+* fix that removing the redefinition of OpenURI::HTTPError in 1.2.0 caused
+  :exception responses to raise when OpenURI isn't available [Chris Kampmeier]
+
+* fix registering an :exception response with classes that require arguments for
+  instantiation, like Interrupt's subclasses [Chris Kampmeier]
+
+
 fakeweb (1.2.2)
 
 * fix that HTTP Digest and OAuth requests could raise URI::InvalidURIErrors

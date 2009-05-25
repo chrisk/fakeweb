@@ -102,4 +102,14 @@ class TestRegexes < Test::Unit::TestCase
     assert FakeWeb.registered_uri?(:get, "https://www.example.com:443")
   end
 
+  def test_registry_matches_with_query_params
+    FakeWeb.register_uri(:get, %r[example.com/list\?(.*&|)important=1], :string => "example")
+    assert FakeWeb.registered_uri?(:get, "http://example.com/list?hash=123&important=1&unimportant=2")
+    assert FakeWeb.registered_uri?(:get, "http://example.com/list?hash=123&important=12&unimportant=2")
+    assert FakeWeb.registered_uri?(:get, "http://example.com/list?important=1&unimportant=2")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com/list?important=2")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com/list?important=2&unimportant=1")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com/list?hash=123&important=2&unimportant=1")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com/list?notimportant=1&unimportant=1")
+  end
 end

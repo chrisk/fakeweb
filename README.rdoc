@@ -70,8 +70,7 @@ If you use the <tt>:any</tt> symbol, the URI you specify will be completely
 stubbed out (regardless of the HTTP method of the request). This can be useful
 for RPC-like services, where the HTTP method isn't significant. (Older
 versions of FakeWeb always behaved like this, and didn't accept the first
-+method+ argument above; this syntax is still supported, for
-backwards-compatibility, but it will probably be deprecated at some point.)
++method+ argument above; this syntax is now deprecated.)
 
 === Rotating responses
 
@@ -96,8 +95,8 @@ option for that response.)
 You can stub requests that use basic authentication with +userinfo+ strings in
 the URIs:
 
-  FakeWeb.register_uri("http://example.com/secret", :string => "Unauthorized", :status => ["401", "Unauthorized"])
-  FakeWeb.register_uri("http://user:pass@example.com/secret", :string => "Authorized")
+  FakeWeb.register_uri(:get, "http://example.com/secret", :string => "Unauthorized", :status => ["401", "Unauthorized"])
+  FakeWeb.register_uri(:get, "http://user:pass@example.com/secret", :string => "Authorized")
 
   Net::HTTP.start("example.com") do |http|
     req = Net::HTTP::Get.new("/secret")

@@ -1,3 +1,10 @@
+fakeweb (development)
+
+* DEPRECATION: Calling FakeWeb.register_uri and FakeWeb.registered_uri? without
+  an HTTP method as the first argument is now deprecated. To match against any
+  HTTP method (the pre-1.2.0 behavior), use :any [Chris Kampmeier]
+
+
 fakeweb (1.2.3)
 
 * fix the #http_version of :file and :string responses, which was returning the

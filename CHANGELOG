@@ -1,4 +1,7 @@
-fakeweb (development)
+fakeweb (1.2.3)
+
+* fix the #http_version of :file and :string responses, which was returning the
+  request URI instead of something sensible like "1.0" [Chris Kampmeier]
 
 * add method aliases in the Net::HTTP patch to eliminate warnings when running
   with -w [Joshua Clingenpeel]

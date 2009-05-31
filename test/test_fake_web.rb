@@ -515,4 +515,15 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
+  def test_http_version_from_string_response
+    FakeWeb.register_uri(:get, "http://example.com", :string => "example")
+    response = Net::HTTP.start("example.com") { |http| http.get("/") }
+    assert_equal "1.0", response.http_version
+  end
+
+  def test_http_version_from_file_response
+    FakeWeb.register_uri(:get, "http://example.com", :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    response = Net::HTTP.start("example.com") { |http| http.get("/") }
+    assert_equal "1.0", response.http_version
+  end
 end

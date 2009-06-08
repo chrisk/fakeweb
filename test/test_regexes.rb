@@ -29,9 +29,9 @@ class TestRegexes < Test::Unit::TestCase
   end
 
   def test_register_uri_pattern
-    FakeWeb.register_uri(%r|http://example.com/test_example/\d+|, :string => "example")
-    assert FakeWeb.registered_uri?("http://example.com/test_example/25")
-    assert !FakeWeb.registered_uri?("http://example.com/test_example/abc")
+    FakeWeb.register_uri(:get, %r|http://example.com/test_example/\d+|, :string => "example")
+    assert FakeWeb.registered_uri?(:get, "http://example.com/test_example/25")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com/test_example/abc")
   end
 
   def test_pattern_map_can_find_matches

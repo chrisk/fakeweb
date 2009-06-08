@@ -2,9 +2,9 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeAuthentication < Test::Unit::TestCase
   def setup
-    FakeWeb.register_uri('http://user:pass@mock/auth.txt', :string => 'authorized')
-    FakeWeb.register_uri('http://user2:pass@mock/auth.txt', :string => 'wrong user')
-    FakeWeb.register_uri('http://mock/auth.txt', :string => 'unauthorized')
+    FakeWeb.register_uri(:get, 'http://user:pass@mock/auth.txt', :string => 'authorized')
+    FakeWeb.register_uri(:get, 'http://user2:pass@mock/auth.txt', :string => 'wrong user')
+    FakeWeb.register_uri(:get, 'http://mock/auth.txt', :string => 'unauthorized')
   end
 
   def test_register_uri_with_authentication_and_pattern
@@ -13,18 +13,18 @@ class TestFakeAuthentication < Test::Unit::TestCase
   end
 
   def test_register_uri_with_authentication
-    FakeWeb.register_uri('http://user:pass@mock/test_example.txt', :string => "example")
-    assert FakeWeb.registered_uri?('http://user:pass@mock/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://user:pass@mock/test_example.txt', :string => "example")
+    assert FakeWeb.registered_uri?(:get, 'http://user:pass@mock/test_example.txt')
   end
 
   def test_register_uri_with_authentication_doesnt_trigger_without
-    FakeWeb.register_uri('http://user:pass@mock/test_example.txt', :string => "example")
-    assert !FakeWeb.registered_uri?('http://mock/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://user:pass@mock/test_example.txt', :string => "example")
+    assert !FakeWeb.registered_uri?(:get, 'http://mock/test_example.txt')
   end
 
   def test_register_uri_with_authentication_doesnt_trigger_with_incorrect_credentials
-    FakeWeb.register_uri('http://user:pass@mock/test_example.txt', :string => "example")
-    assert !FakeWeb.registered_uri?('http://user:wrong@mock/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://user:pass@mock/test_example.txt', :string => "example")
+    assert !FakeWeb.registered_uri?(:get, 'http://user:wrong@mock/test_example.txt')
   end
 
   def test_unauthenticated_request

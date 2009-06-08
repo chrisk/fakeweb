@@ -8,6 +8,14 @@ require 'mocha'
 
 module FakeWebTestHelper
 
+  def capture_stderr
+    $stderr = StringIO.new
+    yield
+    $stderr.rewind && $stderr.read
+  ensure
+    $stderr = STDERR
+  end
+
   # Sets several expectations (using Mocha) that a real HTTP request makes it
   # past FakeWeb to the socket layer. You can use this when you need to check
   # that a request isn't handled by FakeWeb.

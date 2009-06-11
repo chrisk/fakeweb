@@ -56,6 +56,8 @@ module Net  #:nodoc: all
         connect_without_fakeweb
         request_without_fakeweb(request, body, &block)
       else
+        uri.sub!(":80/", "/")  if uri =~ %r|^http://|
+        uri.sub!(":443/", "/") if uri =~ %r|^https://|
         raise FakeWeb::NetConnectNotAllowedError,
               "Real HTTP connections are disabled. Unregistered request: #{request.method} #{uri}"
       end

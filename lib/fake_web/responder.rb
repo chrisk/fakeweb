@@ -2,6 +2,7 @@ module FakeWeb
   class Responder #:nodoc:
 
     attr_accessor :method, :uri, :options, :times
+    KNOWN_OPTIONS = [:exception, :file, :response, :status, :string].freeze
 
     def initialize(method, uri, options, times)
       self.method = method
@@ -17,6 +18,7 @@ module FakeWeb
         code, msg = meta_information
         response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
         response.instance_variable_set(:@body, content)
+        headers_extracted_from_options.each { |name, value| response[name] = value }
       end
 
       response.instance_variable_set(:@read, true)
@@ -30,6 +32,12 @@ module FakeWeb
     end
 
     private
+
+    def headers_extracted_from_options
+      options.reject {|name, _| KNOWN_OPTIONS.include?(name) }.map { |name, value|
+        [name.to_s.split("_").map { |segment| segment.capitalize }.join("-"), value]
+      }
+    end
 
     def content
       [ :file, :string ].each do |map_option|

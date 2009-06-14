@@ -131,6 +131,16 @@ This is handy when you want to make sure your tests are self-contained, or you
 want to catch the scenario when a URI is changed in implementation code
 without a corresponding test change.
 
+=== Specifying HTTP response headers
+
+When you register a response using the <tt>:string</tt> or <tt>:file</tt>
+options, you're only setting the body of the response. If you want to add
+headers to these responses, simply add the header as an option to
++register_uri+:
+
+  FakeWeb.register_uri(:get, "http://example.com/hello.txt", :string => "Hello", :content_type => "text/plain")
+
+This sets the "Content-Type" header in the response.
 
 == More info
 

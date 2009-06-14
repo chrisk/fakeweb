@@ -2,13 +2,18 @@ module FakeWeb
   class Responder #:nodoc:
 
     attr_accessor :method, :uri, :options, :times
-    KNOWN_OPTIONS = [:exception, :file, :response, :status, :string].freeze
+    KNOWN_OPTIONS = [:body, :exception, :response, :status].freeze
 
     def initialize(method, uri, options, times)
       self.method = method
       self.uri = uri
       self.options = options
       self.times = times ? times : 1
+
+      if options.has_key?(:file) || options.has_key?(:string)
+        print_file_string_options_deprecation_warning
+        options[:body] = options.delete(:file) || options.delete(:string)
+      end
     end
 
     def response(&block)
@@ -17,7 +22,7 @@ module FakeWeb
       else
         code, msg = meta_information
         response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
-        response.instance_variable_set(:@body, content)
+        response.instance_variable_set(:@body, body)
         headers_extracted_from_options.each { |name, value| response[name] = value }
       end
 
@@ -39,21 +44,14 @@ module FakeWeb
       }
     end
 
-    def content
-      [ :file, :string ].each do |map_option|
-        next unless options.has_key?(map_option)
-        return self.send("#{map_option}_response", options[map_option])
+    def body
+      return '' unless options.has_key?(:body)
+
+      if !options[:body].include?("\0") && File.exists?(options[:body]) && !File.directory?(options[:body])
+        File.read(options[:body])
+      else
+        options[:body]
       end
-
-      return ''
-    end
-
-    def file_response(path)
-      IO.read(path)
-    end
-
-    def string_response(string)
-      string
     end
 
     def baked_response
@@ -101,6 +99,14 @@ module FakeWeb
 
     def meta_information
       options.has_key?(:status) ? options[:status] : [200, 'OK']
+    end
+
+    def print_file_string_options_deprecation_warning
+      which = options.has_key?(:file) ? :file : :string
+      $stderr.puts
+      $stderr.puts "Deprecation warning: FakeWeb's :#{which} option has been renamed to :body."
+      $stderr.puts "Just replace :#{which} with :body in your FakeWeb.register_uri calls."
+      $stderr.puts "Called at #{caller[6]}"
     end
 
   end

@@ -7,17 +7,17 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uri
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for(:get, 'http://mock/test_example.txt').body
   end
   
   def test_mock_open
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', open('http://mock/test_example.txt').read
   end
   
   def test_mock_open_with_string_as_registered_uri
-    FakeWeb.register_uri(:get, 'http://mock/test_string.txt', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://mock/test_string.txt', :body => 'foo')
     assert_equal 'foo', open('http://mock/test_string.txt').string
   end
   
@@ -54,7 +54,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   end
 
   def test_mock_open_with_block
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     open('http://mock/test_example.txt') do |f|
       assert 'test example content', f.readlines
     end

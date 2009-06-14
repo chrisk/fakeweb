@@ -52,18 +52,17 @@ module FakeWeb
   # for +uri+ to be handled according to +options+. If you specify the method
   # <tt>:any</tt>, the response will be reigstered for any request for +uri+.
   # +uri+ can be a +String+ or a +URI+ object. +options+ must be either a
-  # +Hash+ or an +Array+ of +Hashes+ (see below) that must contain any one of
-  # the following keys:
+  # +Hash+ or an +Array+ of +Hashes+ (see below) that must contain one of these
+  # two keys:
   #
-  # <tt>:string</tt>::
-  #   Takes a +String+ argument that is returned as the body of the response.
-  #     FakeWeb.register_uri(:get, 'http://example.com/', :string => "Hello World!")
-  # <tt>:file</tt>::
-  #   Takes a valid filesystem path to a file that is slurped and returned as
-  #   the body of the response.
-  #     FakeWeb.register_uri(:post, 'http://example.com/', :file => "/tmp/my_response_body.txt")
+  # <tt>:body</tt>::
+  #   A string which is used as the body of the response. If the string refers
+  #   to a valid filesystem path, the contents of that file will be read and used
+  #   as the body of the response instead. (This used to be two options,
+  #   <tt>:string</tt> and <tt>:file</tt>, respectively. These are now deprecated.)
   # <tt>:response</tt>:: 
-  #   Either an <tt>Net::HTTPResponse</tt>, an +IO+ or a +String+.
+  #   Either an <tt>Net::HTTPResponse</tt>, an +IO+, or a +String+ which is used
+  #   as the full response for the request.
   # 
   #   The easier way by far is to pass the <tt>:response</tt> option to
   #   +register_uri+ as a +String+ or an (open for reads) +IO+ object which
@@ -104,11 +103,10 @@ module FakeWeb
   #   specified URL is requested. Any +Exception+ class is valid. Example:
   #     FakeWeb.register_uri('http://www.example.com/', :exception => Net::HTTPError)
   #
-  # If you're using the <tt>:string</tt> or <tt>:file</tt> response type, you can
-  # pass additional options to specify the HTTP headers to be used in the response.
-  # Example:
+  # If you're using the <tt>:body</tt> response type, you can pass additional
+  # options to specify the HTTP headers to be used in the response. Example:
   #
-  #   FakeWeb.register_uri(:get, "http://example.com/index.txt", :string => "Hello", :content_type => "text/plain")
+  #   FakeWeb.register_uri(:get, "http://example.com/index.txt", :body => "Hello", :content_type => "text/plain")
   def self.register_uri(*args)
     case args.length
     when 3

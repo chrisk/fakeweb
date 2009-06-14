@@ -34,7 +34,7 @@ Start by requiring FakeWeb:
 
 === Registering basic string responses
 
-  FakeWeb.register_uri(:get, "http://example.com/test1", :string => "Hello World!")
+  FakeWeb.register_uri(:get, "http://example.com/test1", :body => "Hello World!")
 
   Net::HTTP.get(URI.parse("http://example.com/test1"))
   => "Hello World!"
@@ -52,7 +52,7 @@ Start by requiring FakeWeb:
 
 === Adding a custom status to the response
 
-  FakeWeb.register_uri(:get, "http://example.com/", :string => "Nothing to be found 'round here",
+  FakeWeb.register_uri(:get, "http://example.com/", :body => "Nothing to be found 'round here",
                                                     :status => ["404", "Not Found"])
 
   Net::HTTP.start("example.com") do |req|
@@ -64,7 +64,7 @@ Start by requiring FakeWeb:
 
 === Responding to any HTTP method
 
-  FakeWeb.register_uri(:any, "http://example.com", :string => "response for any HTTP method")
+  FakeWeb.register_uri(:any, "http://example.com", :body => "response for any HTTP method")
 
 If you use the <tt>:any</tt> symbol, the URI you specify will be completely
 stubbed out (regardless of the HTTP method of the request). This can be useful
@@ -81,8 +81,8 @@ a response more than once before rotating, by specifying a <tt>:times</tt>
 option for that response.)
 
   FakeWeb.register_uri(:delete, "http://example.com/posts/1",
-                       [{:string => "Post 1 deleted.", :status => ["200", "OK"]},
-                        {:string => "Post not found",  :status => ["404", "Not Found"]}])
+                       [{:body => "Post 1 deleted.", :status => ["200", "OK"]},
+                        {:body => "Post not found",  :status => ["404", "Not Found"]}])
 
   Net::HTTP.start("example.com") do |req|
     req.delete("/posts/1").body  # => "Post 1 deleted"
@@ -95,8 +95,8 @@ option for that response.)
 You can stub requests that use basic authentication with +userinfo+ strings in
 the URIs:
 
-  FakeWeb.register_uri(:get, "http://example.com/secret", :string => "Unauthorized", :status => ["401", "Unauthorized"])
-  FakeWeb.register_uri(:get, "http://user:pass@example.com/secret", :string => "Authorized")
+  FakeWeb.register_uri(:get, "http://example.com/secret", :body => "Unauthorized", :status => ["401", "Unauthorized"])
+  FakeWeb.register_uri(:get, "http://user:pass@example.com/secret", :body => "Authorized")
 
   Net::HTTP.start("example.com") do |http|
     req = Net::HTTP::Get.new("/secret")
@@ -133,12 +133,11 @@ without a corresponding test change.
 
 === Specifying HTTP response headers
 
-When you register a response using the <tt>:string</tt> or <tt>:file</tt>
-options, you're only setting the body of the response. If you want to add
-headers to these responses, simply add the header as an option to
-+register_uri+:
+When you register a response using the <tt>:body</tt> option, you're only
+setting the body of the response. If you want to add headers to these responses,
+simply add the header as an option to +register_uri+:
 
-  FakeWeb.register_uri(:get, "http://example.com/hello.txt", :string => "Hello", :content_type => "text/plain")
+  FakeWeb.register_uri(:get, "http://example.com/hello.txt", :body => "Hello", :content_type => "text/plain")
 
 This sets the "Content-Type" header in the response.
 

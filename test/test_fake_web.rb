@@ -8,7 +8,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_register_uri
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :string => "example")
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => "example")
     assert FakeWeb.registered_uri?(:get, 'http://mock/test_example.txt')
   end
 
@@ -17,7 +17,7 @@ class TestFakeWeb < Test::Unit::TestCase
       FakeWeb.register_uri("http://example.com")
     end
     assert_raises ArgumentError do
-      FakeWeb.register_uri(:get, "http://example.com", "/example", :string => "example")
+      FakeWeb.register_uri(:get, "http://example.com", "/example", :body => "example")
     end
   end
 
@@ -46,47 +46,47 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_register_uri_with_port_and_check_with_port
-    FakeWeb.register_uri(:get, 'http://example.com:3000/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://example.com:3000/', :body => 'foo')
     assert FakeWeb.registered_uri?(:get, 'http://example.com:3000/')
   end
 
   def test_register_uri_with_port_and_check_without_port
-    FakeWeb.register_uri(:get, 'http://example.com:3000/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://example.com:3000/', :body => 'foo')
     assert !FakeWeb.registered_uri?(:get, 'http://example.com/')
   end
 
   def test_register_uri_with_default_port_for_http_and_check_without_port
-    FakeWeb.register_uri(:get, 'http://example.com:80/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://example.com:80/', :body => 'foo')
     assert FakeWeb.registered_uri?(:get, 'http://example.com/')
   end
 
   def test_register_uri_with_default_port_for_https_and_check_without_port
-    FakeWeb.register_uri(:get, 'https://example.com:443/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'https://example.com:443/', :body => 'foo')
     assert FakeWeb.registered_uri?(:get, 'https://example.com/')
   end
 
   def test_register_uri_with_no_port_for_http_and_check_with_default_port
-    FakeWeb.register_uri(:get, 'http://example.com/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://example.com/', :body => 'foo')
     assert FakeWeb.registered_uri?(:get, 'http://example.com:80/')
   end
 
   def test_register_uri_with_no_port_for_https_and_check_with_default_port
-    FakeWeb.register_uri(:get, 'https://example.com/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'https://example.com/', :body => 'foo')
     assert FakeWeb.registered_uri?(:get, 'https://example.com:443/')
   end
 
   def test_register_uri_with_no_port_for_https_and_check_with_443_on_http
-    FakeWeb.register_uri(:get, 'https://example.com/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'https://example.com/', :body => 'foo')
     assert !FakeWeb.registered_uri?(:get, 'http://example.com:443/')
   end
 
   def test_register_uri_with_no_port_for_http_and_check_with_80_on_https
-    FakeWeb.register_uri(:get, 'http://example.com/', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://example.com/', :body => 'foo')
     assert !FakeWeb.registered_uri?(:get, 'https://example.com:80/')
   end
 
   def test_register_uri_for_any_method_explicitly
-    FakeWeb.register_uri(:any, "http://example.com/rpc_endpoint", :string => "OK")
+    FakeWeb.register_uri(:any, "http://example.com/rpc_endpoint", :body => "OK")
     assert FakeWeb.registered_uri?(:get, "http://example.com/rpc_endpoint")
     assert FakeWeb.registered_uri?(:post, "http://example.com/rpc_endpoint")
     assert FakeWeb.registered_uri?(:put, "http://example.com/rpc_endpoint")
@@ -98,7 +98,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_register_uri_for_get_method_only
-    FakeWeb.register_uri(:get, "http://example.com/users", :string => "User list")
+    FakeWeb.register_uri(:get, "http://example.com/users", :body => "User list")
     assert FakeWeb.registered_uri?(:get, "http://example.com/users")
     assert !FakeWeb.registered_uri?(:post, "http://example.com/users")
     assert !FakeWeb.registered_uri?(:put, "http://example.com/users")
@@ -110,7 +110,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_response_for_with_registered_uri
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for(:get, 'http://mock/test_example.txt').body
   end
 
@@ -119,18 +119,18 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_response_for_with_put_method
-    FakeWeb.register_uri(:put, "http://example.com", :string => "response")
+    FakeWeb.register_uri(:put, "http://example.com", :body => "response")
     assert_equal 'response', FakeWeb.response_for(:put, "http://example.com").body
   end
 
   def test_response_for_with_any_method_explicitly
-    FakeWeb.register_uri(:any, "http://example.com", :string => "response")
+    FakeWeb.register_uri(:any, "http://example.com", :body => "response")
     assert_equal 'response', FakeWeb.response_for(:get, "http://example.com").body
     assert_equal 'response', FakeWeb.response_for(:any, "http://example.com").body
   end
 
   def test_content_for_registered_uri_with_port_and_request_with_port
-    FakeWeb.register_uri(:get, 'http://example.com:3000/', :string => 'test example content')
+    FakeWeb.register_uri(:get, 'http://example.com:3000/', :body => 'test example content')
     Net::HTTP.start('example.com', 3000) do |http|
       response = http.get('/')
       assert_equal 'test example content', response.body
@@ -138,7 +138,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uri_with_default_port_for_http_and_request_without_port
-    FakeWeb.register_uri(:get, 'http://example.com:80/', :string => 'test example content')
+    FakeWeb.register_uri(:get, 'http://example.com:80/', :body => 'test example content')
     Net::HTTP.start('example.com') do |http|
       response = http.get('/')
       assert_equal 'test example content', response.body
@@ -146,7 +146,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uri_with_no_port_for_http_and_request_with_default_port
-    FakeWeb.register_uri(:get, 'http://example.com/', :string => 'test example content')
+    FakeWeb.register_uri(:get, 'http://example.com/', :body => 'test example content')
     Net::HTTP.start('example.com', 80) do |http|
       response = http.get('/')
       assert_equal 'test example content', response.body
@@ -154,7 +154,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uri_with_default_port_for_https_and_request_with_default_port
-    FakeWeb.register_uri(:get, 'https://example.com:443/', :string => 'test example content')
+    FakeWeb.register_uri(:get, 'https://example.com:443/', :body => 'test example content')
     http = Net::HTTP.new('example.com', 443)
     http.use_ssl = true
     response = http.get('/')
@@ -162,7 +162,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uri_with_no_port_for_https_and_request_with_default_port
-    FakeWeb.register_uri(:get, 'https://example.com/', :string => 'test example content')
+    FakeWeb.register_uri(:get, 'https://example.com/', :body => 'test example content')
     http = Net::HTTP.new('example.com', 443)
     http.use_ssl = true
     response = http.get('/')
@@ -170,8 +170,8 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uris_with_ports_on_same_domain_and_request_without_port
-    FakeWeb.register_uri(:get, 'http://example.com:3000/', :string => 'port 3000')
-    FakeWeb.register_uri(:get, 'http://example.com/', :string => 'port 80')
+    FakeWeb.register_uri(:get, 'http://example.com:3000/', :body => 'port 3000')
+    FakeWeb.register_uri(:get, 'http://example.com/', :body => 'port 80')
     Net::HTTP.start('example.com') do |http|
       response = http.get('/')
       assert_equal 'port 80', response.body
@@ -179,8 +179,8 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_content_for_registered_uris_with_ports_on_same_domain_and_request_with_port
-    FakeWeb.register_uri(:get, 'http://example.com:3000/', :string => 'port 3000')
-    FakeWeb.register_uri(:get, 'http://example.com/', :string => 'port 80')
+    FakeWeb.register_uri(:get, 'http://example.com:3000/', :body => 'port 3000')
+    FakeWeb.register_uri(:get, 'http://example.com/', :body => 'port 80')
     Net::HTTP.start('example.com', 3000) do |http|
       response = http.get('/')
       assert_equal 'port 3000', response.body
@@ -189,7 +189,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_content_for_registered_uri_with_get_method_only
     FakeWeb.allow_net_connect = false
-    FakeWeb.register_uri(:get, "http://example.com/", :string => "test example content")
+    FakeWeb.register_uri(:get, "http://example.com/", :body => "test example content")
     Net::HTTP.start('example.com') do |http|
       assert_equal 'test example content', http.get('/').body
       assert_raises(FakeWeb::NetConnectNotAllowedError) { http.post('/', nil) }
@@ -200,7 +200,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_content_for_registered_uri_with_any_method_explicitly
     FakeWeb.allow_net_connect = false
-    FakeWeb.register_uri(:any, "http://example.com/", :string => "test example content")
+    FakeWeb.register_uri(:any, "http://example.com/", :body => "test example content")
     Net::HTTP.start('example.com') do |http|
       assert_equal 'test example content', http.get('/').body
       assert_equal 'test example content', http.post('/', nil).body
@@ -212,7 +212,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_content_for_registered_uri_with_any_method_implicitly
     FakeWeb.allow_net_connect = false
     capture_stderr do  # silence deprecation warning
-      FakeWeb.register_uri("http://example.com/", :string => "test example content")
+      FakeWeb.register_uri("http://example.com/", :body => "test example content")
     end
 
     Net::HTTP.start('example.com') do |http|
@@ -224,7 +224,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_with_block
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     Net::HTTP.start('mock') do |http|
       response = http.get('/test_example.txt')
       assert_equal 'test example content', response.body
@@ -232,7 +232,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_with_undocumented_full_uri_argument_style
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     Net::HTTP.start('mock') do |query|
       response = query.get('http://mock/test_example.txt')
       assert_equal 'test example content', response.body
@@ -240,7 +240,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_with_undocumented_full_uri_argument_style_and_query
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt?a=b', :string => 'test query content')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt?a=b', :body => 'test query content')
     Net::HTTP.start('mock') do |query|
       response = query.get('http://mock/test_example.txt?a=b')
       assert_equal 'test query content', response.body
@@ -248,7 +248,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_post
-    FakeWeb.register_uri(:post, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:post, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     response = nil
     Net::HTTP.start('mock') do |query|
       response = query.post('/test_example.txt', '')
@@ -258,7 +258,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_mock_post_with_string_as_registered_uri
     response = nil
-    FakeWeb.register_uri(:post, 'http://mock/test_string.txt', :string => 'foo')
+    FakeWeb.register_uri(:post, 'http://mock/test_string.txt', :body => 'foo')
     Net::HTTP.start('mock') do |query|
       response = query.post('/test_string.txt', '')
     end
@@ -297,8 +297,8 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_proxy_request
-    FakeWeb.register_uri(:get, 'http://www.example.com/', :string => "hello world")
-    FakeWeb.register_uri(:get, 'http://your.proxy.host/', :string => "lala")
+    FakeWeb.register_uri(:get, 'http://www.example.com/', :body => "hello world")
+    FakeWeb.register_uri(:get, 'http://your.proxy.host/', :body => "lala")
     proxy_addr = 'your.proxy.host'
     proxy_port = 8080
 
@@ -309,7 +309,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_https_request
-    FakeWeb.register_uri(:get, 'https://www.example.com/', :string => "Hello World")
+    FakeWeb.register_uri(:get, 'https://www.example.com/', :body => "Hello World")
     http = Net::HTTP.new('www.example.com', 443)
     http.use_ssl = true
     response = http.get('/')
@@ -359,7 +359,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_real_request_on_same_domain_as_mock
     setup_expectations_for_real_apple_hot_news_request
 
-    FakeWeb.register_uri(:get, 'http://images.apple.com/test_string.txt', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://images.apple.com/test_string.txt', :body => 'foo')
 
     resp = nil
     Net::HTTP.start('images.apple.com') do |query|
@@ -370,7 +370,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_on_real_domain
-    FakeWeb.register_uri(:get, 'http://images.apple.com/test_string.txt', :string => 'foo')
+    FakeWeb.register_uri(:get, 'http://images.apple.com/test_string.txt', :body => 'foo')
     resp = nil
     Net::HTTP.start('images.apple.com') do |query|
       resp = query.get('/test_string.txt')
@@ -404,7 +404,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_instance_syntax
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     response = nil
     uri = URI.parse('http://mock/test_example.txt')
     http = Net::HTTP.new(uri.host, uri.port)
@@ -419,7 +419,7 @@ class TestFakeWeb < Test::Unit::TestCase
     response = nil
     proxy_address = nil
     proxy_port = nil
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     uri = URI.parse('http://mock/test_example.txt')
     http = Net::HTTP::Proxy(proxy_address, proxy_port).new(
               uri.host, (uri.port or 80))
@@ -431,7 +431,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_response_type
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :string => "test")
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => "test")
     Net::HTTP.start('mock') do |http|
       response = http.get('/test_example.txt')
       assert_kind_of(Net::HTTPSuccess, response)
@@ -449,9 +449,9 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_mock_rotate_responses
     FakeWeb.register_uri(:get, 'http://mock/multiple_test_example.txt',
-                         [ {:file => File.dirname(__FILE__) + '/fixtures/test_example.txt', :times => 2},
-                           {:string => "thrice", :times => 3},
-                           {:string => "ever_more"} ])
+                         [ {:body => File.dirname(__FILE__) + '/fixtures/test_example.txt', :times => 2},
+                           {:body => "thrice", :times => 3},
+                           {:body => "ever_more"} ])
 
     uri = URI.parse('http://mock/multiple_test_example.txt')
     2.times { assert_equal 'test example content', Net::HTTP.get(uri) }
@@ -489,7 +489,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_txt_file_should_have_three_lines
-    FakeWeb.register_uri(:get, 'http://www.google.com/', :file => File.dirname(__FILE__) + '/fixtures/test_txt_file')
+    FakeWeb.register_uri(:get, 'http://www.google.com/', :body => File.dirname(__FILE__) + '/fixtures/test_txt_file')
     response = nil
     Net::HTTP.start('www.google.com') do |query|
       response = query.get('/')
@@ -510,23 +510,34 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_raise EOFError do
       Net::HTTP.get(URI.parse("http://example.com"))
     end
+
+    FakeWeb.register_uri(:get, "http://example.com", :body => "test\0test")
+    body = Net::HTTP.get(URI.parse("http://example.com"))
+    assert_equal "test\0test", body
+  end
+
+  def test_registering_using_body_with_directory_name
+    dirname = File.dirname(__FILE__)
+    FakeWeb.register_uri(:get, "http://example.com", :body => dirname)
+    body = Net::HTTP.get(URI.parse("http://example.com"))
+    assert_equal dirname, body
   end
 
   def test_http_version_from_string_response
-    FakeWeb.register_uri(:get, "http://example.com", :string => "example")
+    FakeWeb.register_uri(:get, "http://example.com", :body => "example")
     response = Net::HTTP.start("example.com") { |http| http.get("/") }
     assert_equal "1.0", response.http_version
   end
 
   def test_http_version_from_file_response
-    FakeWeb.register_uri(:get, "http://example.com", :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, "http://example.com", :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     response = Net::HTTP.start("example.com") { |http| http.get("/") }
     assert_equal "1.0", response.http_version
   end
 
   def test_register_uri_without_method_argument_prints_deprecation_warning
     warning = capture_stderr do
-      FakeWeb.register_uri("http://example.com", :string => "test")
+      FakeWeb.register_uri("http://example.com", :body => "test")
     end
     assert_match /deprecation warning: fakeweb/i, warning
   end
@@ -543,5 +554,33 @@ class TestFakeWeb < Test::Unit::TestCase
       FakeWeb.response_for("http://example.com")
     end
     assert_match /deprecation warning: fakeweb/i, warning
+  end
+
+  def test_register_uri_without_method_argument_prints_deprecation_warning_with_correct_caller
+    warning = capture_stderr do
+      FakeWeb.register_uri("http://example.com", :body => "test")
+    end
+    assert_match /Called at.*?test_fake_web\.rb/i, warning
+  end
+
+  def test_register_uri_with_string_option_prints_deprecation_warning
+    warning = capture_stderr do
+      FakeWeb.register_uri(:get, "http://example.com", :string => "test")
+    end
+    assert_match /deprecation warning: fakeweb's :string option/i, warning
+  end
+
+  def test_register_uri_with_file_option_prints_deprecation_warning
+    warning = capture_stderr do
+      FakeWeb.register_uri(:get, "http://example.com", :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    end
+    assert_match /deprecation warning: fakeweb's :file option/i, warning
+  end
+
+  def test_register_uri_with_string_option_prints_deprecation_warning_with_correct_caller
+    warning = capture_stderr do
+      FakeWeb.register_uri(:get, "http://example.com", :string => "test")
+    end
+    assert_match /Called at.*?test_fake_web\.rb/i, warning
   end
 end

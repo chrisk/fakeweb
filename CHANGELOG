@@ -1,5 +1,9 @@
 fakeweb (development)
 
+* add support for specifying HTTP headers as options to FakeWeb.register_uri
+  when using the :string or :file response types, since those methods only
+  specify a response body [David Michael, Chris Kampmeier]
+
 * DEPRECATION: Calling FakeWeb.register_uri and FakeWeb.registered_uri? without
   an HTTP method as the first argument is now deprecated. To match against any
   HTTP method (the pre-1.2.0 behavior), use :any [Chris Kampmeier]

@@ -104,6 +104,11 @@ module FakeWeb
   #   specified URL is requested. Any +Exception+ class is valid. Example:
   #     FakeWeb.register_uri('http://www.example.com/', :exception => Net::HTTPError)
   #
+  # If you're using the <tt>:string</tt> or <tt>:file</tt> response type, you can
+  # pass additional options to specify the HTTP headers to be used in the response.
+  # Example:
+  #
+  #   FakeWeb.register_uri(:get, "http://example.com/index.txt", :string => "Hello", :content_type => "text/plain")
   def self.register_uri(*args)
     case args.length
     when 3

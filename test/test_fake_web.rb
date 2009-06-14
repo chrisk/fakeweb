@@ -501,7 +501,7 @@ class TestFakeWeb < Test::Unit::TestCase
     require "fakeweb"
   end
 
-  def test_registering_using_response_with_string_containing_null_byte
+  def test_registering_with_string_containing_null_byte
     # Regression test for File.exists? raising an ArgumentError ("string
     # contains null byte") since :response first tries to find by filename.
     # The string should be treated as a response body, instead, and an
@@ -516,11 +516,17 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal "test\0test", body
   end
 
-  def test_registering_using_body_with_directory_name
-    dirname = File.dirname(__FILE__)
-    FakeWeb.register_uri(:get, "http://example.com", :body => dirname)
+  def test_registering_with_string_that_is_a_directory_name
+    # Similar to above, but for Errno::EISDIR being raised since File.exists?
+    # returns true for directories
+    FakeWeb.register_uri(:get, "http://example.com", :response => File.dirname(__FILE__))
+    assert_raise EOFError do
+      body = Net::HTTP.get(URI.parse("http://example.com"))
+    end
+
+    FakeWeb.register_uri(:get, "http://example.com", :body => File.dirname(__FILE__))
     body = Net::HTTP.get(URI.parse("http://example.com"))
-    assert_equal dirname, body
+    assert_equal File.dirname(__FILE__), body
   end
 
   def test_http_version_from_string_response

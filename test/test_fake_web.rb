@@ -114,16 +114,6 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal 'test example content', FakeWeb.response_for(:get, 'http://mock/test_example.txt').body
   end
 
-  def test_response_for_with_matching_registered_uri
-    FakeWeb.register_uri(:get, %r|http://www.google.com|, :body => "Welcome to Google!")
-    assert_equal "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com").body
-  end
-
-  def test_response_for_with_matching_registered_uri_and_method
-    FakeWeb.register_uri(:get, %r|http://www.google.com|, :body => "Welcome to Google!")
-    assert_equal "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com").body
-  end
-
   def test_response_for_with_unknown_uri
     assert_equal nil, FakeWeb.response_for(:get, 'http://example.com/')
   end

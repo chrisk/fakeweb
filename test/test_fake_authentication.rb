@@ -25,21 +25,21 @@ class TestFakeAuthentication < Test::Unit::TestCase
   def test_unauthenticated_request
     http = Net::HTTP.new('mock', 80)
     req = Net::HTTP::Get.new('/auth.txt')
-    assert_equal http.request(req).body, 'unauthorized'
+    assert_equal 'unauthorized', http.request(req).body
   end
 
   def test_authenticated_request
     http = Net::HTTP.new('mock',80)
     req = Net::HTTP::Get.new('/auth.txt')
     req.basic_auth 'user', 'pass'
-    assert_equal http.request(req).body, 'authorized'
+    assert_equal 'authorized', http.request(req).body
   end
 
   def test_incorrectly_authenticated_request
     http = Net::HTTP.new('mock',80)
     req = Net::HTTP::Get.new('/auth.txt')
     req.basic_auth 'user2', 'pass'
-    assert_equal http.request(req).body, 'wrong user'
+    assert_equal 'wrong user', http.request(req).body
   end
 
   def test_basic_auth_support_is_transparent_to_oauth

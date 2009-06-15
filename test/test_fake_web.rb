@@ -115,7 +115,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_response_for_with_unknown_uri
-    assert_equal nil, FakeWeb.response_for(:get, 'http://example.com/')
+    assert_nil FakeWeb.response_for(:get, 'http://example.com/')
   end
 
   def test_response_for_with_put_method

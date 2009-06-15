@@ -15,7 +15,7 @@ module Net  #:nodoc: all
       when Socket, OpenSSL::SSL::SSLSocket, IO
         io
       when String
-        if !io.include?("\0") && File.exists?(io)
+        if !io.include?("\0") && File.exists?(io) && !File.directory?(io)
           File.open(io, "r")
         else
           StringIO.new(io)

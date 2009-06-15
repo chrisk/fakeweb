@@ -1,5 +1,13 @@
 fakeweb (development)
 
+* fix an exception when registering with the :response option and a string that
+  is the same as the name of a directory in the current path [Chris Kampmeier]
+
+* DEPRECATION: Calling FakeWeb.register_uri with a :string or :file option is
+  now deprecated. Both options have been replaced with a unified :body option,
+  since they supply the response body (as opposed to :response, which supplies
+  the full response including headers) [Chris Kampmeier]
+
 * add support for specifying HTTP headers as options to FakeWeb.register_uri
   when using the :string or :file response types, since those methods only
   specify a response body [David Michael, Chris Kampmeier]

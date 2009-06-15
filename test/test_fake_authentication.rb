@@ -8,7 +8,7 @@ class TestFakeAuthentication < Test::Unit::TestCase
   end
 
   def test_register_uri_with_authentication_and_pattern
-    FakeWeb.register_uri(:get, %r|http://user:pass@mock/example\.\w+|i, :string => "example")
+    FakeWeb.register_uri(:get, %r|http://user:pass@mock/example\.\w+|i, :body => "example")
     assert FakeWeb.registered_uri?(:get, 'http://user:pass@mock/example.txt')
   end
 

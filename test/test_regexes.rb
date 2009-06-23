@@ -64,11 +64,6 @@ class TestRegexes < Test::Unit::TestCase
     assert_equal "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com").body
   end
 
-  def test_response_for_with_matching_registered_uri_and_method
-    FakeWeb.register_uri(:get, %r|http://www.google.com|, :body => "Welcome to Google!")
-    assert_equal "Welcome to Google!", FakeWeb.response_for(:get, "http://www.google.com").body
-  end
-
   def test_registered_uri_with_authentication_and_pattern
     FakeWeb.register_uri(:get, %r|http://user:pass@mock/example\.\w+|i, :body => "example")
     assert FakeWeb.registered_uri?(:get, 'http://user:pass@mock/example.txt')

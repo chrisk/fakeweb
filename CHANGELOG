@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.4)
 
 * add experimental support for matching URIs via regular expressions
   [Jacqui Maher, Tiago Albineli Motta, Peter Wagene]

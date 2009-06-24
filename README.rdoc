@@ -42,6 +42,9 @@ Start by requiring FakeWeb:
   Net::HTTP.get(URI.parse("http://example.com/test2"))
   => FakeWeb is bypassed and the response from a real request is returned
 
+You can also call <tt>register_uri</tt> with a regular expression, to match
+more than one URI.
+
 === Replaying a recorded response
 
   page = `curl -is http://www.google.com/`
@@ -104,30 +107,6 @@ the URIs:
     req.basic_auth("user", "pass")
     http.request(req)  # => "Authorized"
   end
-
-=== Registering URI patterns with regular expressions
-
-  FakeWeb.register_uri(%r|http://example.com(:\d+)?/test/\d+|, :string => "Response to a patterned URI!")
-  Net::HTTP.get(URI.parse("http://example.com/test/1"))
-  => "Response to a patterned URI!"
-
-  FakeWeb.registered_uri?('http://example.com/test/25')
-  => true
-
-  Net::HTTP.get(URI.parse("http://example.com/test/not_a_number"))
-  => FakeWeb::NetConnectNotAllowedError: Real HTTP connections are disabled. Unregistered request: GET http://example.com:80/test/not_a_number
-    from ./lib/fake_web/ext/net_http.rb:53:in `request'
-    from /opt/local/lib/ruby/1.8/net/http.rb:945:in `request_get'
-    from /opt/local/lib/ruby/1.8/net/http.rb:380:in `get_response'
-    from /opt/local/lib/ruby/1.8/net/http.rb:543:in `start'
-    from /opt/local/lib/ruby/1.8/net/http.rb:379:in `get_response'
-    from /opt/local/lib/ruby/1.8/net/http.rb:356:in `get'
-    from (irb):19
-    from :0
-
-  FakeWeb.registered_uri?('http://example.com/test/not_a_number')
-  => false
-
 
 === Clearing registered URIs
 

@@ -51,9 +51,9 @@ module FakeWeb
   # Register requests using the HTTP method specified by the symbol +method+
   # for +uri+ to be handled according to +options+. If you specify the method
   # <tt>:any</tt>, the response will be reigstered for any request for +uri+.
-  # +uri+ can be a +String+ or a +URI+ object. +options+ must be either a
-  # +Hash+ or an +Array+ of +Hashes+ (see below) that must contain one of these
-  # two keys:
+  # +uri+ can be a +String+, +URI+, or +Regexp+ object. +options+ must be either
+  # a +Hash+ or an +Array+ of +Hashes+ (see below), which must contain one of
+  # these two keys:
   #
   # <tt>:body</tt>::
   #   A string which is used as the body of the response. If the string refers

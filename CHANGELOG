@@ -1,5 +1,8 @@
 fakeweb (development)
 
+* add experimental support for matching URIs via regular expressions
+  [Jacqui Maher, Tiago Albineli Motta, Peter Wagene]
+
 * fix an exception when registering with the :response option and a string that
   is the same as the name of a directory in the current path [Chris Kampmeier]
 

@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rake/gempackagetask'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 task :default => :test
 
@@ -12,13 +12,12 @@ Rake::TestTask.new :test do |test|
 end
 
 desc "Generate Documentation"
-Rake::RDocTask.new do |rdoc|
+RDoc::Task.new do |rdoc|
   rdoc.main = "README.rdoc"
   rdoc.rdoc_dir = "doc"
   rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
   rdoc.title = "FakeWeb API Documentation"
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.options << '--charset' << 'utf-8'
+  rdoc.options << '--line-numbers' << '--charset' << 'utf-8'
 end
 
 desc %{Update ".manifest" with the latest list of project filenames. Respect\

@@ -2,7 +2,7 @@ module FakeWeb
   class Registry #:nodoc:
     include Singleton
 
-    attr_accessor :uri_map, :pattern_map
+    attr_accessor :uri_map
 
     def initialize
       clean_registry
@@ -12,44 +12,32 @@ module FakeWeb
       self.uri_map = Hash.new do |hash, key|
         hash[key] = Hash.new(&hash.default_proc)
       end
-      self.pattern_map = []
     end
 
     def register_uri(method, uri, options)
-      case uri
-      when URI, String
-        uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
-          FakeWeb::Responder.new(method, uri, option, option[:times])
-        end
-      when Regexp
-        responders = [*[options]].flatten.collect do |option|
-          FakeWeb::Responder.new(method, uri, option, option[:times])
-        end
-        pattern_map << {:pattern => uri,
-                        :responders => responders,
-                        :method => method }
-
+      uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
+        FakeWeb::Responder.new(method, uri, option, option[:times])
       end
     end
 
     def registered_uri?(method, uri)
       normalized_uri = normalize_uri(uri)
-      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any) || pattern_map_matches?(method, uri) || pattern_map_matches?(:any, uri)
+      uri_map[normalized_uri].has_key?(method) || uri_map[normalized_uri].has_key?(:any) ||
+      uri_map_matches?(method, uri) || uri_map_matches?(:any, uri)
     end
 
     def registered_uri(method, uri)
       uri = normalize_uri(uri)
-      registered = registered_uri?(method, uri)
-      if registered && uri_map[uri].has_key?(method)
+      return nil unless registered_uri?(method, uri)
+
+      if uri_map[uri].has_key?(method)
         uri_map[uri][method]
-      elsif registered && pattern_map_matches?(method, uri)
-        pattern_map_matches(method, uri).map{|m| m[:responders]}.flatten
-      elsif registered && uri_map[uri].has_key?(:any)
+      elsif uri_map_matches?(method, uri)
+        uri_map_matches(method, uri)
+      elsif uri_map[uri].has_key?(:any)
         uri_map[uri][:any]
-      elsif registered && pattern_map_matches(:any, uri)
-        pattern_map_matches(:any, uri).map{|m| m[:responders]}.flatten
-      else
-        nil
+      elsif uri_map_matches(:any, uri)
+        uri_map_matches(:any, uri)
       end
     end
 
@@ -69,20 +57,23 @@ module FakeWeb
       next_response.response(&block)
     end
 
-    def pattern_map_matches?(method, uri)
-      !pattern_map_matches(method, uri).empty?
+    def uri_map_matches?(method, uri)
+      !uri_map_matches(method, uri).nil?
     end
 
-    def pattern_map_matches(method, uri)
-      uri = uri.to_s
+    def uri_map_matches(method, uri)
+      uri = normalize_uri(uri.to_s).to_s
       uri.sub!(":80/", "/")  if uri =~ %r|^http://|
       uri.sub!(":443/", "/") if uri =~ %r|^https://|
-      pattern_map.select { |p| uri.match(p[:pattern]) && p[:method] == method }
+      uri_map.select { |registered_uri, method_hash|
+        registered_uri.is_a?(Regexp) && uri.match(registered_uri) && method_hash.has_key?(method)
+      }.map { |_, method_hash| method_hash[method] }.first
     end
 
     private
 
     def normalize_uri(uri)
+      return uri if uri.is_a?(Regexp)
       normalized_uri =
         case uri
         when URI then uri

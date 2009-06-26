@@ -1,7 +1,13 @@
 require 'rubygems'
 require 'rake/gempackagetask'
 require 'rake/testtask'
-require 'rdoc/task'
+begin
+  require 'rdoc/task'
+rescue LoadError
+  puts "\nIt looks like you're using an old version of RDoc, but FakeWeb requires a newer one."
+  puts "You can try upgrading with `sudo gem install rdoc`.\n\n"
+  raise
+end
 
 task :default => :test
 

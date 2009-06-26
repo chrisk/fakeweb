@@ -58,7 +58,6 @@ else
     t.test_files = FileList['test/**/test*.rb'] 
     t.rcov_opts << "--sort coverage"
     t.rcov_opts << "--exclude gems"
-    t.rcov_opts << "--no-validator-links"
   end
 end
 

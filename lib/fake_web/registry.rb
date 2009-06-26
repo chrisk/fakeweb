@@ -80,10 +80,6 @@ module FakeWeb
       pattern_map.select { |p| uri.match(p[:pattern]) && p[:method] == method }
     end
 
-    def pattern_map_match(method, uri)
-      pattern_map_matches(method, uri).first
-    end
-
     private
 
     def normalize_uri(uri)

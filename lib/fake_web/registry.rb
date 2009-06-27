@@ -25,22 +25,6 @@ module FakeWeb
       !responses_for(method, uri).nil?
     end
 
-    def responses_for(method, uri)
-      uri = normalize_uri(uri)
-
-      if uri_map[uri].has_key?(method)
-        uri_map[uri][method]
-      elsif uri_map_matches?(method, uri)
-        uri_map_matches(method, uri)
-      elsif uri_map[uri].has_key?(:any)
-        uri_map[uri][:any]
-      elsif uri_map_matches(:any, uri)
-        uri_map_matches(:any, uri)
-      else
-        nil
-      end
-    end
-
     def response_for(method, uri, &block)
       responses = responses_for(method, uri)
       return nil if responses.nil?
@@ -57,6 +41,25 @@ module FakeWeb
       next_response.response(&block)
     end
 
+
+    private
+
+    def responses_for(method, uri)
+      uri = normalize_uri(uri)
+
+      if uri_map[uri].has_key?(method)
+        uri_map[uri][method]
+      elsif uri_map_matches?(method, uri)
+        uri_map_matches(method, uri)
+      elsif uri_map[uri].has_key?(:any)
+        uri_map[uri][:any]
+      elsif uri_map_matches(:any, uri)
+        uri_map_matches(:any, uri)
+      else
+        nil
+      end
+    end
+
     def uri_map_matches?(method, uri)
       !uri_map_matches(method, uri).nil?
     end
@@ -69,8 +72,6 @@ module FakeWeb
         registered_uri.is_a?(Regexp) && uri.match(registered_uri) && method_hash.has_key?(method)
       }.map { |_, method_hash| method_hash[method] }.first
     end
-
-    private
 
     def normalize_uri(uri)
       return uri if uri.is_a?(Regexp)

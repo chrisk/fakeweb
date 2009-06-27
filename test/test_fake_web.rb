@@ -231,6 +231,26 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
+  def test_request_with_registered_body_yields_the_response_body_to_a_request_block
+    FakeWeb.register_uri(:get, "http://example.com", :body => "content")
+    Net::HTTP.start("example.com") do |http|
+      http.get("/") do |body|
+        assert_equal "content", body
+      end
+    end
+  end
+
+  def test_request_with_registered_response_yields_the_response_body_to_a_request_block
+    fake_response = Net::HTTPOK.new('1.1', '200', 'OK')
+    fake_response.instance_variable_set(:@body, "content")
+    FakeWeb.register_uri(:get, 'http://example.com', :response => fake_response)
+    Net::HTTP.start("example.com") do |http|
+      http.get("/") do |body|
+        assert_equal "content", body
+      end
+    end
+  end
+
   def test_mock_request_with_undocumented_full_uri_argument_style
     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     Net::HTTP.start('mock') do |query|

@@ -26,7 +26,7 @@ module FakeWeb
       uri_map_matches?(method, uri) || uri_map_matches?(:any, uri)
     end
 
-    def registered_uri(method, uri)
+    def responses_for(method, uri)
       uri = normalize_uri(uri)
       return nil unless registered_uri?(method, uri)
 
@@ -42,7 +42,7 @@ module FakeWeb
     end
 
     def response_for(method, uri, &block)
-      responses = registered_uri(method, uri)
+      responses = responses_for(method, uri)
       return nil if responses.nil?
 
       next_response = responses.last

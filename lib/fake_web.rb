@@ -45,6 +45,11 @@ module FakeWeb
   # stubbed.
   class NetConnectNotAllowedError < StandardError; end;
 
+  # This exception is raised if a Net::HTTP request matches more than one of
+  # the regular expression-based stubs you've registered. To fix the problem,
+  # disambiguate the regular expressions by making them more specific.
+  class MultipleMatchingRegexpsError < StandardError; end;
+
   # call-seq:
   #   FakeWeb.register_uri(method, uri, options)
   #

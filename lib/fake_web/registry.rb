@@ -68,9 +68,17 @@ module FakeWeb
       uri = normalize_uri(uri.to_s).to_s
       uri.sub!(":80/", "/")  if uri =~ %r|^http://|
       uri.sub!(":443/", "/") if uri =~ %r|^https://|
-      uri_map.select { |registered_uri, method_hash|
+
+      matches = uri_map.select { |registered_uri, method_hash|
         registered_uri.is_a?(Regexp) && uri.match(registered_uri) && method_hash.has_key?(method)
-      }.map { |_, method_hash| method_hash[method] }.first
+      }
+
+      if matches.size > 1
+        raise MultipleMatchingRegexpsError,
+          "More than one regular expression matched this request: #{method.to_s.upcase} #{uri}"
+      end
+
+      matches.map { |_, method_hash| method_hash[method] }.first
     end
 
     def normalize_uri(uri)

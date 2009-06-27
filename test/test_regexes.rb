@@ -45,11 +45,22 @@ class TestRegexes < Test::Unit::TestCase
     assert_equal "example", http.request(req).body
   end
 
-  def test_registering_with_overlapping_regexes_uses_first_registered
+  def test_requesting_a_uri_that_matches_two_registered_regexes_raises_an_error
     FakeWeb.register_uri(:get, %r|http://example\.com/|, :body => "first")
     FakeWeb.register_uri(:get, %r|http://example\.com/a|, :body => "second")
-    response = Net::HTTP.start("example.com") { |query| query.get('/a') }
-    assert_equal "first", response.body
+    assert_raise FakeWeb::MultipleMatchingRegexpsError do
+      Net::HTTP.start("example.com") { |query| query.get('/a') }
+    end
+  end
+
+  def test_requesting_a_uri_that_matches_two_registered_regexes_raises_an_error_including_request_info
+    FakeWeb.register_uri(:get, %r|http://example\.com/|, :body => "first")
+    FakeWeb.register_uri(:get, %r|http://example\.com/a|, :body => "second")
+    begin
+      Net::HTTP.start("example.com") { |query| query.get('/a') }
+    rescue FakeWeb::MultipleMatchingRegexpsError => exception
+    end
+    assert exception.message.include?("GET http://example.com/a")
   end
 
   def test_registry_does_not_find_using_mismatched_protocols_or_ports_when_registered_with_both

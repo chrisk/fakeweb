@@ -41,17 +41,17 @@ class TestResponseHeaders < Test::Unit::TestCase
                                                    :content_type => "text/plain"},
                                 {:body => 'test2', :expires => "Thu, 14 Jun 2009 16:00:01 GMT"}])
 
+    first_response = second_response = nil
     Net::HTTP.start("example.com") do |query|
-      response = query.get("/")
-      assert_equal 'test1', response.body
-      assert_equal "Thu, 14 Jun 2009 16:00:00 GMT", response['Expires']
-      assert_equal "text/plain", response['Content-Type']
-
-      response = query.get("/")
-      assert_equal 'test2', response.body
-      assert_equal "Thu, 14 Jun 2009 16:00:01 GMT", response['Expires']
-      assert_nil response['Content-Type']
+      first_response = query.get("/")
+      second_response = query.get("/")
     end
+    assert_equal 'test1', first_response.body
+    assert_equal "Thu, 14 Jun 2009 16:00:00 GMT", first_response['Expires']
+    assert_equal "text/plain", first_response['Content-Type']
+    assert_equal 'test2', second_response.body
+    assert_equal "Thu, 14 Jun 2009 16:00:01 GMT", second_response['Expires']
+    assert_nil second_response['Content-Type']
   end
 
   def test_registering_with_status_option_and_response_headers

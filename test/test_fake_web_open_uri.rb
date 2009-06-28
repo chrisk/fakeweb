@@ -51,8 +51,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
 
   def test_mock_open_with_block
     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
-    open('http://mock/test_example.txt') do |f|
-      assert 'test example content', f.readlines
-    end
+    body = open('http://mock/test_example.txt') { |f| f.readlines }
+    assert_equal 'test example content', body.first
   end
 end

@@ -6,6 +6,20 @@ require 'fake_web'
 require 'rubygems'
 require 'mocha'
 
+
+# Give all tests a common setup and teardown that prevents shared state
+class Test::Unit::TestCase
+  def setup
+    FakeWeb.clean_registry
+    @original_allow_net_connect = FakeWeb.allow_net_connect?
+  end
+
+  def teardown
+    FakeWeb.allow_net_connect = @original_allow_net_connect
+  end
+end
+
+
 module FakeWebTestHelper
 
   def capture_stderr

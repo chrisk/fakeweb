@@ -2,10 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestResponseHeaders < Test::Unit::TestCase
 
-  def setup
-    FakeWeb.clean_registry
-  end
-
   def test_content_type_when_registering_with_string_and_content_type_header
     FakeWeb.register_uri(:get, "http://example.com/users.json", :body => '[{"username": "chrisk"}]', :content_type => "application/json")
     response = Net::HTTP.start("example.com") { |query| query.get("/users.json") }

@@ -1,11 +1,6 @@
 require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeAuthentication < Test::Unit::TestCase
-  def setup
-    FakeWeb.register_uri(:get, 'http://user:pass@mock/auth.txt', :body => 'authorized')
-    FakeWeb.register_uri(:get, 'http://user2:pass@mock/auth.txt', :body => 'wrong user')
-    FakeWeb.register_uri(:get, 'http://mock/auth.txt', :body => 'unauthorized')
-  end
 
   def test_register_uri_with_authentication
     FakeWeb.register_uri(:get, 'http://user:pass@mock/test_example.txt', :body => "example")
@@ -23,23 +18,27 @@ class TestFakeAuthentication < Test::Unit::TestCase
   end
 
   def test_unauthenticated_request
+    FakeWeb.register_uri(:get, 'http://mock/auth.txt', :body => 'unauthorized')
     http = Net::HTTP.new('mock', 80)
     req = Net::HTTP::Get.new('/auth.txt')
     assert_equal 'unauthorized', http.request(req).body
   end
 
   def test_authenticated_request
+    FakeWeb.register_uri(:get, 'http://user:pass@mock/auth.txt', :body => 'authorized')
     http = Net::HTTP.new('mock',80)
     req = Net::HTTP::Get.new('/auth.txt')
     req.basic_auth 'user', 'pass'
     assert_equal 'authorized', http.request(req).body
   end
 
-  def test_incorrectly_authenticated_request
-    http = Net::HTTP.new('mock',80)
+  def test_authenticated_request_where_only_userinfo_differs
+    FakeWeb.register_uri(:get, 'http://user:pass@mock/auth.txt', :body => 'first user')
+    FakeWeb.register_uri(:get, 'http://user2:pass@mock/auth.txt', :body => 'second user')
+    http = Net::HTTP.new('mock')
     req = Net::HTTP::Get.new('/auth.txt')
     req.basic_auth 'user2', 'pass'
-    assert_equal 'wrong user', http.request(req).body
+    assert_equal 'second user', http.request(req).body
   end
 
   def test_basic_auth_support_is_transparent_to_oauth

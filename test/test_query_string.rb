@@ -2,10 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeWebQueryString < Test::Unit::TestCase
 
-  def setup
-    FakeWeb.clean_registry
-  end
-
   def test_register_uri_string_with_query_params
     FakeWeb.register_uri(:get, 'http://example.com/?a=1&b=1', :body => 'foo')
     assert FakeWeb.registered_uri?(:get, 'http://example.com/?a=1&b=1')

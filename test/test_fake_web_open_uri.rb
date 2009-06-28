@@ -2,10 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeWebOpenURI < Test::Unit::TestCase
 
-  def setup
-    FakeWeb.clean_registry
-  end
-
   def test_content_for_registered_uri
     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for(:get, 'http://mock/test_example.txt').body

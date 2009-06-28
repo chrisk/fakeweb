@@ -2,11 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeWeb < Test::Unit::TestCase
 
-  def setup
-    FakeWeb.allow_net_connect = true
-    FakeWeb.clean_registry
-  end
-
   def test_register_uri
     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => "example")
     assert FakeWeb.registered_uri?(:get, 'http://mock/test_example.txt')

@@ -2,15 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeWebTrailingSlashes < Test::Unit::TestCase
 
-  def setup
-    FakeWeb.clean_registry
-    @original_allow_net_connect = FakeWeb.allow_net_connect?
-  end
-
-  def teardown
-    FakeWeb.allow_net_connect = @old_allow_net_conncet
-  end
-
   def test_registering_root_without_slash_and_ask_predicate_method_with_slash
     FakeWeb.register_uri(:get, "http://www.example.com", :body => "root")
     assert FakeWeb.registered_uri?(:get, "http://www.example.com/")

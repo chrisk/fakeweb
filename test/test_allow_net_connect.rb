@@ -2,15 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestFakeWebAllowNetConnect < Test::Unit::TestCase
 
-  def setup
-    @original_allow_net_connect = FakeWeb.allow_net_connect?
-  end
-
-  def teardown
-    FakeWeb.allow_net_connect = @original_allow_net_connect
-  end
-
-
   def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_true
     FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request

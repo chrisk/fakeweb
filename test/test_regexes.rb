@@ -2,15 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestRegexes < Test::Unit::TestCase
 
-  def setup
-    FakeWeb.clean_registry
-    @original_allow_net_connect = FakeWeb.allow_net_connect?
-  end
-
-  def teardown
-    FakeWeb.allow_net_connect = @old_allow_net_conncet
-  end
-
   def test_registered_uri_with_pattern
     FakeWeb.register_uri(:get, %r|http://example.com/test_example/\d+|, :body => "example")
     assert FakeWeb.registered_uri?(:get, "http://example.com/test_example/25")

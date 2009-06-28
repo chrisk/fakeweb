@@ -3,12 +3,13 @@ require File.join(File.dirname(__FILE__), "test_helper")
 class TestMissingOpenURI < Test::Unit::TestCase
 
   def setup
-    FakeWeb.clean_registry
+    super
     @saved_open_uri = OpenURI
     Object.send(:remove_const, :OpenURI)
   end
 
   def teardown
+    super
     Object.const_set(:OpenURI, @saved_open_uri)
   end
 

@@ -2,10 +2,6 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestDeprecations < Test::Unit::TestCase
 
-  def setup
-    FakeWeb.clean_registry
-  end
-
   def test_register_uri_without_method_argument_prints_deprecation_warning
     warning = capture_stderr do
       FakeWeb.register_uri("http://example.com", :body => "test")

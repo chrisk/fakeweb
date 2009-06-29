@@ -1,3 +1,13 @@
+fakeweb (development)
+
+* fix that exact matches against strings/URIs with the :any method had a lower
+  precedence than regex matches using a real HTTP method (exact matches now
+  always take precedence) [Chris Kampmeier]
+
+* change request handling to raise an exception when more than one registered
+  regex matches a request URI [Chris Kampmeier]
+
+
 fakeweb (1.2.4)
 
 * add experimental support for matching URIs via regular expressions

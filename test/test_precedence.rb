@@ -29,6 +29,13 @@ class TestPrecedence < Test::Unit::TestCase
     assert_equal "get method", response.body
   end
 
+  def test_matching_any_strings_have_precedence_over_matching_get_regexes
+    FakeWeb.register_uri(:any, "http://example.com/test", :body => "any string")
+    FakeWeb.register_uri(:get, %r|http://example\.com/test|, :body => "get regex")
+    response = Net::HTTP.start("example.com") { |query| query.get('/test') }
+    assert_equal "any string", response.body
+  end
+
   def test_registered_strings_and_uris_are_equivalent_so_second_takes_precedence
     FakeWeb.register_uri(:get, "http://example.com/test", :body => "string")
     FakeWeb.register_uri(:get, URI.parse("http://example.com/test"), :body => "uri")

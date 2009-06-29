@@ -49,10 +49,10 @@ module FakeWeb
 
       if uri_map[uri].has_key?(method)
         uri_map[uri][method]
-      elsif uri_map_matches?(method, uri)
-        uri_map_matches(method, uri)
       elsif uri_map[uri].has_key?(:any)
         uri_map[uri][:any]
+      elsif uri_map_matches?(method, uri)
+        uri_map_matches(method, uri)
       elsif uri_map_matches(:any, uri)
         uri_map_matches(:any, uri)
       else

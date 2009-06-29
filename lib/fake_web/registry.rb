@@ -22,12 +22,12 @@ module FakeWeb
 
     def registered_uri?(method, uri)
       normalized_uri = normalize_uri(uri)
-      !responses_for(method, uri).nil?
+      !responses_for(method, uri).empty?
     end
 
     def response_for(method, uri, &block)
       responses = responses_for(method, uri)
-      return nil if responses.nil?
+      return nil if responses.empty?
 
       next_response = responses.last
       responses.each do |response|
@@ -56,7 +56,7 @@ module FakeWeb
       elsif uri_map_matches(:any, uri)
         uri_map_matches(:any, uri)
       else
-        nil
+        []
       end
     end
 

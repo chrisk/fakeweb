@@ -41,7 +41,11 @@ module Net  #:nodoc: all
       path = URI.parse(request.path).request_uri if request.path =~ /^http/
 
       if request["authorization"] =~ /^Basic /
-        userinfo = request["authorization"].sub(/^Basic /, "").unpack("m").first + "@"
+        userinfo = request["authorization"].sub(/^Basic /, "").unpack("m").first
+        # TODO: extract method
+        unsafe_in_userinfo = /[^#{URI::REGEXP::PATTERN::UNRESERVED};&=+$,]|^(#{URI::REGEXP::PATTERN::ESCAPED})/
+        userinfo = URI.escape(userinfo.split(":")[0...-1].join(":"), unsafe_in_userinfo) + ":" +
+                   URI.escape(userinfo.split(":").last, unsafe_in_userinfo) + "@"
       else
         userinfo = ""
       end

@@ -12,6 +12,7 @@ class Test::Unit::TestCase
   def setup
     FakeWeb.clean_registry
     @original_allow_net_connect = FakeWeb.allow_net_connect?
+    FakeWeb.allow_net_connect = false
   end
 
   def teardown

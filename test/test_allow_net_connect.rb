@@ -70,8 +70,16 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
     assert !FakeWeb.allow_net_connect?
   end
 
+end
+
+
+class TestFakeWebAllowNetConnectWithCleanState < Test::Unit::TestCase
+  # Our test_helper.rb sets allow_net_connect = false in an inherited #setup
+  # method. Disable that here to test the default setting.
+  def setup; end
+  def teardown; end
+
   def test_allow_net_connect_is_true_by_default
     assert FakeWeb.allow_net_connect?
   end
-
 end

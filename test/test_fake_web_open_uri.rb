@@ -18,6 +18,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   end
   
   def test_real_open
+    FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request
     resp = open('http://images.apple.com/main/rss/hotnews/hotnews.rss')
     assert_equal "200", resp.status.first

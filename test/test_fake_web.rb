@@ -307,6 +307,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_http_request
+    FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request
 
     resp = nil
@@ -318,6 +319,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_http_request_with_undocumented_full_uri_argument_style
+    FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request(:path => 'http://images.apple.com/main/rss/hotnews/hotnews.rss')
 
     resp = nil
@@ -329,6 +331,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_https_request
+    FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request(:port => 443)
 
     http = Net::HTTP.new('images.apple.com', 443)
@@ -340,6 +343,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_request_on_same_domain_as_mock
+    FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request
 
     FakeWeb.register_uri(:get, 'http://images.apple.com/test_string.txt', :body => 'foo')

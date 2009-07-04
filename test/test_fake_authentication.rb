@@ -73,14 +73,6 @@ class TestFakeAuthentication < Test::Unit::TestCase
     assert_equal "authorized", http.request(request).body
   end
 
-  def test_basic_auth_when_userinfo_contains_colon
-    FakeWeb.register_uri(:get, "http://songs%3Aohia:secret@example.com", :body => "authorized")
-    http = Net::HTTP.new("example.com")
-    request = Net::HTTP::Get.new("/")
-    request.basic_auth("songs:ohia", "secret")
-    assert_equal "authorized", http.request(request).body
-  end
-
   def test_basic_auth_when_userinfo_contains_ampersand
     FakeWeb.register_uri(:get, "http://roses&hello:solongs@example.com", :body => "authorized")
     http = Net::HTTP.new("example.com")

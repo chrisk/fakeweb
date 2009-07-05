@@ -65,7 +65,15 @@ class TestFakeAuthentication < Test::Unit::TestCase
     assert_equal "secret", response.body
   end
 
-  def test_basic_auth_when_userinfo_contains_at_sign
+  def test_basic_auth_when_userinfo_contains_allowed_unencoded_characters
+    FakeWeb.register_uri(:get, "http://roses&hel1o,(+$):so;longs=@example.com", :body => "authorized")
+    http = Net::HTTP.new("example.com")
+    request = Net::HTTP::Get.new("/")
+    request.basic_auth("roses&hel1o,(+$)", "so;longs=")
+    assert_equal "authorized", http.request(request).body
+  end
+
+  def test_basic_auth_when_userinfo_contains_encoded_at_sign
     FakeWeb.register_uri(:get, "http://user%40example.com:secret@example.com", :body => "authorized")
     http = Net::HTTP.new("example.com")
     request = Net::HTTP::Get.new("/")
@@ -73,19 +81,11 @@ class TestFakeAuthentication < Test::Unit::TestCase
     assert_equal "authorized", http.request(request).body
   end
 
-  def test_basic_auth_when_userinfo_contains_ampersand
-    FakeWeb.register_uri(:get, "http://roses&hello:solongs@example.com", :body => "authorized")
+  def test_basic_auth_when_userinfo_contains_allowed_encoded_characters
+    FakeWeb.register_uri(:get, "http://us%20er:sec%20%2F%2Fret%3F@example.com", :body => "authorized")
     http = Net::HTTP.new("example.com")
     request = Net::HTTP::Get.new("/")
-    request.basic_auth("roses&hello", "solongs")
-    assert_equal "authorized", http.request(request).body
-  end
-
-  def test_basic_auth_when_userinfo_contains_space
-    FakeWeb.register_uri(:get, "http://us%20er:sec%20ret@example.com", :body => "authorized")
-    http = Net::HTTP.new("example.com")
-    request = Net::HTTP::Get.new("/")
-    request.basic_auth("us er", "sec ret")
+    request.basic_auth("us er", "sec //ret?")
     assert_equal "authorized", http.request(request).body
   end
 

@@ -49,26 +49,22 @@ class TestUtility < Test::Unit::TestCase
 
   def test_strip_default_port_from_uri_does_not_strip_8080_from_http
     uri = "http://example.com:8080/foo/bar"
-    stripped_uri = FakeWeb::Utility.strip_default_port_from_uri(uri)
-    assert_equal uri, stripped_uri
+    assert_equal uri, FakeWeb::Utility.strip_default_port_from_uri(uri)
   end
 
   def test_strip_default_port_from_uri_does_not_strip_443_from_http
     uri = "http://example.com:443/foo/bar"
-    stripped_uri = FakeWeb::Utility.strip_default_port_from_uri(uri)
-    assert_equal uri, stripped_uri
+    assert_equal uri, FakeWeb::Utility.strip_default_port_from_uri(uri)
   end
 
   def test_strip_default_port_from_uri_does_not_strip_80_from_query_string
     uri = "http://example.com/?a=:80&b=c"
-    stripped_uri = FakeWeb::Utility.strip_default_port_from_uri(uri)
-    assert_equal uri, stripped_uri
+    assert_equal uri, FakeWeb::Utility.strip_default_port_from_uri(uri)
   end
 
   def test_strip_default_port_from_uri_does_not_modify_strings_that_do_not_start_with_http_or_https
     uri = "httpz://example.com:80/"
-    stripped_uri = FakeWeb::Utility.strip_default_port_from_uri(uri)
-    assert_equal uri, stripped_uri
+    assert_equal uri, FakeWeb::Utility.strip_default_port_from_uri(uri)
   end
 
 end

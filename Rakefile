@@ -1,3 +1,5 @@
+puts "Using ruby #{RUBY_VERSION}p#{RUBY_PATCHLEVEL}"
+
 require 'rubygems'
 require 'rake/gempackagetask'
 require 'rake/testtask'

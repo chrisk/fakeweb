@@ -9,9 +9,7 @@ module FakeWeb
     end
 
     def clean_registry
-      self.uri_map = Hash.new do |hash, key|
-        hash[key] = Hash.new(&hash.default_proc)
-      end
+      self.uri_map = Hash.new { |hash, key| hash[key] = {} }
     end
 
     def register_uri(method, uri, options)

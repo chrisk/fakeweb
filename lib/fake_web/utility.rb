@@ -12,5 +12,13 @@ module FakeWeb
       }.join(":")
     end
 
+    def self.strip_default_port_from_uri(uri)
+      case uri
+      when %r{^http://}  then uri.sub(%r{:80(/|$)}, '\1')
+      when %r{^https://} then uri.sub(%r{:443(/|$)}, '\1')
+      else uri
+      end
+    end
+
   end
 end

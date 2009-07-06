@@ -66,8 +66,7 @@ module FakeWeb
 
     def uri_map_matches(method, uri)
       uri = normalize_uri(uri.to_s).to_s
-      uri.sub!(":80/", "/")  if uri =~ %r|^http://|
-      uri.sub!(":443/", "/") if uri =~ %r|^https://|
+      uri = Utility.strip_default_port_from_uri(uri)
 
       matches = uri_map.select { |registered_uri, method_hash|
         registered_uri.is_a?(Regexp) && uri.match(registered_uri) && method_hash.has_key?(method)

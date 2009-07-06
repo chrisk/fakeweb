@@ -7,9 +7,7 @@ module FakeWeb
 
     def self.encode_unsafe_chars_in_userinfo(userinfo)
       unsafe_in_userinfo = /[^#{URI::REGEXP::PATTERN::UNRESERVED};&=+$,]|^(#{URI::REGEXP::PATTERN::ESCAPED})/
-      userinfo.split(":").map { |user_or_pass|
-        URI.escape(user_or_pass, unsafe_in_userinfo)
-      }.join(":")
+      userinfo.split(":").map { |part| URI.escape(part, unsafe_in_userinfo) }.join(":")
     end
 
     def self.strip_default_port_from_uri(uri)

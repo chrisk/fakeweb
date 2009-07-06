@@ -11,6 +11,7 @@ lib/fake_web/registry.rb
 lib/fake_web/responder.rb
 lib/fake_web/response.rb
 lib/fake_web/stub_socket.rb
+lib/fake_web/utility.rb
 lib/fakeweb.rb
 test
 test/fixtures
@@ -31,3 +32,4 @@ test/test_query_string.rb
 test/test_regexes.rb
 test/test_response_headers.rb
 test/test_trailing_slashes.rb
+test/test_utility.rb

@@ -5,6 +5,7 @@ require 'fake_web/registry'
 require 'fake_web/response'
 require 'fake_web/responder'
 require 'fake_web/stub_socket'
+require 'fake_web/utility'
 
 module FakeWeb
 

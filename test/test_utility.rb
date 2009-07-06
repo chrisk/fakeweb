@@ -65,4 +65,10 @@ class TestUtility < Test::Unit::TestCase
     assert_equal uri, stripped_uri
   end
 
+  def test_strip_default_port_from_uri_does_not_modify_strings_that_do_not_start_with_http_or_https
+    uri = "httpz://example.com:80/"
+    stripped_uri = FakeWeb::Utility.strip_default_port_from_uri(uri)
+    assert_equal uri, stripped_uri
+  end
+
 end

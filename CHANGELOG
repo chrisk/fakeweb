@@ -1,5 +1,8 @@
 fakeweb (development)
 
+* fix handling of userinfo strings that contain percent-encoded unsafe
+  characters [Chris Kampmeier, Ken Mayer]
+
 * fix that exact matches against strings/URIs with the :any method had a lower
   precedence than regex matches using a real HTTP method (exact matches now
   always take precedence) [Chris Kampmeier]

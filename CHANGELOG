@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.5)
 
 * fix handling of userinfo strings that contain percent-encoded unsafe
   characters [Chris Kampmeier, Ken Mayer]

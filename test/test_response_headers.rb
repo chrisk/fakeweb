@@ -2,10 +2,16 @@ require File.join(File.dirname(__FILE__), "test_helper")
 
 class TestResponseHeaders < Test::Unit::TestCase
 
-  def test_content_type_when_registering_with_string_and_content_type_header
+  def test_content_type_when_registering_with_string_and_content_type_header_as_symbol_option
     FakeWeb.register_uri(:get, "http://example.com/users.json", :body => '[{"username": "chrisk"}]', :content_type => "application/json")
     response = Net::HTTP.start("example.com") { |query| query.get("/users.json") }
     assert_equal '[{"username": "chrisk"}]', response.body
+    assert_equal "application/json", response['Content-Type']
+  end
+
+  def test_content_type_when_registering_with_string_and_content_type_header_as_string_option
+    FakeWeb.register_uri(:get, "http://example.com/users.json", :body => '[{"username": "chrisk"}]', 'Content-Type' => "application/json")
+    response = Net::HTTP.start("example.com") { |query| query.get("/users.json") }
     assert_equal "application/json", response['Content-Type']
   end
 

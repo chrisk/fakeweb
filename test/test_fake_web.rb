@@ -104,6 +104,23 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
+  def test_clean_registry_affects_registered_uri
+    FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
+    assert FakeWeb.registered_uri?(:get, "http://example.com")
+    FakeWeb.clean_registry
+    assert !FakeWeb.registered_uri?(:get, "http://example.com")
+  end
+
+  def test_clean_registry_affects_net_http_requests
+    FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
+    response = Net::HTTP.start("example.com") { |query| query.get("/") }
+    assert_equal "registered", response.body
+    FakeWeb.clean_registry
+    assert_raise FakeWeb::NetConnectNotAllowedError do
+      Net::HTTP.start("example.com") { |query| query.get("/") }
+    end
+  end
+
   def test_response_for_with_registered_uri
     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
     assert_equal 'test example content', FakeWeb.response_for(:get, 'http://mock/test_example.txt').body

@@ -19,7 +19,6 @@ module FakeWeb
     end
 
     def registered_uri?(method, uri)
-      normalized_uri = normalize_uri(uri)
       !responses_for(method, uri).empty?
     end
 
@@ -63,11 +62,11 @@ module FakeWeb
     end
 
     def uri_map_matches(method, uri)
-      uri = normalize_uri(uri.to_s).to_s
-      uri = Utility.strip_default_port_from_uri(uri)
+      uris_to_check = variations_of_uri(uri).map { |u| u.to_s }
 
       matches = uri_map.select { |registered_uri, method_hash|
-        registered_uri.is_a?(Regexp) && uri.match(registered_uri) && method_hash.has_key?(method)
+        registered_uri.is_a?(Regexp) && method_hash.has_key?(method) &&
+        uris_to_check.any? { |uri_to_check| uri_to_check.match(registered_uri) }
       }
 
       if matches.size > 1
@@ -76,6 +75,22 @@ module FakeWeb
       end
 
       matches.map { |_, method_hash| method_hash[method] }.first
+    end
+
+    def variations_of_uri(uri)
+      uris = []
+      normalized_uri = normalize_uri(uri)
+      query = normalized_uri.query
+      if query.nil? || query.empty?
+        uris << normalized_uri
+      else
+        FakeWeb::Utility.simple_array_permutation(query.split('&')) do |p|
+          current_permutation = normalized_uri.dup
+          current_permutation.query = p.join('&')
+          uris << current_permutation
+        end
+      end
+      uris
     end
 
     def normalize_uri(uri)

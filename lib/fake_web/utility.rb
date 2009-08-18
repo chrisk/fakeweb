@@ -18,5 +18,27 @@ module FakeWeb
       end
     end
 
+    # Array#permutation wrapper for 1.8.6-compatibility. It only supports the
+    # simple case that returns all permutations (so it doesn't take a numeric
+    # argument).
+    def self.simple_array_permutation(array, &block)
+      # use native implementation if it exists
+      return array.permutation(&block) if array.respond_to?(:permutation)
+
+      yield array if array.length <= 1
+
+      array.length.times do |i|
+        rest = array.dup
+        picked = rest.delete_at(i)
+        next if rest.empty?
+
+        simple_array_permutation(rest) do |part_of_rest|
+          yield [picked] + part_of_rest
+        end
+      end
+
+      array
+    end
+
   end
 end

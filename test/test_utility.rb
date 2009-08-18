@@ -67,4 +67,25 @@ class TestUtility < Test::Unit::TestCase
     assert_equal uri, FakeWeb::Utility.strip_default_port_from_uri(uri)
   end
 
+  def test_simple_array_permutation_with_one_element
+    array, permutations = [1], [[1]]
+    FakeWeb::Utility.simple_array_permutation(array) do |permutation|
+      permutations.delete(permutation)
+    end
+    assert permutations.empty?
+  end
+
+  def test_simple_array_permutation_with_three_elements
+    array = [1, 2, 3]
+    permutations = [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+    FakeWeb::Utility.simple_array_permutation(array) do |permutation|
+      permutations.delete(permutation)
+    end
+    assert permutations.empty?
+  end
+
+  def test_simple_array_permutation_return_value
+    array = [1, 2, 3]
+    assert array, FakeWeb::Utility.simple_array_permutation(array) { }
+  end
 end

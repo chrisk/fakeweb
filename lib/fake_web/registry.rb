@@ -44,38 +44,34 @@ module FakeWeb
     def responses_for(method, uri)
       uri = normalize_uri(uri)
 
-      if uri_map[uri].has_key?(method)
-        uri_map[uri][method]
-      elsif uri_map[uri].has_key?(:any)
-        uri_map[uri][:any]
-      elsif uri_map_matches?(method, uri)
-        uri_map_matches(method, uri)
-      elsif uri_map_matches(:any, uri)
-        uri_map_matches(:any, uri)
-      else
-        []
-      end
+      uri_map_matches(method, uri, URI) ||
+      uri_map_matches(:any,   uri, URI) ||
+      uri_map_matches(method, uri, Regexp) ||
+      uri_map_matches(:any,   uri, Regexp) ||
+      []
     end
 
-    def uri_map_matches?(method, uri)
-      !uri_map_matches(method, uri).nil?
-    end
-
-    def uri_map_matches(method, uri)
-      uris_to_check = variations_of_uri(uri).map { |u| u.to_s }
+    def uri_map_matches(method, uri, type_to_check = URI)
+      uris_to_check = variations_of_uri(uri)
 
       matches = uri_map.select { |registered_uri, method_hash|
-        registered_uri.is_a?(Regexp) && method_hash.has_key?(method) &&
-        uris_to_check.any? { |uri_to_check| uri_to_check.match(registered_uri) }
+        registered_uri.is_a?(type_to_check) && method_hash.has_key?(method)
+      }.select { |registered_uri, method_hash|
+        if type_to_check == URI
+          uris_to_check.include?(registered_uri)
+        elsif type_to_check == Regexp
+          uris_to_check.map { |u| u.to_s }.any? { |u| u.match(registered_uri) }
+        end
       }
 
       if matches.size > 1
-        raise MultipleMatchingRegexpsError,
-          "More than one regular expression matched this request: #{method.to_s.upcase} #{uri}"
+        raise MultipleMatchingURIsError,
+          "More than one registered URI matched this request: #{method.to_s.upcase} #{uri}"
       end
 
       matches.map { |_, method_hash| method_hash[method] }.first
     end
+
 
     def variations_of_uri(uri)
       uris = []
@@ -102,16 +98,8 @@ module FakeWeb
           uri = 'http://' + uri unless uri.match('^https?://')
           URI.parse(uri)
         end
-      normalized_uri.query = sort_query_params(normalized_uri.query)
+      normalized_uri.query = nil if normalized_uri.query == ""
       normalized_uri.normalize
-    end
-
-    def sort_query_params(query)
-      if query.nil? || query.empty?
-        nil
-      else
-        query.split('&').sort.join('&')
-      end
     end
 
   end

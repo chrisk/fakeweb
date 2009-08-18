@@ -39,7 +39,7 @@ class TestRegexes < Test::Unit::TestCase
   def test_requesting_a_uri_that_matches_two_registered_regexes_raises_an_error
     FakeWeb.register_uri(:get, %r|http://example\.com/|, :body => "first")
     FakeWeb.register_uri(:get, %r|http://example\.com/a|, :body => "second")
-    assert_raise FakeWeb::MultipleMatchingRegexpsError do
+    assert_raise FakeWeb::MultipleMatchingURIsError do
       Net::HTTP.start("example.com") { |query| query.get('/a') }
     end
   end
@@ -47,10 +47,10 @@ class TestRegexes < Test::Unit::TestCase
   def test_requesting_a_uri_that_matches_two_registered_regexes_with_differently_ordered_query_params_raises_an_error
     FakeWeb.register_uri(:get, %r[example.com/list\?b=2&a=1], :body => "first")
     FakeWeb.register_uri(:get, %r[example.com/list\?a=1&b=2], :body => "second")
-    assert_raise FakeWeb::MultipleMatchingRegexpsError do
+    assert_raise FakeWeb::MultipleMatchingURIsError do
       Net::HTTP.start("example.com") { |query| query.get('/list?a=1&b=2') }
     end
-    assert_raise FakeWeb::MultipleMatchingRegexpsError do
+    assert_raise FakeWeb::MultipleMatchingURIsError do
       Net::HTTP.start("example.com") { |query| query.get('/list?b=2&a=1') }
     end
   end
@@ -60,7 +60,7 @@ class TestRegexes < Test::Unit::TestCase
     FakeWeb.register_uri(:get, %r|http://example\.com/a|, :body => "second")
     begin
       Net::HTTP.start("example.com") { |query| query.get('/a') }
-    rescue FakeWeb::MultipleMatchingRegexpsError => exception
+    rescue FakeWeb::MultipleMatchingURIsError => exception
     end
     assert exception.message.include?("GET http://example.com/a")
   end

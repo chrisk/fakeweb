@@ -80,14 +80,14 @@ class TestRegexes < Test::Unit::TestCase
     assert !FakeWeb.registered_uri?(:get, "https://www.example.com")
   end
 
-  def test_registry_matches_using_any_protocol_and_port_when_registered_without_protocol_or_port
-    FakeWeb.register_uri(:get, %r|www.example.com|, :body => "example")
-    assert FakeWeb.registered_uri?(:get, "http://www.example.com")
-    assert FakeWeb.registered_uri?(:get, "http://www.example.com:80")
-    assert FakeWeb.registered_uri?(:get, "http://www.example.com:443")
-    assert FakeWeb.registered_uri?(:get, "https://www.example.com")
-    assert FakeWeb.registered_uri?(:get, "https://www.example.com:80")
-    assert FakeWeb.registered_uri?(:get, "https://www.example.com:443")
+  def test_registry_matches_using_default_port_for_protocol_when_registered_without_protocol_or_port
+    FakeWeb.register_uri(:get, %r|www.example.com/home|, :body => "example")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com/home")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com/home")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:80/home")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:443/home")
+    assert !FakeWeb.registered_uri?(:get, "https://www.example.com:80/home")
+    assert !FakeWeb.registered_uri?(:get, "http://www.example.com:443/home")
   end
 
   def test_registry_matches_with_query_params

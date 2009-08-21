@@ -48,4 +48,25 @@ class TestPrecedence < Test::Unit::TestCase
     assert_equal "string", response.body
   end
 
+  def test_identical_registration_replaces_previous_registration
+    FakeWeb.register_uri(:get, "http://example.com/test", :body => "first")
+    FakeWeb.register_uri(:get, "http://example.com/test", :body => "second")
+    response = Net::HTTP.start("example.com") { |query| query.get('/test') }
+    assert_equal "second", response.body
+  end
+
+  def test_identical_registration_replaces_previous_registration_accounting_for_normalization
+    FakeWeb.register_uri(:get, "http://example.com/test?", :body => "first")
+    FakeWeb.register_uri(:get, "http://example.com:80/test", :body => "second")
+    response = Net::HTTP.start("example.com") { |query| query.get('/test') }
+    assert_equal "second", response.body
+  end
+
+  def test_identical_registration_replaces_previous_registration_with_regexes
+    FakeWeb.register_uri(:get, /test/, :body => "first")
+    FakeWeb.register_uri(:get, /test/, :body => "second")
+    response = Net::HTTP.start("example.com") { |query| query.get('/test') }
+    assert_equal "second", response.body
+  end
+
 end

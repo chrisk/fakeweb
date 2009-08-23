@@ -98,8 +98,16 @@ module FakeWeb
           uri = 'http://' + uri unless uri.match('^https?://')
           URI.parse(uri)
         end
-      normalized_uri.query = nil if normalized_uri.query == ""
+      normalized_uri.query = sort_query_params(normalized_uri.query)
       normalized_uri.normalize
+    end
+
+    def sort_query_params(query)
+      if query.nil? || query.empty?
+        nil
+      else
+        query.split('&').sort.join('&')
+      end
     end
 
   end

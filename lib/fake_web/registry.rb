@@ -52,15 +52,15 @@ module FakeWeb
     end
 
     def uri_map_matches(method, uri, type_to_check = URI)
-      uris_to_check = variations_of_uri(uri)
+      uris_to_check = variations_of_uri_as_strings(uri)
 
       matches = uri_map.select { |registered_uri, method_hash|
         registered_uri.is_a?(type_to_check) && method_hash.has_key?(method)
       }.select { |registered_uri, method_hash|
         if type_to_check == URI
-          uris_to_check.include?(registered_uri)
+          uris_to_check.include?(registered_uri.to_s)
         elsif type_to_check == Regexp
-          uris_to_check.map { |u| u.to_s }.any? { |u| u.match(registered_uri) }
+          uris_to_check.any? { |u| u.match(registered_uri) }
         end
       }
 
@@ -73,9 +73,11 @@ module FakeWeb
     end
 
 
-    def variations_of_uri(uri)
+    def variations_of_uri_as_strings(uri_object)
       uris = []
-      normalized_uri = normalize_uri(uri)
+      normalized_uri = normalize_uri(uri_object)
+
+      # all orderings of query parameters
       query = normalized_uri.query
       if query.nil? || query.empty?
         uris << normalized_uri
@@ -86,7 +88,18 @@ module FakeWeb
           uris << current_permutation
         end
       end
-      uris
+
+      uri_strings = uris.map { |uri| uri.to_s }
+
+      # including and omitting the default port
+      if normalized_uri.default_port == normalized_uri.port
+        uri_strings += uris.map { |uri|
+          uri.to_s.sub(/#{Regexp.escape(normalized_uri.request_uri)}$/,
+                       ":#{normalized_uri.port}#{normalized_uri.request_uri}")
+        }
+      end
+
+      uri_strings
     end
 
     def normalize_uri(uri)

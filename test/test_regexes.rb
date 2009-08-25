@@ -71,6 +71,36 @@ class TestRegexes < Test::Unit::TestCase
     assert !FakeWeb.registered_uri?(:get, "http://www.example.com:443")
   end
 
+  def test_registry_finds_using_non_default_port
+    FakeWeb.register_uri(:get, %r|example\.com:8080|, :body => "example")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:8080/path")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:8080/path")
+  end
+
+  def test_registry_finds_using_default_port_and_http_when_registered_with_explicit_port_80
+    FakeWeb.register_uri(:get, %r|example\.com:80|, :body => "example")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com/path")
+
+    # check other permutations, too
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:80/path")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:8080/path")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:80/path")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:8080/path")
+    assert !FakeWeb.registered_uri?(:get, "https://www.example.com/path")
+  end
+
+  def test_registry_finds_using_default_port_and_https_when_registered_with_explicit_port_443
+    FakeWeb.register_uri(:get, %r|example\.com:443|, :body => "example")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com/path")
+
+    # check other permutations, too
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:443/path")
+    assert FakeWeb.registered_uri?(:get, "https://www.example.com:44321/path")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:443/path")
+    assert FakeWeb.registered_uri?(:get, "http://www.example.com:44321/path")
+    assert !FakeWeb.registered_uri?(:get, "http://www.example.com/path")
+  end
+
   def test_registry_only_finds_using_default_port_when_registered_without_if_protocol_matches
     FakeWeb.register_uri(:get, %r|http://www.example.com/test|, :body => "example")
     assert FakeWeb.registered_uri?(:get, "http://www.example.com:80/test")

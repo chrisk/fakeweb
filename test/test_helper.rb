@@ -9,12 +9,14 @@ require 'mocha'
 
 # Give all tests a common setup and teardown that prevents shared state
 class Test::Unit::TestCase
+  alias setup_without_fakeweb setup
   def setup
     FakeWeb.clean_registry
     @original_allow_net_connect = FakeWeb.allow_net_connect?
     FakeWeb.allow_net_connect = false
   end
 
+  alias teardown_without_fakeweb teardown
   def teardown
     FakeWeb.allow_net_connect = @original_allow_net_connect
   end

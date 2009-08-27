@@ -15,7 +15,7 @@ task :default => :test
 
 desc "Run All Tests"
 Rake::TestTask.new :test do |test|
-  test.test_files = ["test/**/*.rb"]
+  test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb")
   test.verbose = false
   test.warning = true
 end
@@ -64,7 +64,7 @@ elsif RUBY_VERSION =~ /^1\.9/
 else
   require 'rcov/rcovtask'
   Rcov::RcovTask.new do |t|
-    t.test_files = FileList['test/**/test*.rb'] 
+    t.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb")
     t.rcov_opts << "--sort coverage"
     t.rcov_opts << "--exclude gems"
     t.warning = true

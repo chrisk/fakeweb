@@ -17,6 +17,7 @@ desc "Run All Tests"
 Rake::TestTask.new :test do |test|
   test.test_files = ["test/**/*.rb"]
   test.verbose = false
+  test.warning = true
 end
 
 desc "Generate Documentation"
@@ -66,6 +67,7 @@ else
     t.test_files = FileList['test/**/test*.rb'] 
     t.rcov_opts << "--sort coverage"
     t.rcov_opts << "--exclude gems"
+    t.warning = true
   end
 end
 

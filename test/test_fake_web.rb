@@ -532,4 +532,8 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal "1.0", response.http_version
   end
 
+  def test_version
+    assert_equal "1.2.5", FakeWeb::VERSION
+  end
+
 end

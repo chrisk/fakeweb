@@ -9,6 +9,9 @@ require 'fake_web/utility'
 
 module FakeWeb
 
+  # Returns the version string for the copy of FakeWeb you have loaded.
+  VERSION = File.read(File.join(File.dirname(__FILE__), "..", "VERSION")).strip
+
   # Resets the FakeWeb Registry. This will force all subsequent web requests to
   # behave as real requests.
   def self.clean_registry

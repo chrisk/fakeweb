@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.6)
 
 * fix that query params in a regex would have to be sorted for it to ever match
   a request URI [Chris Kampmeier, Ben Hall]

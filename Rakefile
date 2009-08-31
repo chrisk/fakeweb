@@ -18,6 +18,7 @@ begin
   Jeweler::GemcutterTasks.new
   Jeweler::RubyforgeTasks.new do |rubyforge|
     rubyforge.doc_task = "rdoc"
+    rubyforge.remote_doc_path = ""
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
@@ -59,7 +60,6 @@ begin
   Rake::RDocTask.new do |rdoc|
     version = File.exist?('VERSION') ? File.read('VERSION') : ""
     rdoc.main = "README.rdoc"
-    rdoc.rdoc_dir = "doc"
     rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
     rdoc.title = "FakeWeb #{version} API Documentation"
     rdoc.options << '--line-numbers' << '--charset' << 'utf-8'

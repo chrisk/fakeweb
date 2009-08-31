@@ -1,3 +1,19 @@
+fakeweb (development)
+
+* fix that query params in a regex would have to be sorted for it to ever match
+  a request URI [Chris Kampmeier, Ben Hall]
+
+* improve regex handling so registration with an explicit port (like
+  /example.com:80/) matches a request that uses an implied port
+  (like "http://example.com/") [Chris Kampmeier, Dan Dofter]
+
+* refactor URI registry to reduce duplication; now about twice as fast at
+  handling requests [Chris Kampmeier]
+
+* Add FakeWeb::VERSION so you can programmatically determine what version of
+  FakeWeb is loaded without using RubyGems [Chris Kampmeier, Chris Wanstrath]
+
+
 fakeweb (1.2.5)
 
 * fix handling of userinfo strings that contain percent-encoded unsafe

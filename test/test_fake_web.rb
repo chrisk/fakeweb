@@ -533,7 +533,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_version
-    assert_equal "1.2.5", FakeWeb::VERSION
+    assert_equal "1.2.6", FakeWeb::VERSION
   end
 
 end

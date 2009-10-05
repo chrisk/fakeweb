@@ -5,8 +5,7 @@ require 'stringio'
 module Net  #:nodoc: all
 
   class BufferedIO
-    alias initialize_without_fakeweb initialize
-    def initialize(io, debug_output = nil)
+    def initialize_with_fakeweb(io, debug_output = nil)
       @read_timeout = 60
       @rbuf = ''
       @debug_output = debug_output
@@ -23,18 +22,20 @@ module Net  #:nodoc: all
       end
       raise "Unable to create local socket" unless @io
     end
+    alias_method :initialize_without_fakeweb, :initialize
+    alias_method :initialize, :initialize_with_fakeweb
   end
 
   class HTTP
     class << self
-      alias socket_type_without_fakeweb socket_type
-      def socket_type
+      def socket_type_with_fakeweb
         FakeWeb::StubSocket
       end
+      alias_method :socket_type_without_fakeweb, :socket_type
+      alias_method :socket_type, :socket_type_with_fakeweb
     end
 
-    alias request_without_fakeweb request
-    def request(request, body = nil, &block)
+    def request_with_fakeweb(request, body = nil, &block)
       protocol = use_ssl? ? "https" : "http"
 
       path = request.path
@@ -62,10 +63,14 @@ module Net  #:nodoc: all
               "Real HTTP connections are disabled. Unregistered request: #{request.method} #{uri}"
       end
     end
+    alias_method :request_without_fakeweb, :request
+    alias_method :request, :request_with_fakeweb
 
-    alias connect_without_fakeweb connect
-    def connect
+
+    def connect_with_fakeweb
     end
+    alias_method :connect_without_fakeweb, :connect
+    alias_method :connect, :connect_with_fakeweb
   end
 
 end

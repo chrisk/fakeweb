@@ -7,6 +7,7 @@ require 'fake_web/responder'
 require 'fake_web/stub_socket'
 require 'fake_web/utility'
 
+FakeWeb::Utility.record_loaded_net_http_replacement_libs
 FakeWeb::Utility.puts_warning_for_net_http_around_advice_libs_if_needed
 
 module FakeWeb

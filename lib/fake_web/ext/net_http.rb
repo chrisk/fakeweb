@@ -68,6 +68,11 @@ module Net  #:nodoc: all
 
 
     def connect_with_fakeweb
+      unless @@alredy_checked_for_net_http_replacement_libs ||= false
+        FakeWeb::Utility.puts_warning_for_net_http_replacement_libs_if_needed
+        @@alredy_checked_for_net_http_replacement_libs = true
+      end
+      nil
     end
     alias_method :connect_without_fakeweb, :connect
     alias_method :connect, :connect_with_fakeweb

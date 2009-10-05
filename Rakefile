@@ -27,7 +27,7 @@ end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb")
+  test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor")
   test.verbose = false
   test.warning = true
 end
@@ -38,7 +38,7 @@ task :default => :test
 begin
   require 'rcov/rcovtask'
   Rcov::RcovTask.new do |t|
-    t.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb")
+    t.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor")
     t.rcov_opts << "--sort coverage"
     t.rcov_opts << "--exclude gems"
     t.warning = true

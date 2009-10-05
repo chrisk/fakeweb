@@ -40,5 +40,18 @@ module FakeWeb
       array
     end
 
+    def self.puts_warning_for_net_http_around_advice_libs_if_needed
+      libs = {"Samuel" => defined?(Samuel)}
+      warnings = libs.select { |_, loaded| loaded }.map do |name, _|
+        <<-TEXT.gsub(/ {10}/, '')
+          \e[1mWarning: FakeWeb was loaded after #{name}\e[0m
+          * #{name}'s code is being ignored when a request is handled by FakeWeb,
+            because both libraries work by patching Net::HTTP.
+          * To fix this, just reorder your requires so that FakeWeb is before #{name}.
+        TEXT
+      end
+      $stderr.puts "\n" + warnings.join("\n") + "\n" if warnings.any?
+    end
+
   end
 end

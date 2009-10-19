@@ -149,4 +149,13 @@ class TestRegexes < Test::Unit::TestCase
     assert FakeWeb.registered_uri?(:get, "https://example.com:443/list?b=2&a=1")
   end
 
+  def test_registry_matches_quickly_with_lots_of_query_params
+    # regression test for code that tried to calculate the permutations of the
+    # query params, which hangs with a large number of params
+    FakeWeb.register_uri(:get, %r[example.com], :body => "example")
+    Timeout::timeout(1) do
+      FakeWeb.registered_uri?(:get, "http://example.com/?a=1&b=2&c=3&d=4&e=5&f=6&g=7&h=8")
+    end
+  end
+
 end

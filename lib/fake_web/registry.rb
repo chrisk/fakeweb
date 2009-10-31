@@ -74,32 +74,19 @@ module FakeWeb
 
 
     def variations_of_uri_as_strings(uri_object)
-      uris = []
-      normalized_uri = normalize_uri(uri_object)
+      normalized_uri = normalize_uri(uri_object.dup)
+      normalized_uri_string = normalized_uri.to_s
 
-      # all orderings of query parameters
-      query = normalized_uri.query
-      if query.nil? || query.empty?
-        uris << normalized_uri
-      else
-        FakeWeb::Utility.simple_array_permutation(query.split('&')) do |p|
-          current_permutation = normalized_uri.dup
-          current_permutation.query = p.join('&')
-          uris << current_permutation
-        end
-      end
+      variations = [normalized_uri_string]
 
-      uri_strings = uris.map { |uri| uri.to_s }
-
-      # including and omitting the default port
+      # if the port is implied in the original, add a copy with an explicit port
       if normalized_uri.default_port == normalized_uri.port
-        uri_strings += uris.map { |uri|
-          uri.to_s.sub(/#{Regexp.escape(normalized_uri.request_uri)}$/,
-                       ":#{normalized_uri.port}#{normalized_uri.request_uri}")
-        }
+        variations << normalized_uri_string.sub(
+                        /#{Regexp.escape(normalized_uri.request_uri)}$/,
+                        ":#{normalized_uri.port}#{normalized_uri.request_uri}")
       end
 
-      uri_strings
+      variations
     end
 
     def normalize_uri(uri)

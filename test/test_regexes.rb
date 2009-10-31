@@ -44,17 +44,6 @@ class TestRegexes < Test::Unit::TestCase
     end
   end
 
-  def test_requesting_a_uri_that_matches_two_registered_regexes_with_differently_ordered_query_params_raises_an_error
-    FakeWeb.register_uri(:get, %r[example.com/list\?b=2&a=1], :body => "first")
-    FakeWeb.register_uri(:get, %r[example.com/list\?a=1&b=2], :body => "second")
-    assert_raise FakeWeb::MultipleMatchingURIsError do
-      Net::HTTP.start("example.com") { |query| query.get('/list?a=1&b=2') }
-    end
-    assert_raise FakeWeb::MultipleMatchingURIsError do
-      Net::HTTP.start("example.com") { |query| query.get('/list?b=2&a=1') }
-    end
-  end
-
   def test_requesting_a_uri_that_matches_two_registered_regexes_raises_an_error_including_request_info
     FakeWeb.register_uri(:get, %r|http://example\.com/|, :body => "first")
     FakeWeb.register_uri(:get, %r|http://example\.com/a|, :body => "second")
@@ -142,8 +131,15 @@ class TestRegexes < Test::Unit::TestCase
     assert !FakeWeb.registered_uri?(:get, "http://example.com/list?notimportant=1&unimportant=1")
   end
 
-  def test_registry_matches_with_unsorted_query_params
+  def test_registry_does_not_match_when_regex_has_unsorted_query_params
     FakeWeb.register_uri(:get, %r[example\.com/list\?b=2&a=1], :body => "example")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com/list?b=2&a=1")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com/list?a=1&b=2")
+    assert !FakeWeb.registered_uri?(:get, "https://example.com:443/list?b=2&a=1")
+  end
+
+  def test_registry_matches_when_regex_has_sorted_query_params
+    FakeWeb.register_uri(:get, %r[example\.com/list\?a=1&b=2], :body => "example")
     assert FakeWeb.registered_uri?(:get, "http://example.com/list?b=2&a=1")
     assert FakeWeb.registered_uri?(:get, "http://example.com/list?a=1&b=2")
     assert FakeWeb.registered_uri?(:get, "https://example.com:443/list?b=2&a=1")

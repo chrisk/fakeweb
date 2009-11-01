@@ -1,3 +1,14 @@
+fakeweb (development)
+
+* revert to sorting query params before matching requests against regexps,
+  instead of the 1.2.6 behavior that tried every possible order combination;
+  that was factorial-time, which made matching hang for requests with long query
+  strings [Jason Wadsworth, David Dollar, Blaine Cook]
+
+* print a warning when FakeWeb is loaded before RightHttpConnection or after
+  Samuel, other libs that patch Net::HTTP [Chris Kampmeier, Ben Brinckerhoff]
+
+
 fakeweb (1.2.6)
 
 * fix that query params in a regex would have to be sorted for it to ever match

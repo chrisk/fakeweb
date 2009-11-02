@@ -50,8 +50,6 @@ rescue LoadError
   print "rcov support disabled "
   if RUBY_PLATFORM =~ /java/
     puts "(running under JRuby)"
-  elsif RUBY_VERSION =~ /^1\.9/
-    puts "(running under Ruby 1.9)"
   else
     puts "(install RCov to enable the `rcov` task)"
   end

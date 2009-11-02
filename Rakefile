@@ -3,12 +3,14 @@ puts "Using ruby #{RUBY_VERSION}p#{RUBY_PATCHLEVEL}"
 require 'rubygems'
 require 'rake'
 
+version = File.read(File.join(File.dirname(__FILE__), "lib", "fake_web", "VERSION")).strip
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "fakeweb"
     gem.rubyforge_project = "fakeweb"
-    gem.version = File.read(File.join(File.dirname(__FILE__), "lib", "fake_web", "VERSION")).strip
+    gem.version = version
     gem.summary = "A tool for faking responses to HTTP requests"
     gem.description = "FakeWeb is a helper for faking web requests in Ruby. It works at a global level, without modifying code or writing extensive stubs."
     gem.email = ["chris@kampers.net", "romeda@gmail.com"]
@@ -59,7 +61,6 @@ end
 begin
   require 'rdoc/task'
   Rake::RDocTask.new do |rdoc|
-    version = File.exist?('VERSION') ? File.read('VERSION') : ""
     rdoc.main = "README.rdoc"
     rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
     rdoc.title = "FakeWeb #{version} API Documentation"

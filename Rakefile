@@ -8,6 +8,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "fakeweb"
     gem.rubyforge_project = "fakeweb"
+    gem.version = File.read(File.join(File.dirname(__FILE__), "lib", "fake_web", "VERSION")).strip
     gem.summary = "A tool for faking responses to HTTP requests"
     gem.description = "FakeWeb is a helper for faking web requests in Ruby. It works at a global level, without modifying code or writing extensive stubs."
     gem.email = ["chris@kampers.net", "romeda@gmail.com"]

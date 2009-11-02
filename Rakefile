@@ -35,7 +35,7 @@ Rake::TestTask.new(:test) do |test|
   test.warning = true
 end
 
-task :default => :test
+task :default => [:check_dependencies, :test]
 
 
 begin

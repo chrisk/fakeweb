@@ -46,7 +46,7 @@ begin
     t.rcov_opts << "--exclude gems"
     t.warning = true
   end
-rescue
+rescue LoadError
   print "rcov support disabled "
   if RUBY_PLATFORM =~ /java/
     puts "(running under JRuby)"

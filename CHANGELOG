@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.7)
 
 * revert to sorting query params before matching requests against regexps,
   instead of the 1.2.6 behavior that tried every possible order combination;

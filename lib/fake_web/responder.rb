@@ -55,7 +55,7 @@ module FakeWeb
     end
 
     def baked_response
-      resp = case options[:response]
+      case options[:response]
       when Net::HTTPResponse then options[:response]
       when String
         socket = Net::BufferedIO.new(options[:response])

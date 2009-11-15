@@ -1,3 +1,8 @@
+fakeweb (development)
+
+* support Pathname objects where a filename is expected [Chris Kampmeier]
+
+
 fakeweb (1.2.7)
 
 * revert to sorting query params before matching requests against regexps,

@@ -520,6 +520,20 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal File.dirname(__FILE__), body
   end
 
+  def test_registering_with_a_body_pointing_to_a_pathname
+    path = Pathname.new(File.dirname(__FILE__) + "/fixtures/test_example.txt")
+    FakeWeb.register_uri(:get, "http://example.com", :body => path)
+    response = Net::HTTP.start("example.com") { |http| http.get("/") }
+    assert_equal "test example content", response.body
+  end
+
+  def test_registering_with_a_response_pointing_to_a_pathname
+    path = Pathname.new(File.dirname(__FILE__) + "/fixtures/google_response_without_transfer_encoding")
+    FakeWeb.register_uri(:get, "http://google.com", :response => path)
+    response = Net::HTTP.start("google.com") { |http| http.get("/") }
+    assert response.body.include?("<title>Google</title>")
+  end
+
   def test_http_version_from_string_response
     FakeWeb.register_uri(:get, "http://example.com", :body => "example")
     response = Net::HTTP.start("example.com") { |http| http.get("/") }

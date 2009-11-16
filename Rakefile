@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rake'
 
-version = File.read(File.join(File.dirname(__FILE__), "lib", "fake_web", "VERSION")).strip
+version = File.read("lib/fake_web/VERSION").strip
 
 begin
   require 'jeweler'
@@ -29,6 +29,7 @@ end
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor")
+  test.libs << "test"
   test.verbose = false
   test.warning = true
 end
@@ -40,6 +41,7 @@ begin
   require 'rcov/rcovtask'
   Rcov::RcovTask.new do |t|
     t.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor")
+    t.libs << "test"
     t.rcov_opts << "--sort coverage"
     t.rcov_opts << "--exclude gems"
     t.warning = true

@@ -13,7 +13,7 @@ FakeWeb::Utility.puts_warning_for_net_http_around_advice_libs_if_needed
 module FakeWeb
 
   # Returns the version string for the copy of FakeWeb you have loaded.
-  VERSION = File.read(File.join(File.dirname(__FILE__), "fake_web", "VERSION")).strip
+  VERSION = File.read("lib/fake_web/VERSION").strip
 
   # Resets the FakeWeb Registry. This will force all subsequent web requests to
   # behave as real requests.

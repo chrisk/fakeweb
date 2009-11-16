@@ -36,7 +36,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_register_uri_without_domain_name
     assert_raises URI::InvalidURIError do
-      FakeWeb.register_uri(:get, 'test_example2.txt', File.dirname(__FILE__) + '/fixtures/test_example.txt')
+      FakeWeb.register_uri(:get, 'test_example2.txt', fixture_path("test_example.txt"))
     end
   end
 
@@ -122,7 +122,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_response_for_with_registered_uri
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     assert_equal 'test example content', FakeWeb.response_for(:get, 'http://mock/test_example.txt').body
   end
 
@@ -223,7 +223,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_with_block
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     response = Net::HTTP.start('mock') { |http| http.get('/test_example.txt') }
     assert_equal 'test example content', response.body
   end
@@ -253,7 +253,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_with_undocumented_full_uri_argument_style
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     response = Net::HTTP.start('mock') { |query| query.get('http://mock/test_example.txt') }
     assert_equal 'test example content', response.body
   end
@@ -265,7 +265,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_post
-    FakeWeb.register_uri(:post, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:post, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     response = Net::HTTP.start('mock') { |query| query.post('/test_example.txt', '') }
     assert_equal 'test example content', response.body
   end
@@ -284,14 +284,14 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_get_with_request_from_file_as_registered_uri
-    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_without_transfer_encoding')
+    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_without_transfer_encoding"))
     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
     assert_equal '200', response.code
     assert response.body.include?('<title>Google</title>')
   end
 
   def test_mock_post_with_request_from_file_as_registered_uri
-    FakeWeb.register_uri(:post, 'http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_without_transfer_encoding')
+    FakeWeb.register_uri(:post, 'http://www.google.com/', :response => fixture_path("google_response_without_transfer_encoding"))
     response = Net::HTTP.start('www.google.com') { |query| query.post('/', '') }
     assert_equal "200", response.code
     assert response.body.include?('<title>Google</title>')
@@ -408,7 +408,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_instance_syntax
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     response = nil
     uri = URI.parse('http://mock/test_example.txt')
     http = Net::HTTP.new(uri.host, uri.port)
@@ -423,7 +423,7 @@ class TestFakeWeb < Test::Unit::TestCase
     response = nil
     proxy_address = nil
     proxy_port = nil
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     uri = URI.parse('http://mock/test_example.txt')
     http = Net::HTTP::Proxy(proxy_address, proxy_port).new(
               uri.host, (uri.port or 80))
@@ -451,7 +451,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_mock_rotate_responses
     FakeWeb.register_uri(:get, 'http://mock/multiple_test_example.txt',
-                         [ {:body => File.dirname(__FILE__) + '/fixtures/test_example.txt', :times => 2},
+                         [ {:body => fixture_path("test_example.txt"), :times => 2},
                            {:body => "thrice", :times => 3},
                            {:body => "ever_more"} ])
 
@@ -462,28 +462,28 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_mock_request_using_response_with_transfer_encoding_header_has_valid_transfer_encoding_header
-    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_with_transfer_encoding')
+    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_with_transfer_encoding"))
     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
     assert_not_nil response['transfer-encoding']
     assert response['transfer-encoding'] == 'chunked'
   end
 
   def test_mock_request_using_response_without_transfer_encoding_header_does_not_have_a_transfer_encoding_header
-    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_without_transfer_encoding')
+    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_without_transfer_encoding"))
     response = nil
     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
     assert !response.key?('transfer-encoding')
   end
 
   def test_mock_request_using_response_from_curl_has_original_transfer_encoding_header
-    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => File.dirname(__FILE__) + '/fixtures/google_response_from_curl')
+    FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_from_curl"))
     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
     assert_not_nil response['transfer-encoding']
     assert response['transfer-encoding'] == 'chunked'
   end
 
   def test_txt_file_should_have_three_lines
-    FakeWeb.register_uri(:get, 'http://www.google.com/', :body => File.dirname(__FILE__) + '/fixtures/test_txt_file')
+    FakeWeb.register_uri(:get, 'http://www.google.com/', :body => fixture_path("test_txt_file"))
     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
     assert response.body.split(/\n/).size == 3, "response has #{response.body.split(/\n/).size} lines should have 3"
   end
@@ -521,14 +521,14 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_registering_with_a_body_pointing_to_a_pathname
-    path = Pathname.new(File.dirname(__FILE__) + "/fixtures/test_example.txt")
+    path = Pathname.new(fixture_path("test_example.txt"))
     FakeWeb.register_uri(:get, "http://example.com", :body => path)
     response = Net::HTTP.start("example.com") { |http| http.get("/") }
     assert_equal "test example content", response.body
   end
 
   def test_registering_with_a_response_pointing_to_a_pathname
-    path = Pathname.new(File.dirname(__FILE__) + "/fixtures/google_response_without_transfer_encoding")
+    path = Pathname.new(fixture_path("google_response_without_transfer_encoding"))
     FakeWeb.register_uri(:get, "http://google.com", :response => path)
     response = Net::HTTP.start("google.com") { |http| http.get("/") }
     assert response.body.include?("<title>Google</title>")
@@ -541,7 +541,7 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_http_version_from_file_response
-    FakeWeb.register_uri(:get, "http://example.com", :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, "http://example.com", :body => fixture_path("test_example.txt"))
     response = Net::HTTP.start("example.com") { |http| http.get("/") }
     assert_equal "1.0", response.http_version
   end

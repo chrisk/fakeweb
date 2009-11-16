@@ -27,6 +27,10 @@ end
 
 module FakeWebTestHelper
 
+  def fixture_path(basename)
+    "test/fixtures/#{basename}"
+  end
+
   def capture_stderr
     $stderr = StringIO.new
     yield

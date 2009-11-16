@@ -18,14 +18,12 @@ class TestMissingPathname < Test::Unit::TestCase
   # when Pathname isn't in use.
 
   def test_register_using_body_without_pathname
-    filename = File.dirname(__FILE__) + "/fixtures/test_example.txt"
-    FakeWeb.register_uri(:get, "http://example.com/", :body => filename)
+    FakeWeb.register_uri(:get, "http://example.com/", :body => fixture_path("test_example.txt"))
     Net::HTTP.start("example.com") { |http| http.get("/") }
   end
 
   def test_register_using_response_without_pathname
-    filename = File.dirname(__FILE__) + "/fixtures/google_response_without_transfer_encoding"
-    FakeWeb.register_uri(:get, "http://example.com/", :response => filename)
+    FakeWeb.register_uri(:get, "http://example.com/", :response => fixture_path("google_response_without_transfer_encoding"))
     Net::HTTP.start("example.com") { |http| http.get("/") }
   end
 

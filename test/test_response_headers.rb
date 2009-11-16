@@ -23,7 +23,7 @@ class TestResponseHeaders < Test::Unit::TestCase
   end
 
   def test_cookies_when_registering_with_file_and_set_cookie_header
-    FakeWeb.register_uri(:get, "http://example.com/", :body => File.dirname(__FILE__) + '/fixtures/test_example.txt',
+    FakeWeb.register_uri(:get, "http://example.com/", :body => fixture_path("test_example.txt"),
                                                       :set_cookie => "user_id=1; example=yes")
     response = Net::HTTP.start("example.com") { |query| query.get("/") }
     assert_equal "test example content", response.body

@@ -39,7 +39,7 @@ class TestDeprecations < Test::Unit::TestCase
 
   def test_register_uri_with_file_option_prints_deprecation_warning
     warning = capture_stderr do
-      FakeWeb.register_uri(:get, "http://example.com", :file => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+      FakeWeb.register_uri(:get, "http://example.com", :file => fixture_path("test_example.txt"))
     end
     assert_match %r(deprecation warning: fakeweb's :file option)i, warning
   end

@@ -3,12 +3,12 @@ require File.join(File.dirname(__FILE__), "test_helper")
 class TestFakeWebOpenURI < Test::Unit::TestCase
 
   def test_content_for_registered_uri
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     assert_equal 'test example content', FakeWeb.response_for(:get, 'http://mock/test_example.txt').body
   end
   
   def test_mock_open
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     assert_equal 'test example content', open('http://mock/test_example.txt').read
   end
   
@@ -51,7 +51,7 @@ class TestFakeWebOpenURI < Test::Unit::TestCase
   end
 
   def test_mock_open_with_block
-    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => File.dirname(__FILE__) + '/fixtures/test_example.txt')
+    FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
     body = open('http://mock/test_example.txt') { |f| f.readlines }
     assert_equal 'test example content', body.first
   end

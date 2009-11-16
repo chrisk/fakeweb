@@ -8,8 +8,7 @@ class TestOtherNetHttpLibraries < Test::Unit::TestCase
     vendor_dirs = Dir["#{File.dirname(__FILE__)}/vendor/*/lib"]
     load_path_opts = vendor_dirs.unshift(fakeweb_dir).map { |dir| "-I#{dir}" }.join(" ")
 
-    # TODO: use the same Ruby executable that this test was invoked with
-    `ruby #{load_path_opts} -e "#{requires}; #{additional_code}" 2>&1`
+    `#{ruby_path} #{load_path_opts} -e "#{requires}; #{additional_code}" 2>&1`
   end
 
   def test_requiring_samuel_before_fakeweb_prints_warning

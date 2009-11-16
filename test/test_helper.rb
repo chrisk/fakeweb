@@ -4,6 +4,7 @@ require 'test/unit'
 require 'open-uri'
 require 'pathname'
 require 'fake_web'
+require 'rbconfig'
 require 'rubygems'
 require 'mocha'
 
@@ -32,6 +33,12 @@ module FakeWebTestHelper
     $stderr.rewind && $stderr.read
   ensure
     $stderr = STDERR
+  end
+
+  # The path to the current ruby interpreter. Adapted from Rake's FileUtils.
+  def ruby_path
+    ext = ((RbConfig::CONFIG['ruby_install_name'] =~ /\.(com|cmd|exe|bat|rb|sh)$/) ? "" : RbConfig::CONFIG['EXEEXT'])
+    File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name'] + ext).sub(/.*\s.*/m, '"\&"')
   end
 
   # Sets several expectations (using Mocha) that a real HTTP request makes it

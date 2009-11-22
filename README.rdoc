@@ -6,9 +6,6 @@ level, without modifying code or writing extensive stubs.
 
 == Installation
 
-The latest release of FakeWeb is once again available from your friendly
-RubyForge mirror. Just install the gem:
-
   gem install fakeweb
 
 Note: the gem was previously available as +FakeWeb+ (capital letters), but now

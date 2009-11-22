@@ -22,7 +22,7 @@ begin
     rubyforge.remote_doc_path = ""
   end
 rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
 
@@ -66,5 +66,5 @@ begin
   end
 rescue LoadError
   puts "\nIt looks like you're using an old version of RDoc, but FakeWeb requires a newer one."
-  puts "You can try upgrading with `sudo gem install rdoc`.\n\n"
+  puts "You can try upgrading with `gem install rdoc`.\n\n"
 end

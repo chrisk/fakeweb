@@ -67,4 +67,10 @@ class TestUtility < Test::Unit::TestCase
     assert_equal uri, FakeWeb::Utility.strip_default_port_from_uri(uri)
   end
 
+  def test_uri_escape_delegates_to_uri_parser_when_available
+    parsing_object = URI.const_defined?(:Parser) ? URI::Parser.any_instance : URI
+    parsing_object.expects(:escape).with("string", /unsafe/).returns("escaped")
+    assert_equal "escaped", FakeWeb::Utility.uri_escape("string", /unsafe/)
+  end
+
 end

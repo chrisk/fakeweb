@@ -67,7 +67,8 @@ module FakeWebTestHelper
     request_parts = ["#{options[:method]} #{options[:path]} HTTP/1.1", "Host: #{options[:host]}"]
     socket.expects(:write).with(all_of(includes(request_parts[0]), includes(request_parts[1]))).returns(100)
 
-    socket.expects(:sysread).at_least_once.returns("HTTP/1.1 #{options[:response_code]} #{options[:response_message]}\nContent-Length: #{options[:response_body].length}\n\n#{options[:response_body]}").then.raises(EOFError)
+    read_method = RUBY_VERSION >= "1.9.2" ? :read_nonblock : :sysread
+    socket.expects(read_method).at_least_once.returns("HTTP/1.1 #{options[:response_code]} #{options[:response_message]}\nContent-Length: #{options[:response_body].length}\n\n#{options[:response_body]}").then.raises(EOFError)
   end
 
 

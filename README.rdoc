@@ -26,7 +26,6 @@ The main source repository is http://github.com/chrisk/fakeweb.
 
 Start by requiring FakeWeb:
 
-  require 'rubygems'
   require 'fakeweb'
 
 === Registering basic string responses
@@ -68,17 +67,17 @@ more than one URI.
 
 If you use the <tt>:any</tt> symbol, the URI you specify will be completely
 stubbed out (regardless of the HTTP method of the request). This can be useful
-for RPC-like services, where the HTTP method isn't significant. (Older
+for RPC-style services, where the HTTP method isn't significant. (Older
 versions of FakeWeb always behaved like this, and didn't accept the first
 +method+ argument above; this syntax is now deprecated.)
 
 === Rotating responses
 
-You can optionally call FakeWeb.register_uri with an array of options hashes;
-these are used, in order, to respond to repeated requests. Once you run out of
-responses, further requests always receive the last response. (You can also send
-a response more than once before rotating, by specifying a <tt>:times</tt>
-option for that response.)
+You can optionally call <tt>FakeWeb.register_uri</tt> with an array of options
+hashes; these are used, in order, to respond to repeated requests. Once you run
+out of responses, further requests always receive the last response. (You can
+also send a response more than once before rotating, by specifying a
+<tt>:times</tt> option for that response.)
 
   FakeWeb.register_uri(:delete, "http://example.com/posts/1",
                        [{:body => "Post 1 deleted.", :status => ["200", "OK"]},
@@ -92,8 +91,8 @@ option for that response.)
 
 === Using HTTP basic authentication
 
-You can stub requests that use basic authentication with +userinfo+ strings in
-the URIs:
+You can fake requests that use basic authentication by adding +userinfo+ strings
+to your URIs:
 
   FakeWeb.register_uri(:get, "http://example.com/secret", :body => "Unauthorized", :status => ["401", "Unauthorized"])
   FakeWeb.register_uri(:get, "http://user:pass@example.com/secret", :body => "Authorized")
@@ -107,9 +106,9 @@ the URIs:
 
 === Clearing registered URIs
 
-The FakeWeb registry is a singleton that lasts for the duration of your
-program, maintaining every fake response you register. If needed, you
-can clean out the registry and remove all registered URIs:
+The FakeWeb registry is a singleton that lasts for the duration of your program,
+maintaining every fake response you register. If needed, you can clean out the
+registry and remove all registered URIs:
 
   FakeWeb.clean_registry
 

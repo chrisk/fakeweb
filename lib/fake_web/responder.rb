@@ -36,6 +36,23 @@ module FakeWeb
       response
     end
 
+    def curl_response
+      if has_baked_response?
+        response = baked_curl_response
+      else
+        code, msg = meta_information
+        response = Curl::Easy.new
+        response.instance_eval <<-END
+          def body_str
+            "#{body.gsub('"', '\"')}"
+          end
+        END
+      end
+
+      optionally_raise(response)
+      response
+    end
+
     private
 
     def headers_extracted_from_options

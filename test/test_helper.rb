@@ -1,10 +1,12 @@
 require 'test/unit'
 require 'open-uri'
 require 'pathname'
-require 'fake_web'
 require 'rbconfig'
 require 'rubygems'
+require 'curb'
 require 'mocha'
+
+require 'fake_web'
 
 
 # Give all tests a common setup and teardown that prevents shared state

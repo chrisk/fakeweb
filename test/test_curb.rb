@@ -73,3 +73,8 @@ class TestCurb < Test::Unit::TestCase
   end
 
 end
+
+if RUBY_PLATFORM =~ /java/
+  puts "Skipping Curb tests (running under JRuby)"
+  Object.send(:remove_const, :TestCurb)
+end

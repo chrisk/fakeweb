@@ -15,7 +15,7 @@ begin
     gem.authors = ["Chris Kampmeier", "Blaine Cook"]
     gem.homepage = "http://github.com/chrisk/fakeweb"
     gem.add_development_dependency "mocha", ">= 0.9.5"
-    gem.add_development_dependency "curb", ">= 0.5.4"
+    gem.add_development_dependency "curb", ">= 0.5.9.1" unless RUBY_PLATFORM =~ /java/
   end
   Jeweler::GemcutterTasks.new
   Jeweler::RubyforgeTasks.new do |rubyforge|

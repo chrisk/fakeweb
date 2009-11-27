@@ -3,8 +3,8 @@ require 'open-uri'
 require 'pathname'
 require 'rbconfig'
 require 'rubygems'
-require 'curb'
 require 'mocha'
+require 'curb' unless RUBY_PLATFORM =~ /java/
 
 require 'fake_web'
 

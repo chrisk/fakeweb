@@ -19,23 +19,23 @@ module FakeWeb
     end
 
     def registered_uri?(method, uri)
-      !responses_for(method, uri).empty?
+      !responders_for(method, uri).empty?
     end
 
     def responder_for(method, uri)
-      responses = responses_for(method, uri)
-      return nil if responses.empty?
+      responders = responders_for(method, uri)
+      return nil if responders.empty?
 
-      next_response = responses.last
-      responses.each do |response|
-        if response.times and response.times > 0
-          response.times -= 1
-          next_response = response
+      next_responder = responders.last
+      responders.each do |responder|
+        if responder.times and responder.times > 0
+          responder.times -= 1
+          next_responder = responder
           break
         end
       end
 
-      next_response
+      next_responder
     end
 
     def response_for(method, uri, &block)
@@ -53,7 +53,7 @@ module FakeWeb
 
     private
 
-    def responses_for(method, uri)
+    def responders_for(method, uri)
       uri = normalize_uri(uri)
 
       uri_map_matches(method, uri, URI) ||

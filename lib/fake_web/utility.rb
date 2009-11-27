@@ -28,6 +28,12 @@ module FakeWeb
       end
     end
 
+    # Emulate rb_warn in pure ruby
+    def self.rb_warn(msg, caller_line = caller[0])
+      file_and_line = caller_line.sub(/:in .+$/, '')
+      warn "#{file_and_line}: warning: #{msg}"
+    end
+
     def self.puts_warning_for_net_http_around_advice_libs_if_needed
       libs = {"Samuel" => defined?(Samuel)}
       warnings = libs.select { |_, loaded| loaded }.map do |name, _|

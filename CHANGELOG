@@ -2,6 +2,8 @@ fakeweb (development)
 
 * support Pathname objects where a filename is expected [Chris Kampmeier]
 
+* fix compatibility with Ruby 1.9.2 [Chris Kampmeier]
+
 
 fakeweb (1.2.7)
 

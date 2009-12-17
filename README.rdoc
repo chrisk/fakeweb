@@ -41,6 +41,11 @@ Start by requiring FakeWeb:
 You can also call <tt>register_uri</tt> with a regular expression, to match
 more than one URI.
 
+  FakeWeb.register_uri(:get, %r|http://example.com/|", :body => "Hello World!")
+
+  Net::HTTP.get(URI.parse("http://example.com/test3"))
+  => "Hello World!"
+
 === Replaying a recorded response
 
   page = `curl -is http://www.google.com/`

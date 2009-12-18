@@ -4,6 +4,8 @@ fakeweb (development)
 
 * fix compatibility with Ruby 1.9.2 [Chris Kampmeier]
 
+* support setting FakeWeb.allow_net_connect to a string or regex, which is then
+  used to filter outgoing web requests [Ben Woosley]
 
 fakeweb (1.2.7)
 

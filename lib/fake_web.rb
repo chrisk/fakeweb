@@ -31,6 +31,13 @@ module FakeWeb
   # when a URI is changed in implementation code without a corresponding test
   # change.
   #
+  # If you set <tt>FakeWeb.allow_net_connect = string_or_regex</tt> and subsequently try
+  # to make a request to a URI you haven't registered with #register_uri, the URI
+  # will be tested for a #match against the provided filter string_or_regex. If the
+  # URI matches the string, the request will be allowed.  If not a
+  # NetConnectNotAllowedError will be raised. This is handy when you want to
+  # allow access to a local search server while disallowing web access.
+  #
   # When <tt>FakeWeb.allow_net_connect = true</tt> (the default), requests to
   # URIs not stubbed with FakeWeb are passed through to Net::HTTP.
   def self.allow_net_connect=(allowed)
@@ -43,8 +50,16 @@ module FakeWeb
   # Returns +true+ if requests to URIs not registered with FakeWeb are passed
   # through to Net::HTTP for normal processing (the default). Returns +false+
   # if an exception is raised for these requests.
-  def self.allow_net_connect?
-    @allow_net_connect
+  #
+  # If you have set a string regular expression filter for allow_net_connect,
+  # you must supply a path to be tested against your filter
+  def self.allow_net_connect?(path = nil)
+    if @allow_net_connect.respond_to?(:match)
+      raise "You must supply a uri to test" unless path
+      @allow_net_connect.match(path) != nil
+    else
+      @allow_net_connect
+    end
   end
 
   # This exception is raised if you set <tt>FakeWeb.allow_net_connect =

@@ -1,6 +1,24 @@
 require 'test_helper'
 
 class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+  def test_when_allow_net_connect_is_a_regex_and_the_requested_url_matches_the_request_is_allowed
+    FakeWeb.allow_net_connect = %r{^http://images\.apple\.com/}
+    setup_expectations_for_real_apple_hot_news_request
+    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
+  end
+
+  def test_when_allow_net_connect_is_a_regex_including_port_and_the_requested_url_matches_the_request_is_allowed
+    FakeWeb.allow_net_connect = %r{^http://images\.apple\.com:80/}
+    setup_expectations_for_real_apple_hot_news_request
+    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
+  end
+
+  def test_when_allow_net_connect_is_a_regex_and_the_requested_url_does_not_match_the_request_is_not_allowed
+    FakeWeb.allow_net_connect = %r{^http://images\.apple\.com/}
+    assert_raise FakeWeb::NetConnectNotAllowedError do
+      Net::HTTP.get(URI.parse("http://example.com/"))
+    end
+  end
 
   def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_true
     FakeWeb.allow_net_connect = true

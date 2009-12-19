@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rake'
 
-version = File.read("lib/fake_web/VERSION").strip
+version = '1.2.7'
 
 begin
   require 'jeweler'

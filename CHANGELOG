@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.2.8)
 
 * support Pathname objects where a filename is expected [Chris Kampmeier]
 

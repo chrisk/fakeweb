@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rake'
 
-version = '1.2.7'
+version = '1.2.8'
 
 begin
   require 'jeweler'

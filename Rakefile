@@ -16,11 +16,6 @@ begin
     gem.homepage = "http://github.com/chrisk/fakeweb"
     gem.add_development_dependency "mocha", ">= 0.9.5"
   end
-  Jeweler::GemcutterTasks.new
-  Jeweler::RubyforgeTasks.new do |rubyforge|
-    rubyforge.doc_task = "rdoc"
-    rubyforge.remote_doc_path = ""
-  end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end

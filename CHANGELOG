@@ -4,6 +4,8 @@ fakeweb (development)
 
 * fix compatibility with Ruby 1.9.2 [Chris Kampmeier]
 
+* fix a load path problem when determining FakeWeb::VERSION [Josh Peek,
+  Woody Peterson, Ben Woosley]
 
 fakeweb (1.2.7)
 

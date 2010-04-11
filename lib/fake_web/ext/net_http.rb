@@ -35,7 +35,7 @@ module Net  #:nodoc: all
       alias_method :socket_type, :socket_type_with_fakeweb
     end
 
-    def request_with_fakeweb(request, body = nil, &block)
+    def request_uri(request)
       protocol = use_ssl? ? "https" : "http"
 
       path = request.path
@@ -49,6 +49,10 @@ module Net  #:nodoc: all
       end
 
       uri = "#{protocol}://#{userinfo}#{self.address}:#{self.port}#{path}"
+    end
+
+    def request_with_fakeweb(request, body = nil, &block)
+      uri = request_uri(request)
       method = request.method.downcase.to_sym
 
       if FakeWeb.registered_uri?(method, uri)

@@ -18,6 +18,23 @@ module FakeWeb
       end
     end
 
+    # Returns a string with a normalized version of a Net::HTTP request's URI.
+    def self.request_uri_as_string(net_http, request)
+      protocol = net_http.use_ssl? ? "https" : "http"
+
+      path = request.path
+      path = URI.parse(request.path).request_uri if request.path =~ /^http/
+
+      if request["authorization"] =~ /^Basic /
+        userinfo = FakeWeb::Utility.decode_userinfo_from_header(request["authorization"])
+        userinfo = FakeWeb::Utility.encode_unsafe_chars_in_userinfo(userinfo) + "@"
+      else
+        userinfo = ""
+      end
+
+      uri = "#{protocol}://#{userinfo}#{net_http.address}:#{net_http.port}#{path}"
+    end
+
     # Wrapper for URI escaping that switches between URI::Parser#escape and
     # URI.escape for 1.9-compatibility
     def self.uri_escape(*args)

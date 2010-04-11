@@ -323,13 +323,6 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
-  def test_request_uri
-    uri = URI.parse('http://www.example.com/index.html')
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Get.new(uri.path)
-    assert_equal 'http://www.example.com:80/index.html', http.request_uri(request)
-  end
-
   def test_real_http_request
     FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request

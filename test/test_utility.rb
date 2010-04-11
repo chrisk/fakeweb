@@ -67,6 +67,13 @@ class TestUtility < Test::Unit::TestCase
     assert_equal uri, FakeWeb::Utility.strip_default_port_from_uri(uri)
   end
 
+  def test_request_uri_as_string
+    uri = URI.parse('http://www.example.com/index.html')
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.path)
+    assert_equal 'http://www.example.com:80/index.html', FakeWeb::Utility.request_uri_as_string(http, request)
+  end
+
   def test_uri_escape_delegates_to_uri_parser_when_available
     parsing_object = URI.const_defined?(:Parser) ? URI::Parser.any_instance : URI
     parsing_object.expects(:escape).with("string", /unsafe/).returns("escaped")

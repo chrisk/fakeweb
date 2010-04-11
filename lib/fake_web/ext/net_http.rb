@@ -35,24 +35,8 @@ module Net  #:nodoc: all
       alias_method :socket_type, :socket_type_with_fakeweb
     end
 
-    def request_uri(request)
-      protocol = use_ssl? ? "https" : "http"
-
-      path = request.path
-      path = URI.parse(request.path).request_uri if request.path =~ /^http/
-
-      if request["authorization"] =~ /^Basic /
-        userinfo = FakeWeb::Utility.decode_userinfo_from_header(request["authorization"])
-        userinfo = FakeWeb::Utility.encode_unsafe_chars_in_userinfo(userinfo) + "@"
-      else
-        userinfo = ""
-      end
-
-      uri = "#{protocol}://#{userinfo}#{self.address}:#{self.port}#{path}"
-    end
-
     def request_with_fakeweb(request, body = nil, &block)
-      uri = request_uri(request)
+      uri = FakeWeb::Utility.request_uri_as_string(self, request)
       method = request.method.downcase.to_sym
 
       if FakeWeb.registered_uri?(method, uri)

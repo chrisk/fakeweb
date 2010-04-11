@@ -70,7 +70,8 @@ class TestUtility < Test::Unit::TestCase
   def test_request_uri_as_string
     http = Net::HTTP.new("www.example.com", 80)
     request = Net::HTTP::Get.new("/index.html")
-    assert_equal 'http://www.example.com:80/index.html', FakeWeb::Utility.request_uri_as_string(http, request)
+    expected = "http://www.example.com:80/index.html"
+    assert_equal expected, FakeWeb::Utility.request_uri_as_string(http, request)
   end
 
   def test_uri_escape_delegates_to_uri_parser_when_available

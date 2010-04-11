@@ -68,9 +68,8 @@ class TestUtility < Test::Unit::TestCase
   end
 
   def test_request_uri_as_string
-    uri = URI.parse('http://www.example.com/index.html')
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Get.new(uri.path)
+    http = Net::HTTP.new("www.example.com", 80)
+    request = Net::HTTP::Get.new("/index.html")
     assert_equal 'http://www.example.com:80/index.html', FakeWeb::Utility.request_uri_as_string(http, request)
   end
 

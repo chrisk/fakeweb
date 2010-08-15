@@ -1,3 +1,16 @@
+fakeweb (development)
+
+* improve response header registration so you can pass an array to set a header
+  more than once [Myron Marston]
+
+* fix an exception when the response's :body option was set to nil [Chris Zingel]
+
+* fix that stubbed requests weren't mutating the Net::HTTP request object to set
+  the body and content-length, like real requests do [Chris Kampmeier]
+
+* add FakeWeb.last_request [Chris Kampmeier]
+
+
 fakeweb (1.2.8)
 
 * support Pathname objects where a filename is expected [Chris Kampmeier]

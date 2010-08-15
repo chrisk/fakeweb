@@ -45,6 +45,11 @@ module FakeWeb
       end
     end
 
+    def self.produce_side_effects_of_net_http_request(request, body)
+      request.set_body_internal(body)
+      request.content_length = request.body.length unless request.body.nil?
+    end
+
     def self.puts_warning_for_net_http_around_advice_libs_if_needed
       libs = {"Samuel" => defined?(Samuel)}
       warnings = libs.select { |_, loaded| loaded }.map do |name, _|

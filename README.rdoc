@@ -145,6 +145,15 @@ simply add the header as an option to +register_uri+:
 
 This sets the "Content-Type" header in the response.
 
+=== Checking the last request
+
+It's often useful to retrieve the last request made by your code, so you can
+write tests for its content. FakeWeb keeps track of the last request, whether it
+was stubbed or not:
+
+  Net::HTTP.get(URI.parse("http://example.com"))
+  FakeWeb.last_request  # => Net::HTTP::Get request object
+
 == More info
 
 FakeWeb lets you decouple your test environment from live services without

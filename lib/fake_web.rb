@@ -165,6 +165,15 @@ module FakeWeb
     end
   end
 
+  # Returns the request object from the last request made via Net::HTTP.
+  def self.last_request
+    @last_request
+  end
+
+  def self.last_request=(request)
+    @last_request = request
+  end
+
   private
 
   def self.print_missing_http_method_deprecation_warning(*args)

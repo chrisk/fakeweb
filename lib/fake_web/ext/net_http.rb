@@ -36,6 +36,8 @@ module Net  #:nodoc: all
     end
 
     def request_with_fakeweb(request, body = nil, &block)
+      FakeWeb.last_request = request
+
       uri = FakeWeb::Utility.request_uri_as_string(self, request)
       method = request.method.downcase.to_sym
 

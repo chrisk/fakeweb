@@ -56,7 +56,7 @@ module FakeWebTestHelper
       socket.expects(:connect).with().at_least_once
     else
       socket = mock("TCPSocket")
-      Socket.expects(:===).with(socket).returns(true)
+      Socket.expects(:===).with(socket).at_least_once.returns(true)
     end
 
     TCPSocket.expects(:open).with(options[:host], options[:port]).returns(socket).at_least_once
@@ -66,6 +66,9 @@ module FakeWebTestHelper
     # Request/response handling
     request_parts = ["#{options[:method]} #{options[:path]} HTTP/1.1", "Host: #{options[:host]}"]
     socket.expects(:write).with(all_of(includes(request_parts[0]), includes(request_parts[1]))).returns(100)
+    if !options[:request_body].nil?
+      socket.expects(:write).with(options[:request_body]).returns(100)
+    end
 
     read_method = RUBY_VERSION >= "1.9.2" ? :read_nonblock : :sysread
     socket.expects(read_method).at_least_once.returns("HTTP/1.1 #{options[:response_code]} #{options[:response_message]}\nContent-Length: #{options[:response_body].length}\n\n#{options[:response_body]}").then.raises(EOFError)

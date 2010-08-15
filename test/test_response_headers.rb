@@ -1,12 +1,6 @@
 require 'test_helper'
 
 class TestResponseHeaders < Test::Unit::TestCase
-  def test_head_request_provides_redirect_location
-    FakeWeb.register_uri(:head, "http://example.com/", {:status=>["301", "Moved Permanently"], "x-tiny"=>["cache 0.00051307678222656"], "location"=>["http://www.newexample.com"], "x-powered-by"=>["PHP/5.3.2"], "connection"=>["close"], "content-type"=>["text/html"], "server"=>["TinyURL/1.6"], "date"=>["Fri, 06 Aug 2010 08:38:03 GMT"], :body=>nil})
-      response = Net::HTTP.start("example.com") { |query| query.head("/") } 
-      assert_equal response['location'],"http://www.newexample.com"
-    end
-
   def test_content_type_when_registering_with_string_and_content_type_header_as_symbol_option
     FakeWeb.register_uri(:get, "http://example.com/users.json", :body => '[{"username": "chrisk"}]', :content_type => "application/json")
     response = Net::HTTP.start("example.com") { |query| query.get("/users.json") }

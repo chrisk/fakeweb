@@ -44,8 +44,8 @@ module FakeWeb
       }
     end
 
-    def body 
-      return '' unless options.has_key?(:body)&&!options[:body].nil?
+    def body
+      return '' if options[:body].nil?
 
       options[:body] = options[:body].to_s if defined?(Pathname) && options[:body].is_a?(Pathname)
 

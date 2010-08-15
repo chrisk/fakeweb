@@ -120,6 +120,11 @@ module FakeWeb
   # options to specify the HTTP headers to be used in the response. Example:
   #
   #   FakeWeb.register_uri(:get, "http://example.com/index.txt", :body => "Hello", :content_type => "text/plain")
+  #
+  # You can also pass an array of header values to include a header in the
+  # response more than once:
+  #
+  #   FakeWeb.register_uri(:get, "http://example.com", :set_cookie => ["name=value", "example=1"])
   def self.register_uri(*args)
     case args.length
     when 3

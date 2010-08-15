@@ -110,11 +110,11 @@ module FakeWeb
   #   Passing <tt>:status</tt> as a two-value array will set the response code
   #   and message. The defaults are <tt>200</tt> and <tt>OK</tt>, respectively.
   #   Example:
-  #     FakeWeb.register_uri("http://www.example.com/", :body => "Go away!", :status => [404, "Not Found"])
+  #     FakeWeb.register_uri(:get, "http://example.com", :body => "Go away!", :status => [404, "Not Found"])
   # <tt>:exception</tt>::
   #   The argument passed via <tt>:exception</tt> will be raised when the
   #   specified URL is requested. Any +Exception+ class is valid. Example:
-  #     FakeWeb.register_uri('http://www.example.com/', :exception => Net::HTTPError)
+  #     FakeWeb.register_uri(:get, "http://example.com", :exception => Net::HTTPError)
   #
   # If you're using the <tt>:body</tt> response type, you can pass additional
   # options to specify the HTTP headers to be used in the response. Example:

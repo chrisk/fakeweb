@@ -23,7 +23,13 @@ module FakeWeb
         code, msg = meta_information
         response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
         response.instance_variable_set(:@body, body)
-        headers_extracted_from_options.each { |name, value| response[name] = value }
+        headers_extracted_from_options.each do |name, value|
+          if value.respond_to?(:each)
+            value.each { |v| response.add_field(name, v) }
+          else
+            response[name] = value
+          end
+        end
       end
 
       response.instance_variable_set(:@read, true)

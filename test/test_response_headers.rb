@@ -29,6 +29,13 @@ class TestResponseHeaders < Test::Unit::TestCase
     assert_equal "user_id=1; example=yes", response['Set-Cookie']
   end
 
+  def test_multiple_set_cookie_headers
+    FakeWeb.register_uri(:get, "http://example.com/with_two_cookies", :body => 'body',
+                                                      :set_cookie => ["user_id=2", "example=yes"])
+    response = Net::HTTP.start("example.com") { |query| query.get("/with_two_cookies") }
+    assert_equal ["user_id=2", "example=yes"], response.get_fields('Set-Cookie')
+  end
+
   def test_registering_with_baked_response_ignores_header_options
     fake_response = Net::HTTPOK.new('1.1', '200', 'OK')
     fake_response["Server"] = "Apache/1.3.27 (Unix)"

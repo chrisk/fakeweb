@@ -74,7 +74,7 @@ module FakeWeb
   #   as the body of the response instead. (This used to be two options,
   #   <tt>:string</tt> and <tt>:file</tt>, respectively. These are now deprecated.)
   # <tt>:response</tt>:: 
-  #   Either an <tt>Net::HTTPResponse</tt>, an +IO+, or a +String+ which is used
+  #   Either a <tt>Net::HTTPResponse</tt>, an +IO+, or a +String+ which is used
   #   as the full response for the request.
   # 
   #   The easier way by far is to pass the <tt>:response</tt> option to
@@ -85,25 +85,26 @@ module FakeWeb
   # 
   #   To obtain a complete response document, you can use the +curl+ command,
   #   like so:
-  #  
-  #     curl -i http://www.example.com/ > response_for_www.example.com
+  #   
+  #     curl -i http://example.com > response_from_example.com
   #
   #   which can then be used in your test environment like so:
   #
-  #     FakeWeb.register_uri(:get, 'http://www.example.com/', :response => 'response_for_www.example.com')
+  #     FakeWeb.register_uri(:get, "http://example.com", :response => "response_from_example.com")
   #
   #   See the <tt>Net::HTTPResponse</tt>
   #   documentation[http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/classes/Net/HTTPResponse.html]
   #   for more information on creating custom response objects.
   # 
   # +options+ may also be an +Array+ containing a list of the above-described
-  # +Hash+. In this case, FakeWeb will rotate through each provided response,
-  # you may optionally provide:
+  # +Hash+. In this case, FakeWeb will rotate through each response. You can
+  # optionally repeat a response more than once before rotating:
   #
   # <tt>:times</tt>::
-  #   The number of times this response will be used. Decremented by one each time it's called.
-  #   FakeWeb will use the final provided request indefinitely, regardless of its :times parameter.
-  # 
+  #   The number of times this response will be used before moving on to the
+  #   next one. The last response will be repeated indefinitely, regardless of
+  #   its <tt>:times</tt> parameter.
+  #
   # Two optional arguments are also accepted:
   #
   # <tt>:status</tt>::
@@ -157,7 +158,7 @@ module FakeWeb
   #   FakeWeb.registered_uri?(method, uri)
   #
   # Returns true if a +method+ request for +uri+ is registered with FakeWeb.
-  # Specify a method of <tt>:any</tt> to check for against all HTTP methods.
+  # Specify a method of <tt>:any</tt> to check against all HTTP methods.
   def self.registered_uri?(*args)
     case args.length
     when 2
@@ -175,7 +176,7 @@ module FakeWeb
     @last_request
   end
 
-  def self.last_request=(request)
+  def self.last_request=(request) #:nodoc:
     @last_request = request
   end
 

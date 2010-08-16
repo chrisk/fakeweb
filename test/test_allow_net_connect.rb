@@ -129,6 +129,30 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
     FakeWeb.allow_net_connect = false
     assert !FakeWeb.allow_net_connect?
   end
+
+  def test_question_mark_method_raises_with_no_argument_when_allow_net_connect_is_a_whitelist
+    FakeWeb.allow_net_connect = "http://example.com"
+    exception = assert_raise ArgumentError do
+      FakeWeb.allow_net_connect?
+    end
+    assert_equal "You must supply a URI to test", exception.message
+  end
+
+  def test_question_mark_method_returns_true_when_argument_is_same_uri_as_allow_net_connect_string
+    FakeWeb.allow_net_connect = "http://example.com"
+    assert FakeWeb.allow_net_connect?("http://example.com/")
+  end
+
+  def test_question_mark_method_returns_true_when_argument_matches_allow_net_connect_regexp
+    FakeWeb.allow_net_connect = %r[^https?://example.com/]
+    assert FakeWeb.allow_net_connect?("http://example.com/path")
+    assert FakeWeb.allow_net_connect?("https://example.com:443/")
+  end
+
+  def test_question_mark_method_returns_false_when_argument_does_not_match_allow_net_connect_regexp
+    FakeWeb.allow_net_connect = %r[^http://example.com/]
+    assert !FakeWeb.allow_net_connect?("http://example.com:8080")
+  end
 end
 
 

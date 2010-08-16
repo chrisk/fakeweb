@@ -62,7 +62,7 @@ module FakeWeb
   # you must supply a path to be tested against your filter
   def self.allow_net_connect?(uri = nil)
     if Registry.instance.passthrough_uri_map.any?
-      raise "You must supply a URI to test" if uri.nil?
+      raise ArgumentError, "You must supply a URI to test" if uri.nil?
       Registry.instance.passthrough_uri_matches?(uri)
     else
       @allow_all_connections

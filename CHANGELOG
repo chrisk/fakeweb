@@ -10,8 +10,8 @@ fakeweb (development)
 
 * add FakeWeb.last_request [Chris Kampmeier]
 
-* support setting FakeWeb.allow_net_connect to a string or regex, which is then
-  used to filter outgoing web requests [Ben Woosley]
+* assigning a String or Regexp to FakeWeb.allow_net_connect= sets a whitelist
+  for outbound requests [Dan Dofter, Tim Carey-Smith, Ben Woosley]
 
 
 fakeweb (1.2.8)

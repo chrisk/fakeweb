@@ -131,9 +131,18 @@ behavior, which is to pass those requests through to Net::HTTP as usual).
   Net::HTTP.get(URI.parse("http://example.com/"))
   => FakeWeb is bypassed and the response from a real request is returned
 
-This is handy when you want to make sure your tests are self-contained, or you
-want to catch the scenario when a URI is changed in implementation code
-without a corresponding test change.
+It's recommended that you set <tt>FakeWeb.allow_net_connect = false</tt> in the
+setup for your tests.
+
+==== Allowing requests to a specific server
+
+If you want to prevent your tests from hitting the internet while allowing
+access to a specific server for integration testing, you can assign a URI or
++Regexp+ to be used as a whitelist for outbound requests:
+
+  FakeWeb.allow_net_connect = %r[^https?://localhost]
+  Net::HTTP.get(URI.parse("http://localhost/path"))  # => allowed
+  Net::HTTP.get(URI.parse("http://example.com/"))    # => raises FakeWeb::NetConnectNotAllowedError
 
 === Specifying HTTP response headers
 

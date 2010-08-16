@@ -31,15 +31,13 @@ module FakeWeb
   # when a URI is changed in implementation code without a corresponding test
   # change.
   #
-  # If you set <tt>FakeWeb.allow_net_connect = string_or_regex</tt> and subsequently try
-  # to make a request to a URI you haven't registered with #register_uri, the URI
-  # will be tested for a #match against the provided filter string_or_regex. If the
-  # URI matches the string, the request will be allowed.  If not a
-  # NetConnectNotAllowedError will be raised. This is handy when you want to
-  # allow access to a local search server while disallowing web access.
-  #
   # When <tt>FakeWeb.allow_net_connect = true</tt> (the default), requests to
   # URIs not stubbed with FakeWeb are passed through to Net::HTTP.
+  #
+  # If you assign a +String+, +URI+, or +Regexp+ object, unstubbed requests
+  # will be allowed if they match that value. This is useful when you want to
+  # allow access to a local server for integration testing, while still
+  # preventing your tests from using the internet.
   def self.allow_net_connect=(allowed)
     case allowed
     when String, URI, Regexp
@@ -58,8 +56,9 @@ module FakeWeb
   # through to Net::HTTP for normal processing (the default). Returns +false+
   # if an exception is raised for these requests.
   #
-  # If you have set a string regular expression filter for allow_net_connect,
-  # you must supply a path to be tested against your filter
+  # If you've assigned a +String+, +URI+, or +Regexp+ to
+  # <tt>FakeWeb.allow_net_connect=</tt>, you must supply a URI to check
+  # against that filter. Otherwise, an ArgumentError will be raised.
   def self.allow_net_connect?(uri = nil)
     if Registry.instance.passthrough_uri_map.any?
       raise ArgumentError, "You must supply a URI to test" if uri.nil?

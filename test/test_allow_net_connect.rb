@@ -1,25 +1,6 @@
 require 'test_helper'
 
 class TestFakeWebAllowNetConnect < Test::Unit::TestCase
-  def test_when_allow_net_connect_is_a_regex_and_the_requested_url_matches_the_request_is_allowed
-    FakeWeb.allow_net_connect = %r{^http://images\.apple\.com/}
-    setup_expectations_for_real_apple_hot_news_request
-    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
-  end
-
-  def test_when_allow_net_connect_is_a_regex_including_port_and_the_requested_url_matches_the_request_is_allowed
-    FakeWeb.allow_net_connect = %r{^http://images\.apple\.com:80/}
-    setup_expectations_for_real_apple_hot_news_request
-    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
-  end
-
-  def test_when_allow_net_connect_is_a_regex_and_the_requested_url_does_not_match_the_request_is_not_allowed
-    FakeWeb.allow_net_connect = %r{^http://images\.apple\.com/}
-    assert_raise FakeWeb::NetConnectNotAllowedError do
-      Net::HTTP.get(URI.parse("http://example.com/"))
-    end
-  end
-
   def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_true
     FakeWeb.allow_net_connect = true
     setup_expectations_for_real_apple_hot_news_request
@@ -28,8 +9,69 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
 
   def test_raises_for_unregistered_requests_when_allow_net_connect_is_false
     FakeWeb.allow_net_connect = false
-    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
+    assert_raise FakeWeb::NetConnectNotAllowedError do
       Net::HTTP.get(URI.parse("http://example.com/"))
+    end
+  end
+
+  def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_the_same_string
+    FakeWeb.allow_net_connect = "http://images.apple.com/main/rss/hotnews/hotnews.rss"
+    setup_expectations_for_real_apple_hot_news_request
+    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
+  end
+
+  def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_the_same_string_with_default_port
+    FakeWeb.allow_net_connect = "http://images.apple.com:80/main/rss/hotnews/hotnews.rss"
+    setup_expectations_for_real_apple_hot_news_request
+    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
+  end
+
+  def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_the_same_uri
+    FakeWeb.allow_net_connect = URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss")
+    setup_expectations_for_real_apple_hot_news_request
+    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
+  end
+
+  def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_a_matching_regexp
+    FakeWeb.allow_net_connect = %r[^http://images\.apple\.com]
+    setup_expectations_for_real_apple_hot_news_request
+    Net::HTTP.get(URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss"))
+  end
+
+  def test_raises_for_unregistered_requests_when_allow_net_connect_is_a_different_string
+    FakeWeb.allow_net_connect = "http://example.com"
+    assert_raise FakeWeb::NetConnectNotAllowedError do
+      Net::HTTP.get(URI.parse("http://example.com/path"))
+    end
+  end
+
+  def test_raises_for_unregistered_requests_when_allow_net_connect_is_a_different_uri
+    FakeWeb.allow_net_connect = URI.parse("http://example.com")
+    assert_raise FakeWeb::NetConnectNotAllowedError do
+      Net::HTTP.get(URI.parse("http://example.com/path"))
+    end
+  end
+
+  def test_raises_for_unregistered_requests_when_allow_net_connect_is_a_non_matching_regexp
+    FakeWeb.allow_net_connect = %r[example\.net]
+    assert_raise FakeWeb::NetConnectNotAllowedError do
+      Net::HTTP.get(URI.parse("http://example.com"))
+    end
+  end
+
+  def test_changing_allow_net_connect_from_string_to_false_corretly_removes_whitelist
+    FakeWeb.allow_net_connect = "http://example.com"
+    FakeWeb.allow_net_connect = false
+    assert_raise FakeWeb::NetConnectNotAllowedError do
+      Net::HTTP.get(URI.parse("http://example.com"))
+    end
+  end
+
+  def test_changing_allow_net_connect_from_true_to_string_corretly_limits_connections
+    FakeWeb.allow_net_connect = true
+    FakeWeb.allow_net_connect = "http://example.com"
+    assert_raise FakeWeb::NetConnectNotAllowedError do
+      Net::HTTP.get(URI.parse("http://example.net"))
     end
   end
 
@@ -87,7 +129,6 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
     FakeWeb.allow_net_connect = false
     assert !FakeWeb.allow_net_connect?
   end
-
 end
 
 

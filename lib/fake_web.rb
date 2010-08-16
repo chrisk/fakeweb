@@ -41,7 +41,14 @@ module FakeWeb
   # When <tt>FakeWeb.allow_net_connect = true</tt> (the default), requests to
   # URIs not stubbed with FakeWeb are passed through to Net::HTTP.
   def self.allow_net_connect=(allowed)
-    @allow_net_connect = allowed
+    case allowed
+    when String, URI, Regexp
+      @allow_all_connections = false
+      Registry.instance.register_passthrough_uri(allowed)
+    else
+      @allow_all_connections = allowed
+      Registry.instance.remove_passthrough_uri
+    end
   end
 
   # Enable pass-through to Net::HTTP by default.
@@ -53,12 +60,12 @@ module FakeWeb
   #
   # If you have set a string regular expression filter for allow_net_connect,
   # you must supply a path to be tested against your filter
-  def self.allow_net_connect?(path = nil)
-    if @allow_net_connect.respond_to?(:match)
-      raise "You must supply a uri to test" unless path
-      @allow_net_connect.match(path) != nil
+  def self.allow_net_connect?(uri = nil)
+    if Registry.instance.passthrough_uri_map.any?
+      raise "You must supply a URI to test" if uri.nil?
+      Registry.instance.passthrough_uri_matches?(uri)
     else
-      @allow_net_connect
+      @allow_all_connections
     end
   end
 

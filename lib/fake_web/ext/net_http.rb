@@ -38,18 +38,18 @@ module Net  #:nodoc: all
     def request_with_fakeweb(request, body = nil, &block)
       FakeWeb.last_request = request
 
-      uri = FakeWeb::Utility.request_uri_as_string(self, request)
+      uri_with_port = FakeWeb::Utility.request_uri_as_string(self, request)
+      uri = FakeWeb::Utility.strip_default_port_from_uri(uri_with_port)
       method = request.method.downcase.to_sym
 
-      if FakeWeb.registered_uri?(method, uri)
+      if FakeWeb.registered_uri?(method, uri_with_port)
         @socket = Net::HTTP.socket_type.new
         FakeWeb::Utility.produce_side_effects_of_net_http_request(request, body)
-        FakeWeb.response_for(method, uri, &block)
-      elsif FakeWeb.allow_net_connect?
+        FakeWeb.response_for(method, uri_with_port, &block)
+      elsif FakeWeb.allow_net_connect?(uri) || FakeWeb.allow_net_connect?(uri_with_port)
         connect_without_fakeweb
         request_without_fakeweb(request, body, &block)
       else
-        uri = FakeWeb::Utility.strip_default_port_from_uri(uri)
         raise FakeWeb::NetConnectNotAllowedError,
               "Real HTTP connections are disabled. Unregistered request: #{request.method} #{uri}"
       end

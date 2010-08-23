@@ -1,4 +1,4 @@
-fakeweb (development)
+fakeweb (1.3.0)
 
 * improve response header registration so you can pass an array to set a header
   more than once [Myron Marston]

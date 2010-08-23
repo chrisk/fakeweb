@@ -13,7 +13,7 @@ FakeWeb::Utility.puts_warning_for_net_http_around_advice_libs_if_needed
 module FakeWeb
 
   # Returns the version string for the copy of FakeWeb you have loaded.
-  VERSION = '1.2.8'
+  VERSION = '1.3.0'
 
   # Resets the FakeWeb Registry. This will force all subsequent web requests to
   # behave as real requests.

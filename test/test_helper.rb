@@ -53,7 +53,7 @@ module FakeWebTestHelper
       OpenSSL::SSL::SSLSocket.expects(:===).with(socket).returns(true).at_least_once
       OpenSSL::SSL::SSLSocket.expects(:new).with(socket, instance_of(OpenSSL::SSL::SSLContext)).returns(socket).at_least_once
       socket.stubs(:sync_close=).returns(true)
-      socket.expects(:connect).with().at_least_once
+      socket.expects(:connect).with().once
     else
       socket = mock("TCPSocket")
       Socket.expects(:===).with(socket).at_least_once.returns(true)

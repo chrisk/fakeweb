@@ -35,6 +35,8 @@ module FakeWeb
       response.instance_variable_set(:@read, true)
       response.extend FakeWeb::Response
 
+      sleep(response_delay)
+
       optionally_raise(response)
 
       yield response if block_given?
@@ -116,6 +118,10 @@ module FakeWeb
       $stderr.puts "Deprecation warning: FakeWeb's :#{which} option has been renamed to :body."
       $stderr.puts "Just replace :#{which} with :body in your FakeWeb.register_uri calls."
       $stderr.puts "Called at #{caller[6]}"
+    end
+
+    def response_delay
+      options.has_key?(:delay) ? options[:delay] : 0
     end
 
   end

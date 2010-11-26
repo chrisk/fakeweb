@@ -30,7 +30,7 @@ class TestFakeWeb < Test::Unit::TestCase
       FakeWeb.response_for
     end
     assert_raises ArgumentError do
-      FakeWeb.response_for(:get, "http://example.com", "/example")
+      FakeWeb.response_for(:get, "http://example.com", "/example", "/foo")
     end
   end
 

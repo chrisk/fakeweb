@@ -3,5 +3,7 @@
 /html
 /coverage
 /pkg
+/.bundle
 /.idea
 *.rbc
+Gemfile.lock

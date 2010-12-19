@@ -3,9 +3,12 @@ require 'open-uri'
 require 'pathname'
 require 'fake_web'
 require 'rbconfig'
-require 'rubygems'
-require 'mocha'
 
+require 'rubygems'
+require 'bundler'
+Bundler.setup
+
+require 'mocha'
 
 # Give all tests a common setup and teardown that prevents shared state
 class Test::Unit::TestCase

@@ -1,25 +1,14 @@
 require 'rubygems'
 require 'rake'
 
-version = '1.3.0'
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "fakeweb"
-    gem.rubyforge_project = "fakeweb"
-    gem.version = version
-    gem.summary = "A tool for faking responses to HTTP requests"
-    gem.description = "FakeWeb is a helper for faking web requests in Ruby. It works at a global level, without modifying code or writing extensive stubs."
-    gem.email = ["chris@kampers.net", "romeda@gmail.com"]
-    gem.authors = ["Chris Kampmeier", "Blaine Cook"]
-    gem.homepage = "http://github.com/chrisk/fakeweb"
-    gem.add_development_dependency "mocha", ">= 0.9.5"
+task :check_dependencies do
+  begin
+    require "bundler"
+  rescue LoadError
+    abort "FakeWeb uses bundler to manage development dependencies. Install it with `gem install bundler`."
   end
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+  system("bundle check") || abort
 end
-
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
@@ -57,7 +46,7 @@ begin
   Rake::RDocTask.new do |rdoc|
     rdoc.main = "README.rdoc"
     rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
-    rdoc.title = "FakeWeb #{version} API Documentation"
+    rdoc.title = "FakeWeb 1.3.0 API Documentation"
     rdoc.rdoc_dir = "doc"
     rdoc.template = "direct"
     rdoc.options << "--line-numbers" << "--show-hash" << "--charset=utf-8"

@@ -8,7 +8,12 @@ class TestOtherNetHttpLibraries < Test::Unit::TestCase
     vendor_dirs = Dir["#{File.dirname(__FILE__)}/vendor/*/lib"]
     load_path_opts = vendor_dirs.unshift(fakeweb_dir).map { |dir| "-I#{dir}" }.join(" ")
 
-    `#{ruby_path} #{load_path_opts} -e "#{requires}; #{additional_code}" 2>&1`
+    output = `#{ruby_path} #{load_path_opts} -e "#{requires}; #{additional_code}" 2>&1`
+    remove_jruby_openssl_warnings(output)
+  end
+
+  def remove_jruby_openssl_warnings(string)
+    string.lines.reject { |line| line =~ /jruby.*openssl/i }.join
   end
 
   def test_requiring_samuel_before_fakeweb_prints_warning

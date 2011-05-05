@@ -194,11 +194,20 @@ module FakeWeb
 
   # Returns the request object from the last request made via Net::HTTP.
   def self.last_request
-    @last_request
+    requests.last
   end
 
   def self.last_request=(request) #:nodoc:
-    @last_request = request
+    @requests ||= []
+    @requests << request
+  end
+
+  def self.requests
+    @requests ||= []
+  end
+
+  def self.clear_requests
+    @requests = []
   end
 
   private

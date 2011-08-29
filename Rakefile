@@ -12,7 +12,7 @@ end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor")
+  test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor/**/*")
   test.libs << "test"
   test.verbose = false
   test.warning = true

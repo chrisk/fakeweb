@@ -24,7 +24,7 @@ task :default => [:check_dependencies, :test]
 begin
   require 'rcov/rcovtask'
   Rcov::RcovTask.new do |t|
-    t.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor")
+    t.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor/**/*")
     t.libs << "test"
     t.rcov_opts << "--sort coverage"
     t.rcov_opts << "--exclude gems"

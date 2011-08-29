@@ -48,7 +48,8 @@ begin
     rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
     rdoc.title = "FakeWeb 1.3.0 API Documentation"
     rdoc.rdoc_dir = "doc"
-    rdoc.template = "direct"
+    rdoc.template = "sdoc"
+    rdoc.options << "--format" << "sdoc"
     rdoc.options << "--line-numbers" << "--show-hash" << "--charset=utf-8"
   end
 rescue LoadError

@@ -112,10 +112,11 @@ module FakeWeb
 
     def print_file_string_options_deprecation_warning
       which = options.has_key?(:file) ? :file : :string
+      first_external_caller = caller.detect { |line| !line.include?("/lib/fake_web") }
       $stderr.puts
       $stderr.puts "Deprecation warning: FakeWeb's :#{which} option has been renamed to :body."
       $stderr.puts "Just replace :#{which} with :body in your FakeWeb.register_uri calls."
-      $stderr.puts "Called at #{caller[6]}"
+      $stderr.puts "Called at #{first_external_caller}"
     end
 
   end

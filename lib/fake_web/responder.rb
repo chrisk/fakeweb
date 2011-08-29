@@ -64,7 +64,6 @@ module FakeWeb
 
     def baked_response
       response = options[:response]
-      return response if response.is_a?(Net::HTTPResponse)
       response = response.to_s if defined?(Pathname) && response.is_a?(Pathname)
 
       if response.is_a?(String)
@@ -88,6 +87,8 @@ module FakeWeb
           r.instance_eval { @header['transfer-encoding'] = saved_transfer_encoding }
         end
         r
+      elsif response.is_a?(Net::HTTPResponse)
+        response
       else
         raise StandardError, "Handler unimplemented for response #{response}"
       end

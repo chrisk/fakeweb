@@ -51,22 +51,24 @@ module FakeWeb
     end
 
     def body
-      return '' if options[:body].nil?
+      body = options[:body]
+      return "" if body.nil?
+      body = body.to_s if defined?(Pathname) && body.is_a?(Pathname)
 
-      options[:body] = options[:body].to_s if defined?(Pathname) && options[:body].is_a?(Pathname)
-
-      if !options[:body].include?("\0") && File.exists?(options[:body]) && !File.directory?(options[:body])
-        File.read(options[:body])
+      if !body.include?("\0") && File.exists?(body) && !File.directory?(body)
+        File.read(body)
       else
-        options[:body]
+        body
       end
     end
 
     def baked_response
-      return options[:response] if options[:response].is_a?(Net::HTTPResponse)
+      response = options[:response]
+      return response if response.is_a?(Net::HTTPResponse)
+      response = response.to_s if defined?(Pathname) && response.is_a?(Pathname)
 
-      if options[:response].is_a?(String) || (defined?(Pathname) && options[:response].is_a?(Pathname))
-        socket = Net::BufferedIO.new(options[:response].to_s)
+      if response.is_a?(String)
+        socket = Net::BufferedIO.new(response)
         r = Net::HTTPResponse.read_new(socket)
 
         # Store the original transfer-encoding
@@ -87,7 +89,7 @@ module FakeWeb
         end
         r
       else
-        raise StandardError, "Handler unimplemented for response #{options[:response]}"
+        raise StandardError, "Handler unimplemented for response #{response}"
       end
     end
 

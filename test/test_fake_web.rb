@@ -564,11 +564,29 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal "test example content", response.body
   end
 
+  def test_registering_with_a_body_pointing_to_a_pathname_does_not_modify_options
+    path = Pathname.new(fixture_path("test_example.txt"))
+    options = {:body => path}
+    options_before_request = options.dup
+    FakeWeb.register_uri(:get, "http://example.com", options)
+    Net::HTTP.start("example.com") { |http| http.get("/") }
+    assert_equal options_before_request, options
+  end
+
   def test_registering_with_a_response_pointing_to_a_pathname
     path = Pathname.new(fixture_path("google_response_without_transfer_encoding"))
     FakeWeb.register_uri(:get, "http://google.com", :response => path)
     response = Net::HTTP.start("google.com") { |http| http.get("/") }
     assert response.body.include?("<title>Google</title>")
+  end
+
+  def test_registering_with_a_response_pointing_to_a_pathname_does_not_modify_options
+    path = Pathname.new(fixture_path("google_response_without_transfer_encoding"))
+    options = {:response => path}
+    options_before_request = options.dup
+    FakeWeb.register_uri(:get, "http://google.com", options)
+    Net::HTTP.start("google.com") { |http| http.get("/") }
+    assert_equal options_before_request, options
   end
 
   def test_http_version_from_string_response

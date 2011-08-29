@@ -11,7 +11,7 @@ module Net  #:nodoc: all
       @debug_output = debug_output
 
       @io = case io
-      when Socket, OpenSSL::SSL::SSLSocket, IO
+      when Socket, OpenSSL::SSL::SSLSocket, StringIO, IO
         io
       when String
         if !io.include?("\0") && File.exists?(io) && !File.directory?(io)

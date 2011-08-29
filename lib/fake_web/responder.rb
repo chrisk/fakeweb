@@ -66,7 +66,7 @@ module FakeWeb
       response = options[:response]
       response = response.to_s if defined?(Pathname) && response.is_a?(Pathname)
 
-      if response.is_a?(String) || response.is_a?(IO)
+      if response.is_a?(String) || response.is_a?(IO) || response.is_a?(StringIO)
         socket = Net::BufferedIO.new(response)
         r = Net::HTTPResponse.read_new(socket)
 

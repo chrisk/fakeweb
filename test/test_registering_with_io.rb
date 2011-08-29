@@ -23,4 +23,11 @@ class TestRegisteringWithIO < Test::Unit::TestCase
     assert response.body.include?("<title>Google</title>")
   end
 
+  def test_registering_a_stringio
+    stringio = StringIO.new(File.read(fixture_path("google_response_from_curl")))
+    FakeWeb.register_uri(:get, "http://google.com", :response => stringio)
+    response = Net::HTTP.start("google.com") { |query| query.get('/') }
+    assert response.body.include?("<title>Google</title>")
+  end
+
 end

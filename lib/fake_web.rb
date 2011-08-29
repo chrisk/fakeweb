@@ -95,8 +95,8 @@ module FakeWeb
   #   as the body of the response instead. (This used to be two options,
   #   <tt>:string</tt> and <tt>:file</tt>, respectively. These are now deprecated.)
   # <tt>:response</tt>:: 
-  #   Either a <tt>Net::HTTPResponse</tt>, an +IO+, or a +String+ which is used
-  #   as the full response for the request.
+  #   Either a <tt>Net::HTTPResponse</tt>, +IO+, +StringIO+, or +String+, which
+  #   is used as the full response for the request.
   # 
   #   The easier way by far is to pass the <tt>:response</tt> option to
   #   +register_uri+ as a +String+ or an (open for reads) +IO+ object which

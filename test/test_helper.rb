@@ -17,6 +17,7 @@ class Test::Unit::TestCase
     FakeWeb.clean_registry
     @original_allow_net_connect = FakeWeb.allow_net_connect?
     FakeWeb.allow_net_connect = false
+    FakeWeb.clear_request_history
   end
 
   alias teardown_without_fakeweb teardown

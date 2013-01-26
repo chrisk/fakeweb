@@ -8,7 +8,13 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup
 
-require 'mocha'
+# See mocha's modifying
+#   https://github.com/freerange/mocha/commit/6df882d33ba785e0b43b224b7d625841d8e203be#lib/mocha/setup.rb
+begin
+  require 'mocha/setup'
+rescue LoadError
+  require 'mocha'
+end
 
 # Give all tests a common setup and teardown that prevents shared state
 class Test::Unit::TestCase

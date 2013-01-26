@@ -549,7 +549,7 @@ class TestFakeWeb < Test::Unit::TestCase
     # returns true for directories
     FakeWeb.register_uri(:get, "http://example.com", :response => File.dirname(__FILE__))
     assert_raise EOFError do
-      body = Net::HTTP.get(URI.parse("http://example.com"))
+      Net::HTTP.get(URI.parse("http://example.com"))
     end
 
     FakeWeb.register_uri(:get, "http://example.com", :body => File.dirname(__FILE__))

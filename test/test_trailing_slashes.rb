@@ -33,7 +33,7 @@ class TestFakeWebTrailingSlashes < Test::Unit::TestCase
     FakeWeb.allow_net_connect = false
     FakeWeb.register_uri(:get, "http://www.example.com/users", :body => "User list")
     assert_raise FakeWeb::NetConnectNotAllowedError do
-      response = Net::HTTP.start("www.example.com") { |query| query.get('/users/') }
+      Net::HTTP.start("www.example.com") { |query| query.get('/users/') }
     end
   end
 
@@ -46,7 +46,7 @@ class TestFakeWebTrailingSlashes < Test::Unit::TestCase
     FakeWeb.allow_net_connect = false
     FakeWeb.register_uri(:get, "http://www.example.com/users/", :body => "User list")
     assert_raise FakeWeb::NetConnectNotAllowedError do
-      response = Net::HTTP.start("www.example.com") { |query| query.get('/users') }
+      Net::HTTP.start("www.example.com") { |query| query.get('/users') }
     end
   end
 

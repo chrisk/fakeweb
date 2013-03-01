@@ -32,7 +32,7 @@ module FakeWeb
         userinfo = ""
       end
 
-      uri = "#{protocol}://#{userinfo}#{net_http.address}:#{net_http.port}#{path}"
+      "#{protocol}://#{userinfo}#{net_http.address}:#{net_http.port}#{path}"
     end
 
     # Wrapper for URI escaping that switches between URI::Parser#escape and

@@ -46,7 +46,10 @@ module Net  #:nodoc: all
         FakeWeb::Utility.produce_side_effects_of_net_http_request(request, body)
         FakeWeb.response_for(method, uri, &block)
       elsif FakeWeb.allow_net_connect?(uri)
-        connect_without_fakeweb
+        unless @already_connected ||= false
+          connect_without_fakeweb
+          @already_connected = true
+        end
         request_without_fakeweb(request, body, &block)
       else
         uri = FakeWeb::Utility.strip_default_port_from_uri(uri)

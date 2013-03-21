@@ -18,9 +18,9 @@ gems lying around, remove them: <tt>gem uninstall FakeWeb</tt>
 RDocs for the current release are available at http://fakeweb.rubyforge.org.
 
 There's a mailing list for questions and discussion at
-http://groups.google.com/group/fakeweb-users.
+https://groups.google.com/d/forum/fakeweb-users.
 
-The main source repository is http://github.com/chrisk/fakeweb.
+The main source repository is https://github.com/chrisk/fakeweb.
 
 == Examples
 
@@ -185,5 +185,5 @@ like OpenURI, as well as a ton of libraries for popular web services.
   different URLs, and register different responses for each. (Query strings are
   fully supported, though.) We're currently considering how the API should
   change to add support for request bodies in 1.3.0. Your input would be really
-  helpful: see http://groups.google.com/group/fakeweb-users/browse_thread/thread/44d190a6b12e4273
+  helpful: see https://groups.google.com/d/msg/fakeweb-users/RNGQprEuQnM/ryCiMeBD91YJ
   for a discussion of some different options. Thanks!

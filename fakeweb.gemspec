@@ -72,7 +72,7 @@ Gem::Specification.new do |s|
      "test/vendor/samuel-0.2.1/test/test_helper.rb",
      "test/vendor/samuel-0.2.1/test/thread_test.rb"
   ]
-  s.homepage = %q{http://github.com/chrisk/fakeweb}
+  s.homepage = %q{https://github.com/chrisk/fakeweb}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{fakeweb}

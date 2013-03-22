@@ -85,7 +85,19 @@ module FakeWebTestHelper
       socket.expects(:write).with(options[:request_body]).returns(100)
     end
 
-    read_method = RUBY_VERSION >= "1.9.2" ? :read_nonblock : :sysread
+    # MRI's Net::HTTP switched from #sysread to #read_nonblock in
+    # 1.9.2; although subsequent JRuby releases reported version
+    # numbers later than 1.9.2p0 when running in 1.9-mode, JRuby
+    # didn't switch until 1.7.4 (a.k.a. 1.9.3p392 in 1.9-mode):
+    # https://github.com/jruby/jruby/commit/d04857cb0f.
+    if RUBY_PLATFORM == "java" && ((RUBY_VERSION == "1.9.3" && RUBY_PATCHLEVEL >= 392) || RUBY_VERSION > "1.9.3")
+      read_method = :read_nonblock
+    elsif RUBY_PLATFORM != "java" && RUBY_VERSION >= "1.9.2"
+      read_method = :read_nonblock
+    else
+      read_method = :sysread
+    end
+
     socket.expects(read_method).at_least_once.returns("HTTP/1.1 #{options[:response_code]} #{options[:response_message]}\nContent-Length: #{options[:response_body].length}\n\n#{options[:response_body]}").then.raises(EOFError)
   end
 

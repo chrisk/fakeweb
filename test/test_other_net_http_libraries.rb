@@ -9,12 +9,14 @@ class TestOtherNetHttpLibraries < Test::Unit::TestCase
     load_path_opts = vendor_dirs.unshift(fakeweb_dir).map { |dir| "-I#{dir}" }.join(" ")
 
     output = `#{ruby_path} #{load_path_opts} -e "#{requires}; #{additional_code}" 2>&1`
-    remove_jruby_openssl_warnings(output)
+    remove_warnings_outside_our_control(output)
   end
 
-  def remove_jruby_openssl_warnings(string)
+  def remove_warnings_outside_our_control(string)
+    noise = [/jruby.*openssl/i,
+             /rubygems-bundler.+parenthesize argument\(s\) for future/]
     splitter = string.respond_to?(:lines) ? :lines : :to_a
-    string.send(splitter).reject { |line| line =~ /jruby.*openssl/i }.join
+    string.send(splitter).reject { |line| noise.any? { |n| line =~ n } }.join
   end
 
   def test_requiring_samuel_before_fakeweb_prints_warning

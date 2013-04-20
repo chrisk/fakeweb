@@ -5,7 +5,7 @@ task :check_dependencies do
   begin
     require "bundler"
   rescue LoadError
-    abort "FakeWeb uses bundler to manage development dependencies. Install it with `gem install bundler`."
+    abort "FakeWeb uses Bundler to manage development dependencies. Install it with `gem install bundler`."
   end
   system("bundle check") || abort
 end
@@ -53,5 +53,5 @@ begin
     rdoc.options << "--line-numbers" << "--show-hash" << "--charset=utf-8"
   end
 rescue LoadError
-  puts "SDoc (or a dependency) not available. Install it with: gem install sdoc"
+  warn "SDoc (or a dependency) not available. Install it with: gem install sdoc"
 end

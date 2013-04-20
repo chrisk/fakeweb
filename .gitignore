@@ -2,6 +2,7 @@
 /rdoc
 /html
 /coverage
+/log
 /pkg
 /.bundle
 /.idea

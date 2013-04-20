@@ -13,7 +13,8 @@ class TestOtherNetHttpLibraries < Test::Unit::TestCase
   end
 
   def remove_jruby_openssl_warnings(string)
-    string.lines.reject { |line| line =~ /jruby.*openssl/i }.join
+    splitter = string.respond_to?(:lines) ? :lines : :to_a
+    string.send(splitter).reject { |line| line =~ /jruby.*openssl/i }.join
   end
 
   def test_requiring_samuel_before_fakeweb_prints_warning

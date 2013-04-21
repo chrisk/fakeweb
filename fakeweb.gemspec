@@ -1,14 +1,14 @@
 # encoding: utf-8
 
 Gem::Specification.new do |s|
-  s.name = %q{fakeweb}
+  s.name    = "fakeweb"
   s.version = "1.3.0"
-
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris Kampmeier", "Blaine Cook"]
-  s.date = %q{2010-08-22}
-  s.description = %q{FakeWeb is a helper for faking web requests in Ruby. It works at a global level, without modifying code or writing extensive stubs.}
-  s.email = ["chris@kampers.net", "romeda@gmail.com"]
+  s.email   = ["chris@kampers.net", "romeda@gmail.com"]
+
+  s.description = "FakeWeb is a helper for faking web requests in Ruby. It works at a global level, without modifying code or writing extensive stubs."
+  s.summary = "A tool for faking responses to HTTP requests"
+
   s.extra_rdoc_files = [
     "LICENSE.txt",
      "README.rdoc"
@@ -72,12 +72,10 @@ Gem::Specification.new do |s|
      "test/vendor/samuel-0.2.1/test/test_helper.rb",
      "test/vendor/samuel-0.2.1/test/thread_test.rb"
   ]
-  s.homepage = %q{https://github.com/chrisk/fakeweb}
+  s.homepage = "https://github.com/chrisk/fakeweb"
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{fakeweb}
-  s.rubygems_version = %q{1.3.7}
-  s.summary = %q{A tool for faking responses to HTTP requests}
+  s.rubyforge_project = "fakeweb"
   s.test_files = [
     "test/test_allow_net_connect.rb",
      "test/test_deprecations.rb",
@@ -107,17 +105,5 @@ Gem::Specification.new do |s|
      "test/vendor/samuel-0.2.1/test/thread_test.rb"
   ]
 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<mocha>, [">= 0.9.5"])
-    else
-      s.add_dependency(%q<mocha>, [">= 0.9.5"])
-    end
-  else
-    s.add_dependency(%q<mocha>, [">= 0.9.5"])
-  end
+  s.add_development_dependency "mocha", [">= 0.9.5"]
 end
-

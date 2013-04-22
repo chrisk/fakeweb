@@ -6,6 +6,8 @@ Gem::Specification.new do |s|
   s.authors = ["Chris Kampmeier", "Blaine Cook"]
   s.email   = ["chris@kampers.net", "romeda@gmail.com"]
 
+  s.licenses = ["MIT"]
+
   s.description = "FakeWeb is a helper for faking web requests in Ruby. It works at a global level, without modifying code or writing extensive stubs."
   s.summary = "A tool for faking responses to HTTP requests"
 

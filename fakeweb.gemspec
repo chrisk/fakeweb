@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency "rake", [">= 0.8.7", "!= 0.9.6", "!= 10.0.3", "!= 0.9.1"]
 
   else
-    s.add_development_dependency "mocha", [">= 0.9.5"] + broken_mocha_spec
+    s.add_development_dependency "mocha", ["~> 0.13.3"] + broken_mocha_spec
     s.add_development_dependency "rake",  ["~> 10.0"]
   end
 

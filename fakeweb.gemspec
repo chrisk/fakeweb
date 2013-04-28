@@ -21,7 +21,11 @@ Gem::Specification.new do |s|
   s.require_paths    = ["lib"]
   s.rdoc_options     = ["--charset=UTF-8"]
 
-  s.add_development_dependency "mocha", [">= 0.9.5"]
+  # Mocha's README says "versions 0.10.2, 0.10.3 & 0.11.0 of the
+  # Mocha gem were broken. Please do not use these versions."
+  broken_mocha_spec = ["!= 0.11.0", "!= 0.10.3", "!= 0.10.2"]
+
+  s.add_development_dependency "mocha", [">= 0.9.5"] + broken_mocha_spec
   s.add_development_dependency "rake",  ["~> 10.0"]
 
   if RUBY_PLATFORM == "java"

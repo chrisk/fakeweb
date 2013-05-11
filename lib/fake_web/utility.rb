@@ -35,14 +35,10 @@ module FakeWeb
       "#{protocol}://#{userinfo}#{net_http.address}:#{net_http.port}#{path}"
     end
 
-    # Wrapper for URI escaping that switches between URI::Parser#escape and
-    # URI.escape for 1.9-compatibility
+    # Wrapper that falls back to URI.escape for compatibility with 1.8
     def self.uri_escape(*args)
-      if URI.const_defined?(:Parser)
-        URI::Parser.new.escape(*args)
-      else
-        URI.escape(*args)
-      end
+      houdini = URI.const_defined?(:Parser) ? URI::Parser.new : URI
+      houdini.escape(*args)
     end
 
     def self.produce_side_effects_of_net_http_request(request, body)

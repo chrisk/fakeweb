@@ -10,3 +10,4 @@ rvm:
   - jruby-19mode
   - jruby-head
   - rbx-19mode
+before_install: gem install bundler --conservative --version '~> 1.3' --no-prerelease

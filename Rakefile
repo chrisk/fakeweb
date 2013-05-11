@@ -26,6 +26,9 @@ Rake::TestTask.new(:test) do |test|
   test.warning = true
 end
 Rake::Task["test"].enhance [:print_header, :check_dependencies]
+Rake::Task["test"].clear_comments.add_description <<-DESC
+  Run pre-flight checks, then run all tests (default).
+DESC
 
 task :default => :test
 

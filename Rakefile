@@ -52,6 +52,13 @@ DESC
 task :default => :test
 
 
+desc "Remove build/test/release artifacts"
+task :clean do
+  paths = %w(.rbx/ coverage/ Gemfile.lock log/ pkg/)
+  paths.each do |path|
+    rm_rf File.join(File.dirname(__FILE__), path)
+  end
+end
 
 
 begin

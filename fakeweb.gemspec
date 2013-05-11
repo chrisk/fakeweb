@@ -27,15 +27,21 @@ Gem::Specification.new do |s|
   broken_mocha_spec = ["!= 0.11.0", "!= 0.10.3", "!= 0.10.2"]
 
   if RUBY_VERSION <= "1.8.6"
-    # Mocha 0.11.1 introduced a 1.8.6-incompatible |&blk| block, and
-    # it's been there ever since (currently 0.13.3).
-    s.add_development_dependency "mocha", ["< 0.11.1"] + broken_mocha_spec
+    # Mocha 0.11.1 introduced a call to #define_method with a block
+    # parameter (like this: define_method { |*args, &blk| ... }),
+    # causing a syntax error in 1.8.6. It's still there as of the
+    # latest release, 0.13.3. Older versions of Mocha work great,
+    # though; 0.9.5 is the oldest I've tested so far.
+    s.add_development_dependency "mocha", [">= 0.9.5", "< 0.11.1"] + broken_mocha_spec
 
-    # Rake 0.9.6 and 10.0.3 used String#end_with?, which doesn't exist
-    # in 1.8.6; Rake 0.9.1 had an incompatible |&blk| block parameter.
-    s.add_development_dependency "rake", [">= 0.8.7", "!= 0.9.6", "!= 10.0.3", "!= 0.9.1"]
-
+    # Rake 0.9.1 had the same issue with 1.8.6, but it was fixed for
+    # the next release. Later on, Rake 0.9.6 and 10.0.3 were both
+    # released with code using String#end_with?, which only works in
+    # 1.8.7+; both times, 1.8.6-compatibility was restored for the
+    # next release.
+    s.add_development_dependency "rake", [">= 0.8.7", "!= 0.9.1", "!= 0.9.6", "!= 10.0.3"]
   else
+    # Otherwise, prefer up-to-date dev tools
     s.add_development_dependency "mocha", ["~> 0.13.3"] + broken_mocha_spec
     s.add_development_dependency "rake",  ["~> 10.0"]
   end

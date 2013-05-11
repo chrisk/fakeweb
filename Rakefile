@@ -1,6 +1,13 @@
 require 'rubygems'
 require 'rake'
 
+task :print_header do
+  version_string = `rvm current`.strip
+  version_string = RUBY_DESCRIPTION if !$?.success?
+  puts "\n# Starting tests using \e[1m#{version_string}\e[0m\n\n"
+end
+
+
 task :check_dependencies do
   begin
     require "bundler"
@@ -10,6 +17,7 @@ task :check_dependencies do
   system("bundle check") || abort
 end
 
+
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor/**/*")
@@ -18,7 +26,7 @@ Rake::TestTask.new(:test) do |test|
   test.warning = true
 end
 
-task :default => [:check_dependencies, :test]
+task :default => [:print_header, :check_dependencies, :test]
 
 
 begin

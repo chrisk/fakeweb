@@ -25,8 +25,9 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = false
   test.warning = true
 end
+Rake::Task["test"].enhance [:print_header, :check_dependencies]
 
-task :default => [:print_header, :check_dependencies, :test]
+task :default => :test
 
 
 begin

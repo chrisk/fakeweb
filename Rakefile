@@ -12,7 +12,8 @@ task :check_dependencies do
   begin
     require "bundler"
   rescue LoadError
-    abort "FakeWeb uses Bundler to manage development dependencies. Install it with `gem install bundler`."
+    abort "Error: FakeWeb uses Bundler to manage development dependencies,\n" +
+          "but it's not installed. Try `gem install bundler`.\n\n"
   end
   system("bundle check") || abort
 end

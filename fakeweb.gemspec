@@ -49,6 +49,11 @@ Gem::Specification.new do |s|
   if RUBY_VERSION >= "1.9.0"
     s.add_development_dependency "simplecov",         ["~> 0.7"]
     s.add_development_dependency "simplecov-console", ["~> 0.1"]
+
+    # SimpleCov depends on multi_json, which as of 1.7.3 prints a
+    # warning when the Ruby 1.9 stdlib is the only available backend.
+    # See https://github.com/intridea/multi_json/commit/e7438e7ba2.
+    s.add_development_dependency "json",              ["~> 1.7"]
   end
 
   if RUBY_PLATFORM == "java"

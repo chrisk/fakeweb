@@ -77,6 +77,24 @@ module FakeWebTestHelper
   def current_ruby_opts
     ruby_opts = []
     ruby_opts << "-w" if $-w
+
+    # When you start JRuby with --debug, it does this:
+    #
+    #   # src/org/jruby/util/cli/ArgumentProcessor.java:371
+    #   RubyInstanceConfig.FULL_TRACE_ENABLED = true;
+    #   config.setCompileMode(RubyInstanceConfig.CompileMode.OFF);
+    #
+    # This checks the same settings from Rubyland. See our Rakefile for
+    # some background on --debug.
+    # TODO: is there a good way to retrieve the command-line options
+    # used to start JRuby? --debug doesn't seem to have an analogue of
+    # $-w, $-d, etc.
+    if RUBY_PLATFORM == "java" &&
+       JRuby.runtime.instance_config.class.FULL_TRACE_ENABLED &&
+       JRuby.runtime.instance_config.compile_mode.to_s == "OFF"
+      ruby_opts << "--debug"
+    end
+
     ruby_opts
   end
 

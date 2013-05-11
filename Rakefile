@@ -21,36 +21,24 @@ end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor/**/*")
+  test.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb",
+                                                     "test/helpers/**/*",
+                                                     "test/vendor/**/*")
   test.libs << "test"
   test.verbose = false
   test.warning = true
 end
 Rake::Task["test"].enhance [:print_header, :check_dependencies]
-Rake::Task["test"].clear_comments.add_description <<-DESC
+Rake::Task["test"].clear_comments.add_description <<-DESC.gsub(/^  /, "")
   Run pre-flight checks, then run all tests (default).
+
+  Set COVERAGE_REPORT=1 to produce an HTML-formatted code-coverage
+  report during the run. It will be written to /coverage.
 DESC
 
 task :default => :test
 
 
-begin
-  require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |t|
-    t.test_files = FileList["test/**/*.rb"].exclude("test/test_helper.rb", "test/vendor/**/*")
-    t.libs << "test"
-    t.rcov_opts << "--sort coverage"
-    t.rcov_opts << "--exclude gems"
-    t.warning = true
-  end
-rescue LoadError
-  print "rcov support disabled "
-  if RUBY_PLATFORM =~ /java/
-    puts "(running under JRuby)"
-  else
-    puts "(install RCov to enable the `rcov` task)"
-  end
-end
 
 
 begin

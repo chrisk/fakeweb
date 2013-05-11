@@ -46,6 +46,11 @@ Gem::Specification.new do |s|
     s.add_development_dependency "rake",  ["~> 10.0"]
   end
 
+  if RUBY_VERSION >= "1.9.0"
+    s.add_development_dependency "simplecov",         ["~> 0.7"]
+    s.add_development_dependency "simplecov-console", ["~> 0.1"]
+  end
+
   if RUBY_PLATFORM == "java"
     s.add_development_dependency "jruby-openssl", ["~> 0.8"]
   end

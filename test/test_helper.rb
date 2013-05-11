@@ -1,12 +1,15 @@
+require 'rubygems'
+require 'bundler'
+Bundler.setup
+
+require 'helpers/start_simplecov'
+
 require 'test/unit'
 require 'open-uri'
 require 'pathname'
 require 'fake_web'
 require 'rbconfig'
 
-require 'rubygems'
-require 'bundler'
-Bundler.setup
 
 # See mocha's modifying
 #   https://github.com/freerange/mocha/commit/6df882d33ba785e0b43b224b7d625841d8e203be#lib/mocha/setup.rb
@@ -61,6 +64,20 @@ module FakeWebTestHelper
   def ruby_path
     ext = ((RbConfig::CONFIG['ruby_install_name'] =~ /\.(com|cmd|exe|bat|rb|sh)$/) ? "" : RbConfig::CONFIG['EXEEXT'])
     File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name'] + ext).sub(/.*\s.*/m, '"\&"')
+  end
+
+  # Returns the name of the currently-running Test::Unit test method. This
+  # simply scans the call stack for the first method name starting with
+  # "test_". (TODO: is there a first-class way to retrieve this in Test::Unit?)
+  def current_test_name
+    caller.detect { |line| line =~ /:\d+:in `(test_\w+)'$/ }
+    $1.to_sym
+  end
+
+  def current_ruby_opts
+    ruby_opts = []
+    ruby_opts << "-w" if $-w
+    ruby_opts
   end
 
   # Sets several expectations (using Mocha) that a real HTTP request makes it

@@ -98,6 +98,16 @@ module FakeWebTestHelper
     ruby_opts
   end
 
+  def remove_console_warnings_outside_our_control(string)
+    noise = [/^$/, /coverage/i, /jruby.*openssl/i,
+             /rubygems-bundler.+parenthesize argument\(s\) for future/,
+             %r{/gems/(hirb|simplecov|simplecov-html)-.+ warning: },
+             %r{/vendor/right_http_connection-.+ warning: },
+             /warning: previous definition of \w+ was here/]
+    splitter = string.respond_to?(:lines) ? :lines : :to_a
+    string.send(splitter).reject { |line| noise.any? { |n| line =~ n } }.join
+  end
+
   # Sets several expectations (using Mocha) that a real HTTP request makes it
   # past FakeWeb to the socket layer. You can use this when you need to check
   # that a request isn't handled by FakeWeb.

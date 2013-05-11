@@ -28,14 +28,7 @@ class TestOtherNetHttpLibraries < Test::Unit::TestCase
     simplecov_code = "SIMPLECOV_COMMAND_NAME = '#{current_test_name}'; require 'helpers/start_simplecov'"
 
     output = `#{ruby_path} #{current_ruby_opts.join(' ')} #{load_path_opts} -e "#{simplecov_code}; #{requires}; #{additional_code}" 2>&1`
-    remove_warnings_outside_our_control(output)
-  end
-
-  def remove_warnings_outside_our_control(string)
-    noise = [/jruby.*openssl/i,
-             /rubygems-bundler.+parenthesize argument\(s\) for future/]
-    splitter = string.respond_to?(:lines) ? :lines : :to_a
-    string.send(splitter).reject { |line| noise.any? { |n| line =~ n } }.join
+    remove_console_warnings_outside_our_control(output)
   end
 
   def test_requiring_samuel_before_fakeweb_prints_warning

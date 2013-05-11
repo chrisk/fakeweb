@@ -357,7 +357,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_specifying_nil_for_body
     FakeWeb.register_uri(:head, "http://example.com", :body => nil)
     response = Net::HTTP.start("example.com") { |query| query.head("/") }
-    assert_equal "", response.body
+    assert_empty response.body
   end
 
   def test_real_http_request

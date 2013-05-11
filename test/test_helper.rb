@@ -33,6 +33,17 @@ end
 
 
 module FakeWebTestHelper
+  BUILTIN_ASSERTIONS = Test::Unit::TestCase.instance_methods.select { |m| m.to_s =~ /^assert/ }.map { |m| m.to_sym }
+
+  # Backport assert_empty for Ruby 1.8 (it comes from MiniTest)
+  if !BUILTIN_ASSERTIONS.include?(:assert_empty)
+    def assert_empty(actual, message = nil)
+      message = build_message(message, "<?> is not empty", actual)
+      assert_block message do
+        actual.empty?
+      end
+    end
+  end
 
   def fixture_path(basename)
     "test/fixtures/#{basename}"

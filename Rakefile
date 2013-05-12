@@ -41,13 +41,18 @@ Rake::TestTask.new(:test) do |test|
   # util/cli/ArgumentProcessor.java.
   test.ruby_opts << "--debug" if RUBY_PLATFORM == "java"
 end
-Rake::Task["test"].enhance [:print_header, :check_dependencies]
+Rake::Task["test"].enhance ["test:preflight"]
 Rake::Task["test"].clear_comments.add_description <<-DESC.gsub(/^  /, "")
-  Run pre-flight checks, then run all tests (default).
+  Run preflight checks, then all tests (default task).
 
   Set COVERAGE_REPORT=1 to produce an HTML-formatted code-coverage
   report during the run. It will be written to /coverage.
 DESC
+
+namespace :test do
+  desc "Perform all startup checks without running tests"
+  task :preflight => [:print_header, :check_dependencies]
+end
 
 task :default => :test
 

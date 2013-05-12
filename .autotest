@@ -15,3 +15,7 @@ Autotest.add_hook :initialize do |autotest|
     autotest.files_matching %r|^test/test_\w+\.rb$|
   end
 end
+
+Autotest.add_hook :run_command do |at|
+  system "bundle exec rake test:preflight"
+end

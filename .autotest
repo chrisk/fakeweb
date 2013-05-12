@@ -1,5 +1,17 @@
+require 'autotest/bundler'
+require 'autotest/restart'
+
 Autotest.add_hook :initialize do |autotest|
-  %w(.git vendor).each do |directory|
+  autotest.order = :random
+
+  %w(.git coverage log vendor).each do |directory|
     autotest.add_exception(directory)
+  end
+
+  # Our tests are fast enough that it's reasonable to just run 'em all
+  # whenever something changes
+  autotest.clear_mappings
+  autotest.add_mapping /^Gemfile|^Rakefile|\.gemspec$|\.rb$/ do
+    autotest.files_matching %r|^test/test_\w+\.rb$|
   end
 end

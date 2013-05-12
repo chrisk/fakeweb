@@ -44,6 +44,10 @@ Gem::Specification.new do |s|
     # Otherwise, prefer up-to-date dev tools
     s.add_development_dependency "mocha", ["~> 0.13.3"] + broken_mocha_spec
     s.add_development_dependency "rake",  ["~> 10.0"]
+
+    # ZenTest (for autotest) wants at least RubyGems 1.8, which
+    # doesn't support 1.8.6.
+    s.add_development_dependency "ZenTest", ["~> 4.9"]
   end
 
   if RUBY_VERSION >= "1.9.0"

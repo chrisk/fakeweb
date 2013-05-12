@@ -1,6 +1,7 @@
 module FakeWebTestHelper
   def self.start_simplecov
     return unless RUBY_VERSION >= "1.9.0"
+    return if !ENV['AUTOTEST'].nil?
 
     require 'simplecov'
     require 'simplecov-console'

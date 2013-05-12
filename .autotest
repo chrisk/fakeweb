@@ -1,6 +1,10 @@
 require 'autotest/bundler'
 require 'autotest/restart'
 
+# Let child processes know that they're running under autotest,
+# so they can disable test-coverage reporting, etc.
+ENV["AUTOTEST"] = "1"
+
 Autotest.add_hook :initialize do |autotest|
   autotest.order = :random
 

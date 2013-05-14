@@ -59,25 +59,19 @@ task :default => :test
 
 desc "Remove build/test/release artifacts"
 task :clean do
-  paths = %w(.rbx/ coverage/ Gemfile.lock log/ pkg/)
+  paths = %w(.rbx/ coverage/ doc/ Gemfile.lock log/ pkg/)
   paths.each do |path|
     rm_rf File.join(File.dirname(__FILE__), path)
   end
 end
 
 
-begin
-  require 'sdoc'
-  require 'rdoc/task'
-  Rake::RDocTask.new do |rdoc|
-    rdoc.main = "README.rdoc"
-    rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
-    rdoc.title = "FakeWeb 1.3.0 API Documentation"
-    rdoc.rdoc_dir = "doc"
-    rdoc.template = "sdoc"
-    rdoc.options << "--format" << "sdoc"
-    rdoc.options << "--line-numbers" << "--show-hash" << "--charset=utf-8"
-  end
-rescue LoadError
-  warn "SDoc (or a dependency) not available. Install it with: gem install sdoc"
+require 'sdoc'
+require 'rdoc/task'
+Rake::RDocTask.new do |rdoc|
+  rdoc.title    = "FakeWeb 1.3.0 API Documentation"
+  rdoc.main     = "README.rdoc"
+  rdoc.rdoc_dir = "doc"
+  rdoc.options += %w(--format sdoc --show-hash --charset utf-8 --github)
+  rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
 end

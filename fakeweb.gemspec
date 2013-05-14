@@ -50,6 +50,8 @@ Gem::Specification.new do |s|
     s.add_development_dependency "ZenTest", ["~> 4.9"]
   end
 
+  s.add_development_dependency "sdoc"
+
   if RUBY_VERSION >= "1.9.0"
     s.add_development_dependency "simplecov",         ["~> 0.7"]
     s.add_development_dependency "simplecov-console", ["~> 0.1"]

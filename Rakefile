@@ -65,13 +65,16 @@ task :clean do
   end
 end
 
-
-require 'sdoc'
-require 'rdoc/task'
-Rake::RDocTask.new do |rdoc|
-  rdoc.title    = "FakeWeb 1.3.0 API Documentation"
-  rdoc.main     = "README.rdoc"
-  rdoc.rdoc_dir = "doc"
-  rdoc.options += %w(--format sdoc --show-hash --charset utf-8 --github)
-  rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
+if RUBY_VERSION >= "1.8.7"
+  require 'sdoc'
+  require 'rdoc/task'
+  Rake::RDocTask.new do |rdoc|
+    rdoc.title    = "FakeWeb 1.3.0 API Documentation"
+    rdoc.main     = "README.rdoc"
+    rdoc.rdoc_dir = "doc"
+    rdoc.options += %w(--format sdoc --show-hash --charset utf-8 --github)
+    rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
+  end
+else
+  warn "Warning: RDoc requires ruby >= 1.8.7; doc tasks disabled"
 end

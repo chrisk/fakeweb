@@ -40,17 +40,18 @@ Gem::Specification.new do |s|
     # 1.8.7+; both times, 1.8.6-compatibility was restored for the
     # next release.
     s.add_development_dependency "rake", [">= 0.8.7", "!= 0.9.1", "!= 0.9.6", "!= 10.0.3"]
+
   else
     # Otherwise, prefer up-to-date dev tools
     s.add_development_dependency "mocha", ["~> 0.13.3"] + broken_mocha_spec
     s.add_development_dependency "rake",  ["~> 10.0"]
 
-    # ZenTest (for autotest) wants at least RubyGems 1.8, which
-    # doesn't support 1.8.6.
+    # ZenTest (autotest) wants at least RubyGems 1.8, which is 1.8.7+
+    # only, as is RDoc, the main dependency of sdoc.
     s.add_development_dependency "ZenTest", ["~> 4.9"]
+    s.add_development_dependency "sdoc"
   end
 
-  s.add_development_dependency "sdoc"
 
   if RUBY_VERSION >= "1.9.0"
     s.add_development_dependency "simplecov",         ["~> 0.7"]
@@ -61,6 +62,7 @@ Gem::Specification.new do |s|
     # See https://github.com/intridea/multi_json/commit/e7438e7ba2.
     s.add_development_dependency "json",              ["~> 1.7"]
   end
+
 
   if RUBY_PLATFORM == "java"
     s.add_development_dependency "jruby-openssl", ["~> 0.8"]

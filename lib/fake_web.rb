@@ -25,7 +25,7 @@ module FakeWeb
   # registered URIs.
   #
   # If you set <tt>FakeWeb.allow_net_connect = false</tt> and subsequently try
-  # to make a request to a URI you haven't registered with #register_uri, a
+  # to make a request to a URI you haven't registered with .register_uri, a
   # NetConnectNotAllowedError will be raised. This is handy when you want to
   # make sure your tests are self-contained, or want to catch the scenario
   # when a URI is changed in implementation code without a corresponding test

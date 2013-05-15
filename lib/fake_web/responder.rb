@@ -52,7 +52,8 @@ module FakeWeb
 
     def body
       body = options[:body]
-      return "" if body.nil?
+      return nil if body.to_s == ''
+
       body = body.to_s if defined?(Pathname) && body.is_a?(Pathname)
 
       if !body.include?("\0") && File.exists?(body) && !File.directory?(body)

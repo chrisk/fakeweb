@@ -8,7 +8,8 @@ module FakeWebTestHelper
 
     SimpleCov.start do
       add_filter "/test/"
-      minimum_coverage 100
+
+      minimum_coverage 100 if FakeWebTestHelper.running_all_tests?
 
       if defined?(SIMPLECOV_COMMAND_NAME)
         command_name SIMPLECOV_COMMAND_NAME
@@ -23,6 +24,10 @@ module FakeWebTestHelper
         formatter SimpleCov::Formatter::Console
       end
     end
+  end
+
+  def self.running_all_tests?
+    ENV['TEST'].nil?
   end
 end
 

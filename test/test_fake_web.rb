@@ -354,16 +354,16 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
-  def test_specifying_nil_for_body
+  def test_specifying_nil_for_body_triggers_net_http_behavior_of_nil_body
     FakeWeb.register_uri(:head, "http://example.com", :body => nil)
     response = Net::HTTP.start("example.com") { |query| query.head("/") }
-    assert_equal nil, response.body
+    assert_nil response.body
   end
 
-  def test_specifying_empty_string_for_body
+  def test_specifying_empty_string_for_body_triggers_net_http_behavior_of_nil_body
     FakeWeb.register_uri(:head, "http://example.com", :body => '')
     response = Net::HTTP.start("example.com") { |query| query.head("/") }
-    assert_equal nil, response.body
+    assert_nil response.body
   end
 
   def test_real_http_request

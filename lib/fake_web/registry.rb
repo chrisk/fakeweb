@@ -12,6 +12,12 @@ module FakeWeb
       self.uri_map = Hash.new { |hash, key| hash[key] = {} }
     end
 
+    def clean_uri(method, uri)
+      n_uri = normalize_uri(uri)
+      self.uri_map[n_uri].delete(method)
+      self.uri_map.delete(n_uri) unless self.uri_map[n_uri].size > 0
+    end
+
     def register_uri(method, uri, options)
       uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
         FakeWeb::Responder.new(method, uri, option, option[:times])

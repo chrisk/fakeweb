@@ -21,6 +21,11 @@ module FakeWeb
     Registry.instance.clean_registry
   end
 
+  # Remove added uri from registry.
+  def self.clean_uri(method, uri)
+    Registry.instance.clean_uri(method, uri)
+  end
+
   # Enables or disables real HTTP connections for requests that don't match
   # registered URIs.
   #

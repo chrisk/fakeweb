@@ -125,6 +125,11 @@ module FakeWebTestHelper
       Socket.expects(:===).with(socket).at_least_once.returns(true)
     end
 
+    # Net::HTTP#connect now sets TCP_NODELAY after opening the socket. See ruby-core:56158.
+    if RUBY_VERSION >= "2.1.0"
+      socket.stubs(:setsockopt).returns(0)
+    end
+
     if RUBY_VERSION >= "2.0.0"
       TCPSocket.expects(:open).with(options[:host], options[:port], nil, nil).returns(socket).at_least_once
     else

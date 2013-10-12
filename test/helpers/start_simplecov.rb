@@ -44,7 +44,7 @@ module FakeWebTestHelper
     end
 
     def coverage_supported_by_this_ruby?
-      RUBY_VERSION >= "1.9.0"
+      RUBY_VERSION >= "1.9.0" && RUBY_ENGINE != "rbx"
     end
 
     extend self

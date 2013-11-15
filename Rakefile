@@ -66,13 +66,18 @@ task :clean do
 end
 
 if RUBY_VERSION >= "1.8.7"
-  require 'sdoc'
+  rdoc_options = %w(--show-hash --charset utf-8 --github)
+  begin
+    require 'sdoc'
+    rdoc_options += %w(--format sdoc)
+  rescue LoadError
+  end
   require 'rdoc/task'
   Rake::RDocTask.new do |rdoc|
     rdoc.title    = "FakeWeb 1.3.0 API Documentation"
     rdoc.main     = "README.rdoc"
     rdoc.rdoc_dir = "doc"
-    rdoc.options += %w(--format sdoc --show-hash --charset utf-8 --github)
+    rdoc.options += rdoc_options
     rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
   end
 else

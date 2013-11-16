@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
 
   else
     # Otherwise, prefer up-to-date dev tools
-    s.add_development_dependency "mocha", ["~> 0.13.3"] + broken_mocha_spec
+    s.add_development_dependency "mocha", ["~> 0.14"] + broken_mocha_spec
     s.add_development_dependency "rake",  ["~> 10.0"]
 
     # ZenTest (autotest) wants at least RubyGems 1.8, which is 1.8.7+

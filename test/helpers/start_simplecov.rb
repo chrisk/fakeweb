@@ -10,7 +10,7 @@ module FakeWebTestHelper
       SimpleCov.start do
         add_filter "/test/"
 
-        minimum_coverage 100 if running_all_tests?
+        minimum_coverage 100 if this_process_responsible_for_coverage_reporting?
         command_name SIMPLECOV_COMMAND_NAME if child_test_process?
         formatter simplecov_formatter_class
       end
@@ -18,15 +18,20 @@ module FakeWebTestHelper
 
     def simplecov_formatter_class
       include SimpleCov::Formatter
-      if html_report_requested?
-        MultiFormatter[HTMLFormatter, Console]
-      else
-        Console
+      formatters = []
+      if this_process_responsible_for_coverage_reporting?
+        formatters << Console
+        formatters << HTMLFormatter if html_report_requested?
       end
+      MultiFormatter[*formatters]
+    end
+
+    def this_process_responsible_for_coverage_reporting?
+      running_all_tests? && !child_test_process?
     end
 
     def running_all_tests?
-      ENV['TEST'].nil?
+      ARGV == Dir["test/test_*.rb"] - ["test/test_helper.rb"]
     end
 
     def child_test_process?

@@ -13,6 +13,7 @@ module FakeWebTestHelper
         minimum_coverage 100 if this_process_responsible_for_coverage_reporting?
         command_name SIMPLECOV_COMMAND_NAME if child_test_process?
         formatter simplecov_formatter_class
+        coverage_dir "coverage/#{ENV['TEST_ENV_NUMBER']}" if !ENV['TEST_ENV_NUMBER'].nil?
       end
     end
 

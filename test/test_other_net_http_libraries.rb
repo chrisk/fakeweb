@@ -28,7 +28,7 @@ class TestOtherNetHttpLibraries < Test::Unit::TestCase
     simplecov_code = "SIMPLECOV_COMMAND_NAME = '#{current_test_name}'; require 'helpers/start_simplecov'"
 
     output = `#{ruby_path} #{current_ruby_opts.join(' ')} #{load_path_opts} -e "#{simplecov_code}; #{requires}; #{additional_code}" 2>&1`
-    remove_console_warnings_outside_our_control(output)
+    remove_warnings_from_gems_and_stdlib(output)
   end
 
   def test_requiring_samuel_before_fakeweb_prints_warning

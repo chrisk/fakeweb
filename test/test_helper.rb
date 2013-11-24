@@ -98,7 +98,7 @@ module FakeWebTestHelper
     ruby_opts
   end
 
-  def remove_console_warnings_outside_our_control(string)
+  def remove_warnings_from_gems_and_stdlib(string)
     code_paths = [RbConfig::CONFIG["libdir"],
                   File.expand_path(File.join(File.dirname(__FILE__), "vendor")),
                   Gem.path].flatten

@@ -99,13 +99,14 @@ module FakeWebTestHelper
   end
 
   def remove_console_warnings_outside_our_control(string)
-    noise = [/^$/, /coverage/i, /jruby.*openssl/i,
-             /rubygems-bundler.+parenthesize argument\(s\) for future/,
-             %r{/gems/(hirb|simplecov|simplecov-html)-.+ warning: },
-             %r{/vendor/right_http_connection-.+ warning: },
-             /warning: previous definition of \w+ was here/]
+    code_paths = [RbConfig::CONFIG["libdir"],
+                  File.expand_path(File.join(File.dirname(__FILE__), "vendor")),
+                  Gem.path].flatten
     splitter = string.respond_to?(:lines) ? :lines : :to_a
-    string.send(splitter).reject { |line| noise.any? { |n| line =~ n } }.join
+    string.send(splitter).reject { |line|
+      line.strip.empty? ||
+      code_paths.any? { |path| line =~ /^#{Regexp.escape(path)}.+:\d+:? warning:/ }
+    }.join
   end
 
   # Sets several expectations (using Mocha) that a real HTTP request makes it

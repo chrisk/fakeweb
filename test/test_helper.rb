@@ -120,7 +120,9 @@ module FakeWebTestHelper
       OpenSSL::SSL::SSLSocket.expects(:new).with(socket, instance_of(OpenSSL::SSL::SSLContext)).returns(socket).at_least_once
       socket.stubs(:sync_close=).returns(true)
       socket.expects(:connect).with().at_least_once
-      socket.expects(:session).with().at_least_once if RUBY_VERSION >= "2.0.0"
+      if RUBY_VERSION >= "2.0.0" && RUBY_PLATFORM != "java"
+        socket.expects(:session).with().at_least_once
+      end
     else
       socket = mock("TCPSocket")
       Socket.expects(:===).with(socket).at_least_once.returns(true)

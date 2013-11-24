@@ -56,7 +56,7 @@ module FakeWeb
 
       body = body.to_s if defined?(Pathname) && body.is_a?(Pathname)
 
-      if !body.include?("\0") && File.exists?(body) && !File.directory?(body)
+      if !body.include?("\0") && File.exist?(body) && !File.directory?(body)
         File.read(body)
       else
         body

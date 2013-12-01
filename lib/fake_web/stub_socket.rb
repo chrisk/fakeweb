@@ -1,7 +1,9 @@
 module FakeWeb
   class StubSocket #:nodoc:
 
-    attr_accessor :read_timeout, :continue_timeout
+    Net::BufferedIO.instance_methods.grep(/_timeout$/).each do |timeout|
+      attr_accessor timeout
+    end
 
     def initialize(*args)
     end

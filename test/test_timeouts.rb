@@ -15,4 +15,19 @@ class TestTimeouts < Test::Unit::TestCase
     end
     assert_equal [5], timeouts.uniq
   end
+
+  def test_stub_socket_always_responds_to_read_timeout
+    FakeWeb.register_uri(:get, "http://example.com", :status => [200, "OK"])
+    http = Net::HTTP.new("example.com", 80)
+    http.get("/")
+    assert_respond_to http.instance_variable_get(:@socket), :read_timeout=
+  end
+
+  def test_stub_socket_only_responds_to_continue_timeout_under_193_or_later
+    FakeWeb.register_uri(:get, "http://example.com", :status => [200, "OK"])
+    http = Net::HTTP.new("example.com", 80)
+    http.get("/")
+    socket = http.instance_variable_get(:@socket)
+    assert_equal RUBY_VERSION >= "1.9.3", socket.respond_to?(:continue_timeout=)
+  end
 end

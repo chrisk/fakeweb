@@ -76,7 +76,7 @@ module FakeWebTestHelper
 
   def current_ruby_opts
     ruby_opts = []
-    ruby_opts << "-w" if $-w
+    ruby_opts << "-w" if defined?($-w) && $-w
 
     # When you start JRuby with --debug, it does this:
     #

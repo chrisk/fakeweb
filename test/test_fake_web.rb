@@ -349,9 +349,10 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_register_unimplemented_response
     FakeWeb.register_uri(:get, 'http://mock/unimplemented', :response => 1)
-    assert_raises StandardError do
+    exception = assert_raises ArgumentError do
       Net::HTTP.start('mock') { |q| q.get('/unimplemented') }
     end
+    assert_match "Handler not implemented", exception.message
   end
 
   def test_specifying_nil_for_body_triggers_net_http_behavior_of_nil_body

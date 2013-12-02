@@ -91,7 +91,7 @@ module FakeWeb
       elsif response.is_a?(Net::HTTPResponse)
         response
       else
-        raise StandardError, "Handler unimplemented for response #{response}"
+        raise ArgumentError, "Handler not implemented for response #{response.inspect}"
       end
     end
 

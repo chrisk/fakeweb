@@ -20,7 +20,7 @@ module Net  #:nodoc: all
           StringIO.new(io)
         end
       end
-      raise "Unable to create fake socket from #{io}" unless @io
+      raise ArgumentError, "Unable to create fake socket from #{io}" unless @io
     end
     alias_method :initialize_without_fakeweb, :initialize
     alias_method :initialize, :initialize_with_fakeweb

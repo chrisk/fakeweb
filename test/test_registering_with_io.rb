@@ -30,4 +30,19 @@ class TestRegisteringWithIO < Test::Unit::TestCase
     assert response.body.include?("<title>Google</title>")
   end
 
+  def test_creating_net_buffered_io_directly_with_an_unsupported_underlying_object
+    # It's not possible to exercise this code path through an end-user API because
+    # FakeWeb::Responder performs an equivalent check on the object before passing
+    # it on to Net::BufferedIO. So this is just an internal sanity check.
+    string = ""
+    Net::BufferedIO.new(string)
+
+    stringio = StringIO.new(File.read(fixture_path("google_response_from_curl")))
+    Net::BufferedIO.new(stringio)
+
+    unsupported = Time.now
+    assert_raises ArgumentError do
+      Net::BufferedIO.new(unsupported)
+    end
+  end
 end

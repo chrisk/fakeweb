@@ -1,3 +1,14 @@
+fakeweb (development)
+
+* fix a NoMethodError in Net::HTTP#read_timeout= and #continue_timeout= when
+  called on a Net::HTTP object that's already handled a first fake request
+  [Marcel Massana, Trevor Rowe, Chris Kampmeier]
+	
+* accept StringIO objects as fake responses/response bodies [Larry Diehl]
+	
+* fix that .register_uri would modify its options hash when it included :body
+  with a Pathname value [Chris Kampmeier]
+
 fakeweb (1.3.0)
 
 * improve response header registration so you can pass an array to set a header

@@ -68,6 +68,12 @@ module FakeWeb
     end
   end
 
+  # Returns +true+ if requests to all URIs are passed through to Net::HTTP
+  # for normal processing (the default), otherwise, returns +false+.
+  def self.allow_all_connections?
+    Registry.instance.passthrough_uri_map.empty? && Registry.instance.uri_map.empty? && @allow_all_connections
+  end
+
   # This exception is raised if you set <tt>FakeWeb.allow_net_connect =
   # false</tt> and subsequently try to make a request to a URI you haven't
   # stubbed.

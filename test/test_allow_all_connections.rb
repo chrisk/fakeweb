@@ -12,6 +12,17 @@ class TestAllowAllConnections < Test::Unit::TestCase
     end
   end if RUBY_VERSION >= "2.0.0"
 
+  def test_net_http_can_reconnect_on_keep_alive_timeout_for_passthrough_uris
+    uri = URI.parse("http://images.apple.com/main/rss/hotnews/hotnews.rss")
+    FakeWeb.allow_net_connect = uri
+    req = Net::HTTP::Get.new(uri)
+    Net::HTTP.new(uri.host, uri.port).start do |http|
+      http.keep_alive_timeout = 0
+      http.request(req)
+      http.request(req)
+    end
+  end if RUBY_VERSION >= "2.0.0"
+
   def test_allow_all_connections_returns_true_without_registered_uris_or_passthroughs
     FakeWeb.allow_net_connect = true
     assert_equal true, FakeWeb.allow_all_connections?

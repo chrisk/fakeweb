@@ -45,8 +45,15 @@ module Net  #:nodoc: all
         FakeWeb::Utility.produce_side_effects_of_net_http_request(request, body)
         FakeWeb.response_for(method, uri, &block)
       elsif FakeWeb.allow_net_connect?(uri)
-        connect_without_fakeweb unless FakeWeb.allow_all_connections?
-        request_without_fakeweb(request, body, &block)
+        unless FakeWeb.allow_all_connections?
+          connect_without_fakeweb
+        end
+        begin
+          @in_request_without_fakeweb = true
+          request_without_fakeweb(request, body, &block)
+        ensure
+          @in_request_without_fakeweb = nil
+        end
       else
         uri = FakeWeb::Utility.strip_default_port_from_uri(uri)
         raise FakeWeb::NetConnectNotAllowedError,
@@ -62,7 +69,9 @@ module Net  #:nodoc: all
         FakeWeb::Utility.puts_warning_for_net_http_replacement_libs_if_needed
         @@alredy_checked_for_net_http_replacement_libs = true
       end
-      FakeWeb.allow_all_connections? ? connect_without_fakeweb : nil
+      if FakeWeb.allow_all_connections? || @in_request_without_fakeweb
+        connect_without_fakeweb
+      end
     end
     alias_method :connect_without_fakeweb, :connect
     alias_method :connect, :connect_with_fakeweb

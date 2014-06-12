@@ -3,7 +3,7 @@ require 'test_helper'
 # Each of these tests shells out to `ruby -rfakeweb ...` so
 # we can see how FakeWeb behaves with different combinations of
 # other gems loaded without polluting the rest of our tests.
-class TestOtherNetHttpLibraries < Test::Unit::TestCase
+class TestOtherNetHttpLibraries < Minitest::Test
 
   def capture_output_from_requiring(libs, additional_code = "")
     requires = libs.map { |lib| "require '#{lib}'" }.join("; ")

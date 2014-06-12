@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestResponseHeaders < Test::Unit::TestCase
+class TestResponseHeaders < Minitest::Test
   def test_content_type_when_registering_with_string_and_content_type_header_as_symbol_option
     FakeWeb.register_uri(:get, "http://example.com/users.json", :body => '[{"username": "chrisk"}]', :content_type => "application/json")
     response = Net::HTTP.start("example.com") { |query| query.get("/users.json") }

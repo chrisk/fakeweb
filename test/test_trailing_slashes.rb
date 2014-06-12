@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestFakeWebTrailingSlashes < Test::Unit::TestCase
+class TestFakeWebTrailingSlashes < Minitest::Test
 
   def test_registering_root_without_slash_and_ask_predicate_method_with_slash
     FakeWeb.register_uri(:get, "http://www.example.com", :body => "root")
@@ -32,7 +32,7 @@ class TestFakeWebTrailingSlashes < Test::Unit::TestCase
   def test_registering_path_without_slash_and_request_with_slash
     FakeWeb.allow_net_connect = false
     FakeWeb.register_uri(:get, "http://www.example.com/users", :body => "User list")
-    assert_raise FakeWeb::NetConnectNotAllowedError do
+    assert_raises FakeWeb::NetConnectNotAllowedError do
       Net::HTTP.start("www.example.com") { |query| query.get('/users/') }
     end
   end
@@ -45,7 +45,7 @@ class TestFakeWebTrailingSlashes < Test::Unit::TestCase
   def test_registering_path_with_slash_and_request_without_slash
     FakeWeb.allow_net_connect = false
     FakeWeb.register_uri(:get, "http://www.example.com/users/", :body => "User list")
-    assert_raise FakeWeb::NetConnectNotAllowedError do
+    assert_raises FakeWeb::NetConnectNotAllowedError do
       Net::HTTP.start("www.example.com") { |query| query.get('/users') }
     end
   end

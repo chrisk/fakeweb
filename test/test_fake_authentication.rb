@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestFakeAuthentication < Test::Unit::TestCase
+class TestFakeAuthentication < Minitest::Test
 
   def test_register_uri_with_authentication
     FakeWeb.register_uri(:get, 'http://user:pass@mock/test_example.txt', :body => "example")

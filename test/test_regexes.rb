@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestRegexes < Test::Unit::TestCase
+class TestRegexes < Minitest::Test
 
   def test_registered_uri_with_pattern
     FakeWeb.register_uri(:get, %r|http://example.com/test_example/\d+|, :body => "example")
@@ -39,7 +39,7 @@ class TestRegexes < Test::Unit::TestCase
   def test_requesting_a_uri_that_matches_two_registered_regexes_raises_an_error
     FakeWeb.register_uri(:get, %r|http://example\.com/|, :body => "first")
     FakeWeb.register_uri(:get, %r|http://example\.com/a|, :body => "second")
-    assert_raise FakeWeb::MultipleMatchingURIsError do
+    assert_raises FakeWeb::MultipleMatchingURIsError do
       Net::HTTP.start("example.com") { |query| query.get('/a') }
     end
   end

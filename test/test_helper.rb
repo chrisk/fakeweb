@@ -4,7 +4,7 @@ Bundler.setup
 
 require 'helpers/start_simplecov'
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'open-uri'
 require 'pathname'
 require 'fake_web'
@@ -20,7 +20,7 @@ rescue LoadError
 end
 
 # Give all tests a common setup and teardown that prevents shared state
-class Test::Unit::TestCase
+class Minitest::Test
   alias setup_without_fakeweb setup
   def setup
     FakeWeb.clean_registry
@@ -36,7 +36,7 @@ end
 
 
 module FakeWebTestHelper
-  BUILTIN_ASSERTIONS = Test::Unit::TestCase.instance_methods.select { |m| m.to_s =~ /^assert/ }.map { |m| m.to_sym }
+  BUILTIN_ASSERTIONS = Minitest::Test.instance_methods.select { |m| m.to_s =~ /^assert/ }.map { |m| m.to_sym }
 
   # Backport assert_empty for Ruby 1.8 (it comes from MiniTest)
   if !BUILTIN_ASSERTIONS.include?(:assert_empty)
@@ -178,4 +178,4 @@ module FakeWebTestHelper
 
 end
 
-Test::Unit::TestCase.send(:include, FakeWebTestHelper)
+Minitest::Test.send(:include, FakeWebTestHelper)

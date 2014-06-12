@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestRegisteringWithIO < Test::Unit::TestCase
+class TestRegisteringWithIO < Minitest::Test
 
   def test_registering_a_file_handle_without_transfer_encoding
     file = File.new(fixture_path("google_response_without_transfer_encoding"))

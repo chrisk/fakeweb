@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestPrecedence < Test::Unit::TestCase
+class TestPrecedence < Minitest::Test
 
   def test_matching_get_strings_have_precedence_over_matching_get_regexes
     FakeWeb.register_uri(:get, "http://example.com/test", :body => "string")

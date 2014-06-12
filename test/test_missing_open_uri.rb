@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestMissingOpenURI < Test::Unit::TestCase
+class TestMissingOpenURI < Minitest::Test
 
   def setup
     super

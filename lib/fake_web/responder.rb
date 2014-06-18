@@ -102,8 +102,8 @@ module FakeWeb
     def optionally_raise(response)
       return unless options.has_key?(:exception)
 
-      case options[:exception].to_s
-      when "Net::HTTPError", "OpenURI::HTTPError"
+      case options[:exception].instance_method(:initialize).arity
+      when 2
         raise options[:exception].new('Exception from FakeWeb', response)
       else
         raise options[:exception].new('Exception from FakeWeb')

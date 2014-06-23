@@ -63,6 +63,9 @@ Gem::Specification.new do |s|
     s.add_development_dependency "json",              ["~> 1.7"]
   end
 
+  if RUBY_VERSION >= "2.0"
+    s.add_development_dependency "test-unit"
+  end
 
   if RUBY_PLATFORM == "java"
     s.add_development_dependency "jruby-openssl", ["~> 0.8"]

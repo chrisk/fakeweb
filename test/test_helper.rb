@@ -119,7 +119,11 @@ module FakeWebTestHelper
       OpenSSL::SSL::SSLSocket.expects(:===).with(socket).returns(true).at_least_once
       OpenSSL::SSL::SSLSocket.expects(:new).with(socket, instance_of(OpenSSL::SSL::SSLContext)).returns(socket).at_least_once
       socket.stubs(:sync_close=).returns(true)
-      socket.expects(:connect).with().at_least_once
+      if RUBY_VERSION >= "2.3.0"
+        socket.expects(:connect_nonblock).with(:exception => false).at_least_once
+      else
+        socket.expects(:connect).with().at_least_once
+      end
       if RUBY_VERSION >= "2.0.0" && RUBY_PLATFORM != "java"
         socket.expects(:session).with().at_least_once
       end

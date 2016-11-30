@@ -2,9 +2,13 @@ require 'rubygems'
 require 'rake'
 
 task :print_header do
-  version_string = `rvm current`.strip
-  version_string = RUBY_DESCRIPTION if !$?.success?
-  puts "\n# Starting tests using \e[1m#{version_string}\e[0m\n\n"
+  if system("which rvm > /dev/null")
+    version_string = `rvm current`.strip
+    version_string = RUBY_DESCRIPTION if !$?.success?
+    puts "\n# Starting tests using \e[1m#{version_string}\e[0m\n\n"
+  else
+    puts "\n# RVM not found. Using default Ruby (#{RUBY_DESCRIPTION})"
+  end
 end
 
 

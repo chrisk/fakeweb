@@ -34,9 +34,9 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
-  def test_register_uri_without_domain_name
+  def test_register_with_invalid_uri
     assert_raises URI::InvalidURIError do
-      FakeWeb.register_uri(:get, 'test_example2.txt', fixture_path("test_example.txt"))
+      FakeWeb.register_uri(:get, '#~invalid~#', fixture_path("test_example.txt"))
     end
   end
 
@@ -296,15 +296,16 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_post_with_body_sets_the_request_body
-    FakeWeb.allow_net_connect = true
-    setup_expectations_for_real_apple_hot_news_request :method => "POST",
-      :path => "/posts", :request_body => "title=Test"
-    http = Net::HTTP.new("images.apple.com")
-    request = Net::HTTP::Post.new("/posts")
-    request["Content-Type"] = "application/x-www-form-urlencoded"
-    http.request(request, "title=Test")
-    assert_equal "title=Test", request.body
-    assert_equal 10, request.content_length
+    with_allowed_connections do
+      setup_expectations_for_real_apple_hot_news_request :method => "POST",
+        :path => "/posts", :request_body => "title=Test"
+      http = Net::HTTP.new("images.apple.com")
+      request = Net::HTTP::Post.new("/posts")
+      request["Content-Type"] = "application/x-www-form-urlencoded"
+      http.request(request, "title=Test")
+      assert_equal "title=Test", request.body
+      assert_equal 10, request.content_length
+    end
   end
 
   def test_mock_get_with_request_as_registered_uri
@@ -368,53 +369,57 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_real_http_request
-    FakeWeb.allow_net_connect = true
-    setup_expectations_for_real_apple_hot_news_request
+    with_allowed_connections do
+      setup_expectations_for_real_apple_hot_news_request
 
-    resp = nil
-    Net::HTTP.start('images.apple.com') do |query|
-      resp = query.get('/main/rss/hotnews/hotnews.rss')
+      resp = nil
+      Net::HTTP.start('images.apple.com') do |query|
+        resp = query.get('/main/rss/hotnews/hotnews.rss')
+      end
+      assert resp.body.include?('Apple')
+      assert resp.body.include?('News')
     end
-    assert resp.body.include?('Apple')
-    assert resp.body.include?('News')
   end
 
   def test_real_http_request_with_undocumented_full_uri_argument_style
-    FakeWeb.allow_net_connect = true
-    setup_expectations_for_real_apple_hot_news_request(:path => 'http://images.apple.com/main/rss/hotnews/hotnews.rss')
+    with_allowed_connections do
+      setup_expectations_for_real_apple_hot_news_request(:path => 'http://images.apple.com/main/rss/hotnews/hotnews.rss')
 
-    resp = nil
-    Net::HTTP.start('images.apple.com') do |query|
-      resp = query.get('http://images.apple.com/main/rss/hotnews/hotnews.rss')
+      resp = nil
+      Net::HTTP.start('images.apple.com') do |query|
+        resp = query.get('http://images.apple.com/main/rss/hotnews/hotnews.rss')
+      end
+      assert resp.body.include?('Apple')
+      assert resp.body.include?('News')
     end
-    assert resp.body.include?('Apple')
-    assert resp.body.include?('News')
   end
 
   def test_real_https_request
-    FakeWeb.allow_net_connect = true
-    setup_expectations_for_real_apple_hot_news_request(:port => 443)
+    with_allowed_connections do
+      setup_expectations_for_real_apple_hot_news_request(:port => 443)
 
-    http = Net::HTTP.new('images.apple.com', 443)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # silence certificate warning
-    response = http.get('/main/rss/hotnews/hotnews.rss')
-    assert response.body.include?('Apple')
-    assert response.body.include?('News')
+      http = Net::HTTP.new('images.apple.com', 443)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # silence certificate warning
+      response = http.get('/main/rss/hotnews/hotnews.rss')
+      assert response.body.include?('Apple')
+      assert response.body.include?('News')
+    end
   end
 
   def test_real_request_on_same_domain_as_mock
-    FakeWeb.allow_net_connect = true
-    setup_expectations_for_real_apple_hot_news_request
+    with_allowed_connections do
+      setup_expectations_for_real_apple_hot_news_request
 
-    FakeWeb.register_uri(:get, 'http://images.apple.com/test_string.txt', :body => 'foo')
+      FakeWeb.register_uri(:get, 'http://images.apple.com/test_string.txt', :body => 'foo')
 
-    resp = nil
-    Net::HTTP.start('images.apple.com') do |query|
-      resp = query.get('/main/rss/hotnews/hotnews.rss')
+      resp = nil
+      Net::HTTP.start('images.apple.com') do |query|
+        resp = query.get('/main/rss/hotnews/hotnews.rss')
+      end
+      assert resp.body.include?('Apple')
+      assert resp.body.include?('News')
     end
-    assert resp.body.include?('Apple')
-    assert resp.body.include?('News')
   end
 
   def test_mock_request_on_real_domain
@@ -612,4 +617,13 @@ class TestFakeWeb < Test::Unit::TestCase
     assert_equal "1.3.0", FakeWeb::VERSION
   end
 
+  private
+
+  def with_allowed_connections
+    old_value = FakeWeb.allow_net_connect?
+    FakeWeb.allow_net_connect = true
+    yield
+  ensure
+    FakeWeb.allow_net_connect = old_value
+  end
 end

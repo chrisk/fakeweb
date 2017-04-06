@@ -61,6 +61,7 @@ Gem::Specification.new do |s|
     # warning when the Ruby 1.9 stdlib is the only available backend.
     # See https://github.com/intridea/multi_json/commit/e7438e7ba2.
     s.add_development_dependency "json",              ["~> 1.7"]
+    s.add_development_dependency "test-unit",         ["~> 3.2"]
   end
 
 

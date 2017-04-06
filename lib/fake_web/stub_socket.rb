@@ -8,6 +8,10 @@ module FakeWeb
     def initialize(*args)
     end
 
+    def close
+      @closed = true
+    end
+
     def closed?
       @closed ||= true
     end

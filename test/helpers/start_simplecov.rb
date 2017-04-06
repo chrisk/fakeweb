@@ -24,7 +24,7 @@ module FakeWebTestHelper
         formatters << Console
         formatters << HTMLFormatter if html_report_requested?
       end
-      MultiFormatter[*formatters]
+      MultiFormatter.new formatters
     end
 
     def this_process_responsible_for_coverage_reporting?

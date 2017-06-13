@@ -34,10 +34,15 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
-  def test_register_uri_without_domain_name
+  def test_register_uri_with_invalid_symbol
     assert_raises URI::InvalidURIError do
-      FakeWeb.register_uri(:get, 'test_example2.txt', fixture_path("test_example.txt"))
+      FakeWeb.register_uri(:get, 'test_example2 txt', :body => 'foo')
     end
+  end
+
+  def test_register_uri_without_domain_name
+    FakeWeb.register_uri(:get, 'test_example2.txt', :body => 'foo')
+    assert FakeWeb.registered_uri?(:get, 'http://test_example2.txt/')
   end
 
   def test_register_uri_with_port_and_check_with_port

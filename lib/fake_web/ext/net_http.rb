@@ -5,8 +5,8 @@ require 'stringio'
 module Net  #:nodoc: all
 
   class BufferedIO
-    def initialize_with_fakeweb(*args)
-      initialize_without_fakeweb(*args)
+    def initialize_with_fakeweb(*args, **opts)
+      initialize_without_fakeweb(*args, **opts)
 
       case @io
       when Socket, OpenSSL::SSL::SSLSocket, StringIO, IO

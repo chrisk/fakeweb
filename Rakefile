@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 
 task :print_header do
-  version_string = `rvm current`.strip
+  version_string = `command -v rvm >/dev/null && rvm current`.strip
   version_string = RUBY_DESCRIPTION if !$?.success?
   puts "\n# Starting tests using \e[1m#{version_string}\e[0m\n\n"
 end

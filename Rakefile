@@ -42,7 +42,8 @@ Rake::TestTask.new(:test) do |test|
   test.ruby_opts << "--debug" if RUBY_PLATFORM == "java"
 end
 Rake::Task["test"].enhance ["test:preflight"]
-Rake::Task["test"].clear_comments.add_description <<-DESC.gsub(/^  /, "")
+Rake::Task["test"].clear_comments if Rake::Task["test"].respond_to?(:clear_comments)
+Rake::Task["test"].add_description <<-DESC.gsub(/^  /, "")
   Run preflight checks, then all tests (default task).
 
   Set COVERAGE_REPORT=1 to produce an HTML-formatted code-coverage

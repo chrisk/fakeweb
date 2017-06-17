@@ -67,7 +67,7 @@ task :clean do
 end
 
 if RUBY_VERSION >= "1.8.7"
-  rdoc_options = %w(--show-hash --charset utf-8)
+  rdoc_options = %w(--show-hash --charset=UTF-8)
   begin
     require 'sdoc'
     rdoc_options += %w(--format sdoc)

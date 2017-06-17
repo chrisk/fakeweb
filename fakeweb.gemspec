@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = root_docs
   s.files            = Dir["lib/**/*.rb"] + root_docs
   s.require_paths    = ["lib"]
-  s.rdoc_options     = ["--charset=UTF-8"]
+  s.rdoc_options     = ["--show-hash --charset=UTF-8"]
 
 
   # Mocha's README says "versions 0.10.2, 0.10.3 & 0.11.0 of the

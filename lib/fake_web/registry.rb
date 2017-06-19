@@ -1,3 +1,5 @@
+require 'singleton'
+
 module FakeWeb
   class Registry #:nodoc:
     include Singleton

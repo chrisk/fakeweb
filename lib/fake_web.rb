@@ -1,5 +1,3 @@
-require 'singleton'
-
 require 'fake_web/ext/net_http'
 require 'fake_web/registry'
 require 'fake_web/response'

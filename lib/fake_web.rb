@@ -145,13 +145,17 @@ module FakeWeb
   # response more than once:
   #
   #   FakeWeb.register_uri(:get, "http://example.com", :set_cookie => ["name=value", "example=1"])
-  def self.register_uri(*args)
+  def self.register_uri(*args, &block)
     case args.length
     when 3
       Registry.instance.register_uri(*args)
     when 2
-      print_missing_http_method_deprecation_warning(*args)
-      Registry.instance.register_uri(:any, *args)
+      if block_given?
+        Registry.instance.register_uri(*args, &block)
+      else
+        print_missing_http_method_deprecation_warning(*args)
+        Registry.instance.register_uri(:any, *args)
+      end
     else
       raise ArgumentError.new("wrong number of arguments (#{args.length} for 3)")
     end
@@ -163,13 +167,13 @@ module FakeWeb
   # Returns the faked Net::HTTPResponse object associated with +method+ and +uri+.
   def self.response_for(*args, &block) #:nodoc: :yields: response
     case args.length
-    when 2
+    when 3, 2
       Registry.instance.response_for(*args, &block)
     when 1
       print_missing_http_method_deprecation_warning(*args)
       Registry.instance.response_for(:any, *args, &block)
     else
-      raise ArgumentError.new("wrong number of arguments (#{args.length} for 2)")
+      raise ArgumentError.new("wrong number of arguments (#{args.length} for 3)")
     end
   end
 

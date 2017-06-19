@@ -43,7 +43,7 @@ module Net  #:nodoc: all
       if FakeWeb.registered_uri?(method, uri)
         @socket = Net::HTTP.socket_type.new
         FakeWeb::Utility.produce_side_effects_of_net_http_request(request, body)
-        FakeWeb.response_for(method, uri, &block)
+        FakeWeb.response_for(method, uri, request, &block)
       elsif FakeWeb.allow_net_connect?(uri)
         connect_without_fakeweb
         request_without_fakeweb(request, body, &block)

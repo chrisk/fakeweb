@@ -4,7 +4,7 @@ module FakeWeb
   class Registry #:nodoc:
     include Singleton
 
-    attr_accessor :uri_map, :passthrough_uri_map
+    attr_accessor :uri_map, :passthrough_uri_map, :uri_block_map
 
     def initialize
       clean_registry
@@ -12,19 +12,37 @@ module FakeWeb
 
     def clean_registry
       self.uri_map = Hash.new { |hash, key| hash[key] = {} }
+      self.uri_block_map = Hash.new { |hash, key| hash[key] = {} }
     end
 
-    def register_uri(method, uri, options)
-      uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
-        FakeWeb::Responder.new(method, uri, option, option[:times])
+    def register_uri(method, uri, options = nil, &block)
+      if block_given?
+        uri_block_map[normalize_uri(uri)][method] = block
+      else
+        if options.nil?
+          raise ArgumentError.new("wrong number of arguments (2 for 3)")
+        end
+
+        uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
+          FakeWeb::Responder.new(method, uri, option, option[:times])
+        end
       end
     end
 
     def registered_uri?(method, uri)
-      !responders_for(method, uri).empty?
+      !block_responder_for(method, uri).nil? || !responders_for(method, uri).empty?
     end
 
-    def response_for(method, uri, &block)
+    def response_for(method, uri, request = nil, &block)
+      block_responder = block_responder_for(method, uri)
+      if block_responder
+        block_args = {:method => method, :uri => uri, :request => request}
+        option = block_responder.call(block_args)
+
+        responder = FakeWeb::Responder.new(method, uri, option, option[:times])
+        return responder.response(&block)
+      end
+
       responders = responders_for(method, uri)
       return nil if responders.empty?
 
@@ -57,13 +75,21 @@ module FakeWeb
     private
 
     def responders_for(method, uri)
+      responders_for_helper(uri_map, method, uri, [])
+    end
+
+    def block_responder_for(method, uri)
+      responders_for_helper(uri_block_map, method, uri, nil)
+    end
+
+    def responders_for_helper(map, method, uri, default)
       uri = normalize_uri(uri)
 
-      uri_map_matches(uri_map, method, uri, URI) ||
-      uri_map_matches(uri_map, :any,   uri, URI) ||
-      uri_map_matches(uri_map, method, uri, Regexp) ||
-      uri_map_matches(uri_map, :any,   uri, Regexp) ||
-      []
+      uri_map_matches(map, method, uri, URI) ||
+      uri_map_matches(map, :any,   uri, URI) ||
+      uri_map_matches(map, method, uri, Regexp) ||
+      uri_map_matches(map, :any,   uri, Regexp) ||
+      default
     end
 
     def uri_map_matches(map, method, uri, type_to_check = URI)

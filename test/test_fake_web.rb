@@ -35,7 +35,9 @@ class TestFakeWeb < Test::Unit::TestCase
   end
 
   def test_register_uri_without_domain_name
-    assert_raises URI::InvalidURIError do
+    # Ruby 2.1 and lower raises URI::InvalidURIError
+    # Ruby 2.2 and higher raises TypeError
+    assert_raises URI::InvalidURIError, TypeError do
       FakeWeb.register_uri(:get, 'test_example2.txt', fixture_path("test_example.txt"))
     end
   end

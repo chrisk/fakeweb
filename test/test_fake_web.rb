@@ -16,6 +16,20 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
+  def test_register_uri_with_string_for_third_argument
+    exception = assert_raises ArgumentError do
+      FakeWeb.register_uri(:get, "http://example.com", "response")
+    end
+    assert_match 'Expected options hash: "response"', exception.message
+  end
+
+  def test_register_uri_with_array_of_strings_for_third_argument
+    exception = assert_raises ArgumentError do
+      FakeWeb.register_uri(:get, "http://example.com", ["first response"])
+    end
+    assert_match 'Expected options hash: "first response"', exception.message
+  end
+
   def test_registered_uri_with_wrong_number_of_arguments
     assert_raises ArgumentError do
       FakeWeb.registered_uri?
@@ -34,9 +48,9 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
-  def test_register_uri_without_domain_name
+  def test_register_uri_with_invalid_uri
     assert_raises URI::InvalidURIError do
-      FakeWeb.register_uri(:get, 'test_example2.txt', fixture_path("test_example.txt"))
+      FakeWeb.register_uri(:get, '#~invalid~#', :body => "OK")
     end
   end
 

@@ -16,6 +16,9 @@ module FakeWeb
 
     def register_uri(method, uri, options)
       uri_map[normalize_uri(uri)][method] = [*[options]].flatten.collect do |option|
+        if !option.respond_to?(:keys)
+          raise ArgumentError.new("Expected options hash: #{option.inspect}")
+        end
         FakeWeb::Responder.new(method, uri, option, option[:times])
       end
     end

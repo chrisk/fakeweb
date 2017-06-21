@@ -50,7 +50,7 @@ class TestFakeWeb < Test::Unit::TestCase
 
   def test_register_uri_with_invalid_uri
     assert_raises URI::InvalidURIError do
-      FakeWeb.register_uri(:get, '#~invalid~#', :body => fixture_path("test_example.txt"))
+      FakeWeb.register_uri(:get, '#~invalid~#', :body => "OK")
     end
   end
 

@@ -120,6 +120,9 @@ module FakeWebTestHelper
       OpenSSL::SSL::SSLSocket.expects(:new).with(socket, instance_of(OpenSSL::SSL::SSLContext)).returns(socket).at_least_once
       socket.stubs(:sync_close=).returns(true)
 
+      # MRI's Net::HTTP switched from stdlib's timeout.rb to an internal
+      # implementation using io/wait and connect_nonblock in Ruby 2.3.
+      # See https://github.com/ruby/ruby/commit/bab5bf0c79ba
       if RUBY_VERSION >= "2.3.0"
         socket.expects(:connect_nonblock).with(any_parameters).at_least_once
       else

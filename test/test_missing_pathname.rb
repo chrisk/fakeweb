@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestMissingPathname < Test::Unit::TestCase
+class TestMissingPathname < Minitest::Test
 
   def setup
     super

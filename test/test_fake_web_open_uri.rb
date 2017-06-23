@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestFakeWebOpenURI < Test::Unit::TestCase
+class TestFakeWebOpenURI < Minitest::Test
 
   def test_content_for_registered_uri
     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))

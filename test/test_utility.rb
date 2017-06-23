@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestUtility < Test::Unit::TestCase
+class TestUtility < Minitest::Test
 
   def test_decode_userinfo_from_header_handles_basic_auth
     authorization_header = "Basic dXNlcm5hbWU6c2VjcmV0"

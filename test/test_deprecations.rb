@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestDeprecations < Test::Unit::TestCase
+class TestDeprecations < Minitest::Test
 
   def test_register_uri_without_method_argument_prints_deprecation_warning
     warning = capture_stderr do

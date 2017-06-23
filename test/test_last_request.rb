@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestLastRequest < Test::Unit::TestCase
+class TestLastRequest < Minitest::Test
 
   def test_last_request_returns_correct_net_http_request_class
     FakeWeb.register_uri(:get, "http://example.com", :status => [200, "OK"])

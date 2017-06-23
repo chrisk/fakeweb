@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestFakeWeb < Test::Unit::TestCase
+class TestFakeWeb < Minitest::Test
 
   def test_register_uri
     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => "example")
@@ -130,7 +130,7 @@ class TestFakeWeb < Test::Unit::TestCase
     response = Net::HTTP.start("example.com") { |query| query.get("/") }
     assert_equal "registered", response.body
     FakeWeb.clean_registry
-    assert_raise FakeWeb::NetConnectNotAllowedError do
+    assert_raises FakeWeb::NetConnectNotAllowedError do
       Net::HTTP.start("example.com") { |query| query.get("/") }
     end
   end
@@ -522,7 +522,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_mock_request_using_response_with_transfer_encoding_header_has_valid_transfer_encoding_header
     FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_with_transfer_encoding"))
     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
-    assert_not_nil response['transfer-encoding']
+    assert !response['transfer-encoding'].nil?
     assert response['transfer-encoding'] == 'chunked'
   end
 
@@ -536,7 +536,7 @@ class TestFakeWeb < Test::Unit::TestCase
   def test_mock_request_using_response_from_curl_has_original_transfer_encoding_header
     FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_from_curl"))
     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
-    assert_not_nil response['transfer-encoding']
+    assert !response['transfer-encoding'].nil?
     assert response['transfer-encoding'] == 'chunked'
   end
 
@@ -556,7 +556,7 @@ class TestFakeWeb < Test::Unit::TestCase
     # The string should be treated as a response body, instead, and an
     # EOFError is raised when the byte is encountered.
     FakeWeb.register_uri(:get, "http://example.com", :response => "test\0test")
-    assert_raise EOFError do
+    assert_raises EOFError do
       Net::HTTP.get(URI.parse("http://example.com"))
     end
 
@@ -569,7 +569,7 @@ class TestFakeWeb < Test::Unit::TestCase
     # Similar to above, but for Errno::EISDIR being raised since File.exists?
     # returns true for directories
     FakeWeb.register_uri(:get, "http://example.com", :response => File.dirname(__FILE__))
-    assert_raise EOFError do
+    assert_raises EOFError do
       Net::HTTP.get(URI.parse("http://example.com"))
     end
 

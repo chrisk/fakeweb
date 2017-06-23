@@ -12,6 +12,9 @@ module FakeWeb
       @closed ||= true
     end
 
+    def close
+    end
+
     def readuntil(*args)
     end
   end

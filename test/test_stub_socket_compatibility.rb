@@ -30,4 +30,22 @@ class TestStubSocketCompatibility < Test::Unit::TestCase
     socket = http.instance_variable_get(:@socket)
     assert_equal RUBY_VERSION >= "1.9.3", socket.respond_to?(:continue_timeout=)
   end
+
+  def test_stub_socket_responds_to_close_and_always_returns_true
+    FakeWeb.register_uri(:get, "http://example.com", :status => [200, "OK"])
+    http = Net::HTTP.new("example.com", 80)
+    http.get("/")
+    socket = http.instance_variable_get(:@socket)
+    assert_equal socket.close, true
+  end
+
+  def test_stub_socket_tracks_closed_state
+    FakeWeb.register_uri(:get, "http://example.com", :status => [200, "OK"])
+    http = Net::HTTP.new("example.com", 80)
+    http.get("/")
+    socket = http.instance_variable_get(:@socket)
+    assert !socket.closed?
+    socket.close
+    assert socket.closed?
+  end
 end

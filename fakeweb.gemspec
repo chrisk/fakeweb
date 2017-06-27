@@ -67,8 +67,4 @@ Gem::Specification.new do |s|
     # Test::Unit is no longer distributed with Ruby as of 2.2.0
     s.add_development_dependency "test-unit", ["~> 3.2.4"]
   end
-
-  if RUBY_PLATFORM == "java"
-    s.add_development_dependency "jruby-openssl", ["~> 0.8"]
-  end
 end

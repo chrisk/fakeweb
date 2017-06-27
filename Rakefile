@@ -28,18 +28,11 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = false
   test.warning = true
 
-  # This quells a JRuby warning from SimpleCov: "tracing (e.g.
-  # set_trace_func) will not capture all events without --debug flag".
-  # This flag changes two internal options: it enables the runtime's
-  # "full-trace" mode, then sets its "compile mode" to OFF so that
-  # all code runs through the interpreter. (See test_helper.rb for
-  # the Java and Ruby code exposing these.)
-  #
-  # Note that --debug is unrelated to lots of similar-sounding flags
-  # common to many implementations (-d, -D, --debugger, etc.) and so we
-  # don't need to set any of those. For details, see JRuby's
+  # To measure code coverage under JRuby, we need to pass --debug (enabling the
+  # runtime's "full-trace" mode) and --dev (setting its "compile mode" to OFF so
+  # all code runs through the interpreter). For details, see JRuby's
   # util/cli/ArgumentProcessor.java.
-  test.ruby_opts << "--debug" if RUBY_PLATFORM == "java"
+  test.ruby_opts << "--debug" << "--dev" if RUBY_PLATFORM == "java"
 end
 Rake::Task["test"].enhance ["test:preflight"]
 Rake::Task["test"].clear_comments if Rake::Task["test"].respond_to?(:clear_comments)

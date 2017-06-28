@@ -74,7 +74,10 @@ Gem::Specification.new do |s|
   end
 
 
-  if RUBY_VERSION >= "1.9.0"
+  # To monitor our tests' code coverage, the SimpleCov gem uses Ruby's built-in
+  # Coverage module, which first shipped with Ruby 1.9.0. SimpleCov doesn't work
+  # very well on pre-1.9.3, though.
+  if RUBY_VERSION >= "1.9.3"
     s.add_development_dependency "simplecov",         ["~> 0.7"]
     s.add_development_dependency "simplecov-console", ["~> 0.1"]
 

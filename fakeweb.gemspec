@@ -66,6 +66,11 @@ Gem::Specification.new do |s|
     # only, as is RDoc, the main dependency of sdoc.
     s.add_development_dependency "ZenTest", ["~> 4.9"]
     s.add_development_dependency "sdoc"
+
+    # RDoc 4.3.0 only works on Ruby 1.9.3+
+    if RUBY_VERSION < "1.9.3"
+      s.add_development_dependency "rdoc", ["< 4.3.0"]
+    end
   end
 
 

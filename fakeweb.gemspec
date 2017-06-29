@@ -24,28 +24,36 @@ Gem::Specification.new do |s|
 
   # Mocha's README says "versions 0.10.2, 0.10.3 & 0.11.0 of the Mocha gem were
   # broken. Please do not use these versions."
-  broken_mocha_spec = ["!= 0.11.0", "!= 0.10.3", "!= 0.10.2"]
-
+  exclude_broken_mocha_spec = ["!= 0.11.0", "!= 0.10.3", "!= 0.10.2"]
   if RUBY_VERSION <= "1.8.6"
     # Mocha 0.11.1 introduced a call to #define_method with a block parameter
     # (like this: define_method { |*args, &blk| ... }), causing a syntax error
     # in 1.8.6. It's still there as of the latest release, 0.13.3. Older
     # versions of Mocha work great, though; 0.9.5 is the oldest I've tested so
     # far.
-    s.add_development_dependency "mocha", [">= 0.9.5", "< 0.11.1"] + broken_mocha_spec
-
-    # * Rake 0.9.1 had the same syntax error on 1.8.6 as Mocha, but it was fixed
-    #   for the next release.
-    # * Rake 0.9.6 and 10.0.3 were both released with code using String#end_with?,
-    #   which only works in 1.8.7+; both times, 1.8.6-compatibility was restored
-    #   for the next release.
-    s.add_development_dependency "rake", [">= 0.8.7", "!= 0.9.1", "!= 0.9.6", "!= 10.0.3"]
-
+    mocha_spec = [">= 0.9.5", "< 0.11.1"]
   else
-    # Otherwise, prefer up-to-date dev tools
-    s.add_development_dependency "mocha", ["~> 1.0"] + broken_mocha_spec
-    s.add_development_dependency "rake",  ["~> 10.0"]
+    # Otherwise, prefer up-to-date Mocha
+    mocha_spec = ["~> 1.0"]
+  end
+  s.add_development_dependency "mocha", mocha_spec + exclude_broken_mocha_spec
 
+
+  # * Rake 0.9.1 had the same syntax error on 1.8.6 as Mocha, but it was fixed
+  #   for the next release.
+  # * Rake 0.9.6 and 10.0.3 were both released with code using String#end_with?,
+  #   which only works in 1.8.7+; both times, 1.8.6-compatibility was restored
+  #   for the next release.
+  if RUBY_VERSION <= "1.8.6"
+    rake_spec = [">= 0.8.7", "!= 0.9.1", "!= 0.9.6", "!= 10.0.3"]
+  else
+    # Otherwise, prefer up-to-date Rake
+    rake_spec = ["~> 10.0"]
+  end
+  s.add_development_dependency "rake", rake_spec
+
+
+  if RUBY_VERSION >= "1.8.7"
     # ZenTest (autotest) wants at least RubyGems 1.8, which is 1.8.7+
     # only, as is RDoc, the main dependency of sdoc.
     s.add_development_dependency "ZenTest", ["~> 4.9"]
@@ -62,6 +70,7 @@ Gem::Specification.new do |s|
     # See https://github.com/intridea/multi_json/commit/e7438e7ba2.
     s.add_development_dependency "json",              ["~> 1.7"]
   end
+
 
   if RUBY_VERSION >= "2.2.0"
     # Test::Unit is no longer distributed with Ruby as of 2.2.0

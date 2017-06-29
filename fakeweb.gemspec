@@ -44,11 +44,19 @@ Gem::Specification.new do |s|
   # * Rake 0.9.6 and 10.0.3 were both released with code using String#end_with?,
   #   which only works in 1.8.7+; both times, 1.8.6-compatibility was restored
   #   for the next release.
+  # * Rake 10.2 and 10.2.1 removed Ruby 1.8 compatibility; 10.2.2 restored it.
+  #   Then Rake 11.0 removed it again for good.
   if RUBY_VERSION <= "1.8.6"
-    rake_spec = [">= 0.8.7", "!= 0.9.1", "!= 0.9.6", "!= 10.0.3"]
+    rake_spec = [">= 0.8.7", "!= 0.9.1", "!= 0.9.6", "!= 10.0.3",
+                             "!= 10.2", "!= 10.2.1", "< 11.0"]
+  elsif RUBY_VERSION == "1.8.7"
+    rake_spec = [">= 0.8.7", "!= 10.2", "!= 10.2.1", "< 11.0"]
+  elsif RUBY_VERSION < "1.9.3"
+    # Rake's gemspec started requiring Ruby 1.9.3+ as of 11.0
+    rake_spec = ["~> 10.0"]
   else
     # Otherwise, prefer up-to-date Rake
-    rake_spec = ["~> 10.0"]
+    rake_spec = ["~> 12.0"]
   end
   s.add_development_dependency "rake", rake_spec
 

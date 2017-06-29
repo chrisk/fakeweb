@@ -92,6 +92,7 @@ module FakeWebTestHelper
   def remove_warnings_from_gems_and_stdlib(string)
     code_paths = [RbConfig::CONFIG["libdir"],
                   File.expand_path(File.join(File.dirname(__FILE__), "vendor")),
+                  "./test/vendor",
                   Gem.path].flatten
     splitter = string.respond_to?(:lines) ? :lines : :to_a
     string.send(splitter).reject { |line|

@@ -22,23 +22,23 @@ Gem::Specification.new do |s|
   s.rdoc_options     = ["--show-hash --charset=UTF-8"]
 
 
-  # Mocha's README says "versions 0.10.2, 0.10.3 & 0.11.0 of the
-  # Mocha gem were broken. Please do not use these versions."
+  # Mocha's README says "versions 0.10.2, 0.10.3 & 0.11.0 of the Mocha gem were
+  # broken. Please do not use these versions."
   broken_mocha_spec = ["!= 0.11.0", "!= 0.10.3", "!= 0.10.2"]
 
   if RUBY_VERSION <= "1.8.6"
-    # Mocha 0.11.1 introduced a call to #define_method with a block
-    # parameter (like this: define_method { |*args, &blk| ... }),
-    # causing a syntax error in 1.8.6. It's still there as of the
-    # latest release, 0.13.3. Older versions of Mocha work great,
-    # though; 0.9.5 is the oldest I've tested so far.
+    # Mocha 0.11.1 introduced a call to #define_method with a block parameter
+    # (like this: define_method { |*args, &blk| ... }), causing a syntax error
+    # in 1.8.6. It's still there as of the latest release, 0.13.3. Older
+    # versions of Mocha work great, though; 0.9.5 is the oldest I've tested so
+    # far.
     s.add_development_dependency "mocha", [">= 0.9.5", "< 0.11.1"] + broken_mocha_spec
 
-    # Rake 0.9.1 had the same issue with 1.8.6, but it was fixed for
-    # the next release. Later on, Rake 0.9.6 and 10.0.3 were both
-    # released with code using String#end_with?, which only works in
-    # 1.8.7+; both times, 1.8.6-compatibility was restored for the
-    # next release.
+    # * Rake 0.9.1 had the same syntax error on 1.8.6 as Mocha, but it was fixed
+    #   for the next release.
+    # * Rake 0.9.6 and 10.0.3 were both released with code using String#end_with?,
+    #   which only works in 1.8.7+; both times, 1.8.6-compatibility was restored
+    #   for the next release.
     s.add_development_dependency "rake", [">= 0.8.7", "!= 0.9.1", "!= 0.9.6", "!= 10.0.3"]
 
   else

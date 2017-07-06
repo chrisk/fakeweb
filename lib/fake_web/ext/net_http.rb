@@ -7,19 +7,7 @@ module Net  #:nodoc: all
   class BufferedIO
     def initialize_with_fakeweb(*args)
       initialize_without_fakeweb(*args)
-
-      case @io
-      when Socket, OpenSSL::SSL::SSLSocket, StringIO, IO
-        # usable as-is
-      when String
-        if !@io.include?("\0") && File.exist?(@io) && !File.directory?(@io)
-          @io = File.open(@io, "r")
-        else
-          @io = StringIO.new(@io)
-        end
-      else
-        raise ArgumentError, "Unable to create fake socket from #{io}"
-      end
+      @io = FakeWeb::Utility.io_from_fake_response_object(@io)
     end
     alias_method :initialize_without_fakeweb, :initialize
     alias_method :initialize, :initialize_with_fakeweb

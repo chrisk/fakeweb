@@ -46,6 +46,21 @@ module FakeWeb
       request.content_length = request.body.length unless request.body.nil?
     end
 
+    def self.io_from_fake_response_object(obj)
+      case obj
+      when Socket, OpenSSL::SSL::SSLSocket, StringIO, IO
+        obj  # usable as-is
+      when String
+        if !obj.include?("\0") && File.exist?(obj) && !File.directory?(obj)
+          File.open(obj, "r")
+        else
+          StringIO.new(obj)
+        end
+      else
+        raise ArgumentError, "Unable to create fake socket from #{obj}"
+      end
+    end
+
     def self.puts_warning_for_net_http_around_advice_libs_if_needed
       libs = {"Samuel" => defined?(Samuel)}
       warnings = libs.select { |_, loaded| loaded }.map do |name, _|

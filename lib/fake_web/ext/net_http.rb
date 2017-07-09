@@ -5,22 +5,12 @@ require 'stringio'
 module Net  #:nodoc: all
 
   class BufferedIO
-    def initialize_with_fakeweb(*args)
-      initialize_without_fakeweb(*args)
-
-      case @io
-      when Socket, OpenSSL::SSL::SSLSocket, StringIO, IO
-        # usable as-is
-      when String
-        if !@io.include?("\0") && File.exist?(@io) && !File.directory?(@io)
-          @io = File.open(@io, "r")
-        else
-          @io = StringIO.new(@io)
-        end
-      else
-        raise ArgumentError, "Unable to create fake socket from #{io}"
+    eval <<-RUBY
+      def initialize_with_fakeweb(*args#{", **opts" if RUBY_VERSION >= "2.4.0" })
+        initialize_without_fakeweb(*args#{", **opts" if RUBY_VERSION >= "2.4.0" })
+        @io = FakeWeb::Utility.io_from_fake_response_object(@io)
       end
-    end
+    RUBY
     alias_method :initialize_without_fakeweb, :initialize
     alias_method :initialize, :initialize_with_fakeweb
   end

@@ -45,4 +45,30 @@ class TestRegisteringWithIO < Test::Unit::TestCase
       Net::BufferedIO.new(unsupported)
     end
   end
+
+  def test_creating_net_buffered_io_with_ruby_24_method_signature
+    # These keyword arguments were added to BufferedIO.new's params in Ruby 2.4
+    call_with_keyword_args = lambda do
+      eval <<-RUBY
+        Net::BufferedIO.new("", read_timeout: 1, continue_timeout: 1, debug_output: nil)
+      RUBY
+    end
+
+    if RUBY_VERSION >= "2.4.0"
+      # Should not raise
+      call_with_keyword_args.call
+    elsif RUBY_VERSION >= "2.0.0"
+      # From Ruby 2.0 to 2.3, keyword arguments are generally valid syntax, but
+      # had not been added to BufferedIO.new's method signature
+      assert_raises(ArgumentError) { call_with_keyword_args.call }
+    elsif RUBY_VERSION >= "1.9.0"
+      # Ruby 1.9 will interpret the arguments as a new-style options hash,
+      # which is also not in the method signature
+      assert_raises(ArgumentError) { call_with_keyword_args.call }
+    else
+      # Ruby 1.8 won't know how to parse this, since it had neither new-style
+      # hashes nor keyword arguments
+      assert_raises(SyntaxError) { call_with_keyword_args.call }
+    end
+  end
 end

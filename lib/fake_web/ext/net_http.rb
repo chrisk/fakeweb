@@ -5,10 +5,12 @@ require 'stringio'
 module Net  #:nodoc: all
 
   class BufferedIO
-    def initialize_with_fakeweb(*args)
-      initialize_without_fakeweb(*args)
-      @io = FakeWeb::Utility.io_from_fake_response_object(@io)
-    end
+    eval <<-RUBY
+      def initialize_with_fakeweb(*args#{", **opts" if RUBY_VERSION >= "2.4.0" })
+        initialize_without_fakeweb(*args#{", **opts" if RUBY_VERSION >= "2.4.0" })
+        @io = FakeWeb::Utility.io_from_fake_response_object(@io)
+      end
+    RUBY
     alias_method :initialize_without_fakeweb, :initialize
     alias_method :initialize, :initialize_with_fakeweb
   end

@@ -115,7 +115,10 @@ module FakeWebTestHelper
       # MRI's Net::HTTP switched from stdlib's timeout.rb to an internal
       # implementation using io/wait and connect_nonblock in Ruby 2.3.
       # See https://github.com/ruby/ruby/commit/bab5bf0c79ba
-      if RUBY_VERSION >= "2.3.0"
+      #
+      # Although recent versions of Rubinius report themselves as Ruby 2.3,
+      # they do not yet incorporate this change.
+      if RUBY_VERSION >= "2.3.0" && RUBY_ENGINE != "rbx"
         socket.expects(:connect_nonblock).with(any_parameters).at_least_once
       else
         socket.expects(:connect).with().at_least_once

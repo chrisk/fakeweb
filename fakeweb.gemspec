@@ -68,4 +68,13 @@ Gem::Specification.new do |s|
   if RUBY_PLATFORM == "java"
     s.add_development_dependency "jruby-openssl", ["~> 0.8"]
   end
+
+  s.post_install_message = %q{
+DEPRECATION MESSAGE:
+You use a temporary fork of original https://github.com/chrisk/fakeweb
+Please switch back to the original repository of fakeweb!
+
+# Gemfile
+gem "fakeweb", github: "chrisk/fakeweb", branch: "master"
+}
 end

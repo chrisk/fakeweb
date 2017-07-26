@@ -1,3 +1,25 @@
+fakeweb (master branch pending release)
+
+* fix a variety of NoMethodErrors when Net::HTTP#read_timeout= or
+  Net::HTTP#continue_timeout= is called after a Net::HTTP object has handled a
+  first fake request under newer versions of Ruby and/or some gems (Mechanize,
+  aws-sdk, etc.) [Marcel Massana, Trevor Rowe, Chris Kampmeier]
+
+* add ability to accept a StringIO as a fake response body
+  [Larry Diehl, Andy Delcambre, Chris Kampmeier]
+
+* fix an exception when an IO is passed in as a fake response body
+  [Chris Kampmeier]
+
+* stub responses with no bodies (e.g. to a HEAD request) now return nil for
+  #body, not an empty string, to match Net::HTTP's behavior [Myron Marston]
+
+* fix warnings on post-1.8 versions of Ruby [Peter Hellberg, Kenichi Kamiya]
+
+* fix that the options hash passed to FakeWeb.register_uri would sometimes be
+  modified [Chris Kampmeier]
+
+
 fakeweb (1.3.0)
 
 * improve response header registration so you can pass an array to set a header

@@ -19,6 +19,17 @@ fakeweb (master branch pending release)
 * fix that the options hash passed to FakeWeb.register_uri would sometimes be
   modified [Chris Kampmeier]
 
+* raise an ArgumentError when FakeWeb.register_uri's third argument can't be
+  handled as an options hash [David Cornu, Josef Strzibny, Chris Kampmeier]
+
+* raise the more-specific ArgumentError instead of StandardError when the object
+  passed to FakeWeb.register_uri's :response option can't be handled; this
+  should be relatively backwards-compatible because ArgumentError descends from
+  StandardError [Chris Kampmeier]
+
+* deprecation warnings now detect the caller more robustly to work with JRuby's
+  backtraces [Chris Kampmeier]
+
 
 fakeweb (1.3.0)
 

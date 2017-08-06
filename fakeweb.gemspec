@@ -90,6 +90,6 @@ Gem::Specification.new do |s|
 
   if RUBY_VERSION >= "2.2.0"
     # Test::Unit is no longer distributed with Ruby as of 2.2.0
-    s.add_development_dependency "test-unit", ["~> 3.2.4"]
+    s.add_development_dependency "test-unit", ["~> 3.2"]
   end
 end

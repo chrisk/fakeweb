@@ -8,3 +8,4 @@
 /.idea
 *.rbc
 Gemfile.lock
+.rvmrc

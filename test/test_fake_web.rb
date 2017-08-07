@@ -125,6 +125,16 @@ class TestFakeWeb < Test::Unit::TestCase
     assert !FakeWeb.registered_uri?(:get, "http://example.com")
   end
 
+  def test_clean_uri_affects_registered_uri
+    FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
+    FakeWeb.register_uri(:post, "http://example.com", :body => "registered")
+    assert FakeWeb.registered_uri?(:get, "http://example.com")
+    assert FakeWeb.registered_uri?(:post, "http://example.com")
+    FakeWeb.clean_uri(:get, "http://example.com")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com")
+    assert FakeWeb.registered_uri?(:post, "http://example.com")
+  end
+
   def test_clean_registry_affects_net_http_requests
     FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
     response = Net::HTTP.start("example.com") { |query| query.get("/") }

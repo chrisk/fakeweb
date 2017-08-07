@@ -131,6 +131,10 @@ registry and remove all registered URIs:
 
   FakeWeb.clean_registry
 
+If you want clean out an specific uri, you can remove it from registry:
+
+  FakeWeb.clean_uri(:get, "http://example.com")
+
 === Blocking all real requests
 
 When you're using FakeWeb to replace _all_ of your requests, it's useful to

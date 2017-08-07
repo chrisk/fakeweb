@@ -23,6 +23,10 @@ module FakeWeb
       end
     end
 
+    def unregister_uri(method, uri)
+      uri_map[normalize_uri(uri)][method] = {}
+    end
+
     def registered_uri?(method, uri)
       !responders_for(method, uri).empty?
     end

@@ -125,6 +125,32 @@ class TestFakeWeb < Test::Unit::TestCase
     assert !FakeWeb.registered_uri?(:get, "http://example.com")
   end
 
+  def test_unregister_uri
+    FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
+    assert FakeWeb.registered_uri?(:get, "http://example.com")
+    FakeWeb.unregister_uri(:get, "http://example.com")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com")
+  end
+
+  def test_unregister_uri_affects_only_one_uri
+    FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
+    FakeWeb.register_uri(:get, "http://other.example.com", :body => "registered")
+    assert FakeWeb.registered_uri?(:get, "http://example.com")
+    assert FakeWeb.registered_uri?(:get, "http://other.example.com")
+    FakeWeb.unregister_uri(:get, "http://example.com")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com")
+    assert FakeWeb.registered_uri?(:get, "http://other.example.com")
+  end
+
+  def test_unregistered_uri_can_be_registered_again
+    FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
+    assert FakeWeb.registered_uri?(:get, "http://example.com")
+    FakeWeb.unregister_uri(:get, "http://example.com")
+    assert !FakeWeb.registered_uri?(:get, "http://example.com")
+    FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
+    assert FakeWeb.registered_uri?(:get, "http://example.com")
+  end
+
   def test_clean_registry_affects_net_http_requests
     FakeWeb.register_uri(:get, "http://example.com", :body => "registered")
     response = Net::HTTP.start("example.com") { |query| query.get("/") }

@@ -10,6 +10,13 @@ module FakeWeb
       clean_registry
     end
 
+    def uri_map
+      def @uri_map.inspect
+        self.keys.map(&:to_s)
+      end
+      @uri_map
+    end
+
     def clean_registry
       self.uri_map = Hash.new { |hash, key| hash[key] = {} }
     end

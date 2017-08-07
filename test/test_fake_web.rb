@@ -458,6 +458,17 @@ class TestFakeWeb < Test::Unit::TestCase
     end
   end
 
+  def test_mock_post_that_raises_other_http_errors
+    [Net::HTTPRetriableError, Net::HTTPServerException, Net::HTTPFatalError, OpenURI::HTTPError].each do |error_class|
+      FakeWeb.register_uri(:post, 'http://mock/raising_exception.txt', :exception => error_class)
+      assert_raises(error_class) do
+        Net::HTTP.start('mock') do |query|
+          query.post('/raising_exception.txt', '')
+        end
+      end
+    end
+  end
+
   def test_raising_an_exception_that_requires_an_argument_to_instantiate
     FakeWeb.register_uri(:get, "http://example.com/timeout.txt", :exception => Timeout::Error)
     assert_raises(Timeout::Error) do

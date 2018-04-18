@@ -34,7 +34,7 @@ https://groups.google.com/d/forum/fakeweb-users.
 
 The main source repository is https://github.com/chrisk/fakeweb.
 
-{<img src="https://travis-ci.org/chrisk/fakeweb.png?branch=master" alt="Build Status" style="vertical-align: text-top" />}[https://travis-ci.org/chrisk/fakeweb] FakeWeb's tests run at https://travis-ci.org/chrisk/fakeweb.
+{<img src="https://travis-ci.org/chrisk/fakeweb.svg?branch=master" alt="Build Status" style="vertical-align: text-top" />}[https://travis-ci.org/chrisk/fakeweb] FakeWeb's tests run at https://travis-ci.org/chrisk/fakeweb.
 
 == Examples
 
